@@ -1,0 +1,47 @@
+@charset 'utf-8';
+
+$base-font-size: 192px; //design iphone6: 96px * 2 / 10 = 192px; --design
+// $base-font-size: 75px; //design iphone6: 375px * 2 / 10 = 75px; --design
+// $base-font-size: 32px; //design iphone3gs: 320px / 10 = 32px
+// $base-font-size: 64px; //design iphone4/5: 320px * 2 / 10 = 64px
+// $base-font-size: 124.2px; //design iphone6pls: 414px * 3 / 10 = 124.2px;
+// $base-font-size: 23.4375px; //design 750px / 32 = 23.4375px;
+// $base-font-size: 17px; //design 750px / 32 = 23.4375px;
+
+$imgContextPath: "../images/";
+
+// 颜色基调
+$baseColor:#868e96;
+$white: #fff;
+$buff: #E5E5B1;
+$blue: #1da1f2;
+$green: #17b443;
+$orange: #f3a83d;
+$red: #ff2525;
+
+$fontColor: #cbced6;
+
+$primary-5: #40a9ff;
+
+//px转rem
+@function rem($px) {
+    // @return  $px / $base-font-size * 1rem ;
+    @return $px / $base-font-size / 2 * 1rem;
+}
+
+//文字超过一行省略号
+@mixin ellipsis ($line) {
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $line;
+    overflow: hidden;
+    white-space: normal;
+}
+
+@mixin angle ($rotate) {
+    -moz-transform: rotate($rotate);
+    -webkit-transform: rotate($rotate);
+    -o-transform: rotate($rotate);
+    transform: rotate($rotate);
+}

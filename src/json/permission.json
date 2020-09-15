@@ -1,0 +1,275 @@
+{
+    "message": "请求成功",
+    "flag": true,
+    "code": 200,
+    "data": [
+        {
+            "type": "leaf",
+            "name": "主页",
+            "key": "1",
+            "icon": "home",
+            "url": "/index",
+            "children": [
+                {
+                    "type": "hide",
+                    "id": "flightList",
+                    "name": "航班详情列表",
+                    "key": "1-1",
+                    "url": "/index/flightRisk/FlightList",
+                    "parentKey":"1",
+                    "children": []
+                }
+            ],
+            "show": true
+        },
+        {
+            "type": "category",
+            "name": "航班风险展示",
+            "key": "2",
+            "icon": "compass",
+            "children": [
+                {
+                    "type": "leaf",
+                    "id": "3645b32296154654ba7a2c3890049cda",
+                    "name": "航班风险",
+                    "key": "2-1",
+                    "url": "/index/flightRisk/FlightRisk",
+                    "parentKey":"2",
+                    "children": [
+                        {
+                            "type": "hide",
+                            "id": "flightRiskDetail",
+                            "name": "航班风险详情",
+                            "key": "2-1-1",
+                            "url": "/FlightRiskDetail/:flightCode/:batchNum?",
+                            "parentKey":"2-1",
+                            "children": [
+                                {
+                                    "type": "hide",
+                                    "id": "newFlightRiskDetail",
+                                    "name": "新模型计算详情",
+                                    "key": "2-1-1-1",
+                                    "url": "/NewFlightRiskDetail/:flightCode?",
+                                    "parentKey":"2-1-1",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "hide",
+                            "id": "flightWarnList",
+                            "name": "风险告警",
+                            "key": "2-1-2",
+                            "url": "/index/flightRisk/RiskWarnList",
+                            "parentKey":"2-1",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "type": "leaf",
+                    "id": "dd9e0ecf8b514eaaa5bf3fe7e7163a5f",
+                    "name": "历史航班风险",
+                    "key": "2-2",
+                    "url": "/index/flightRisk/HistoryFlightRisk",
+                    "parentKey":"2",
+                    "children": [
+                        {
+                            "type": "hide",
+                            "id": "historyFlightRiskDetail",
+                            "name": "历史航班风险详情",
+                            "key": "2-2-1",
+                            "url": "/HistoryFlightRiskDetail/:flightCode/:batchNum?",
+                            "parentKey":"2-2",
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "category",
+            "name": "风险指标维护",
+            "key": "3",
+            "icon": "area-chart",
+            "children": [
+                {
+                    "type": "leaf",
+                    "id": "698f4510bc944861802bbf8fa978c283",
+                    "name": "风险配置",
+                    "key": "3-1",
+                    "url": "/index/riskTarget/RiskTarget",
+                    "parentKey":"3",
+                    "children": []
+                },
+                {
+                    "type": "leaf",
+                    "id": "d0df510184864941a097c706771b52c8",
+                    "name": "关联风险配置",
+                    "key": "3-2",
+                    "url": "/index/riskTarget/RelateRiskTarget",
+                    "parentKey":"3",
+                    "children": []
+                },
+                {
+                    "type": "leaf",
+                    "id": "2b90983b898345a2a403366e81e6ed30",
+                    "name": "日常风险配置",
+                    "key": "3-3",
+                    "url": "/index/riskTarget/DailyRiskTarget",
+                    "parentKey":"3",
+                    "children": []
+                },
+                {
+                    "type": "leaf",
+                    "id": "6eda5d611d474d3ca51ceb6e8d142860",
+                    "name": "风险树展示",
+                    "key": "3-4",
+                    "url": "/index/riskTarget/RiskTreeShow",
+                    "parentKey":"3",
+                    "children": []
+                }
+            ]
+        },
+        {
+            "type": "category",
+            "name": "基础数据维护",
+            "key": "4",
+            "icon": "appstore",
+            "children": [
+                {
+                    "type": "leaf",
+                    "id": "174b844283b4440aa6291300fc7ba623",
+                    "name": "飞机风险数据库",
+                    "key": "4-1",
+                    "url": "/index/activity/AcfData",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "3446b88bbefb4721956e7cd343e7d7fa",
+                    "name": "机场风险参数库",
+                    "key": "4-2",
+                    "url": "/index/activity/RmArptRiskParam",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "c919163e8948496fafe1ff670b7e1547",
+                    "name": "机场风险数据库",
+                    "key": "4-3",
+                    "url": "/index/activity/RmRiskArpt",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "0c837107d1354d79b14442b52291445e",
+                    "name": "特殊航线",
+                    "key": "4-4",
+                    "url": "/index/activity/RmSpecialAirLine",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "677dde2d0dea47d2b9d262273194502b",
+                    "name": "手册规章数据库",
+                    "key": "4-5",
+                    "url": "/index/activity/C0059HandBook",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "503a9d872d4940839b1febfa00e0378b",
+                    "name": "三新风险维护",
+                    "key": "4-6",
+                    "url": "/index/activity/ThreeNew",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "5f1181d7c2144b97bb5daad3de4b7c4d",
+                    "name": "各机型风限制标准维护",
+                    "key": "4-7",
+                    "url": "/index/activity/WindLimitStandard",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "08936e16f82247038abc322619690396",
+                    "name": "跑道规则维护",
+                    "key": "4-8",
+                    "url": "/index/activity/RwyRule",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "c9e473972faf4cdd82c3feda7d27edcb",
+                    "name": "V2500发动机数据维护",
+                    "key": "4-9",
+                    "url": "/index/activity/V2500Reform",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "b49112d1a2ec43108d655cdf1226bdcc",
+                    "name": "ND黑屏数据维护",
+                    "key": "4-10",
+                    "url": "/index/activity/NdTail",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "7c276be9cb0d438d962510efc9a29965",
+                    "name": "隶属节点维护",
+                    "key": "4-11",
+                    "url": "/index/activity/RmItemFunPoint",
+                    "parentKey":"4",
+                    "children": []
+                }, {
+                    "type": "leaf",
+                    "id": "f2a889bde90c41b696e090b7dc1cf99c",
+                    "name": "气象标准",
+                    "key": "4-12",
+                    "url": "/index/activity/Weather",
+                    "parentKey":"4",
+                    "children": []
+                }
+            ]
+        },
+        {
+            "type": "category",
+            "name": "系统管理",
+            "key": "6",
+            "icon": "setting",
+            "children": [
+                {
+                    "type": "leaf",
+                    "id": "eefe75fcda02459eb2037add237f5b2d",
+                    "name": "用户管理",
+                    "key": "6-1",
+                    "url": "/index/system/User",
+                    "parentKey":"6",
+                    "children": []
+                },
+                {
+                    "type": "leaf",
+                    "id": "986d797926af421aaa57415c43814041",
+                    "name": "角色管理",
+                    "key": "6-2",
+                    "url": "/index/system/Role",
+                    "parentKey":"6",
+                    "children": []
+                },
+                {
+                    "type": "leaf",
+                    "id": "",
+                    "name": "权限管理",
+                    "key": "6-3",
+                    "url": "/index/system/Permission",
+                    "parentKey":"6",
+                    "children": []
+                }
+            ]
+        }
+    ]
+}

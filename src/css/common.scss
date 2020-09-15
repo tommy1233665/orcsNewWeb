@@ -1,0 +1,91 @@
+@charset 'utf-8';
+@import "./base.scss";
+
+//边距
+.mt15 {
+    margin-top: rem(15px) !important;
+}
+.mt20 {
+    margin-top: rem(20px) !important;
+}
+.mt70 {
+    margin-top: rem(70px) !important;
+}
+.mb10 {
+    margin-bottom: rem(10px) !important;
+}
+.mb20 {
+    margin-bottom: rem(20px) !important;
+}
+.mb24 {
+    margin-bottom: rem(24px) !important;
+}
+.mb30 {
+    margin-bottom: rem(30px) !important;
+}
+.mb48 {
+    margin-bottom: rem(48px) !important;
+}
+.mb70 {
+    margin-bottom: rem(70px) !important;
+}
+.ml10 {
+    margin-left: rem(10px) !important;
+}
+.pl15 {
+    padding-left: rem(15px) !important;
+}
+
+// 位置对齐
+.text-center {
+    text-align: center !important;
+}
+.text-left {
+    text-align: left !important;
+}
+.text-right {
+    text-align: right !important;
+}
+.flex {
+    display: flex;
+}
+
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.clearfix {
+    &:before,
+    &:after {
+        content: " ";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+.clearBoth {
+    clear: both;
+}
+
+// 色调
+.text-success {
+    color: $green;
+}
+.text-info {
+    color: $blue;
+}
+.text-warning {
+    color: $orange;
+}
+.text-danger {
+    color: $red;
+}
+.text-white {
+    color: $white;
+}
+.text-buff {
+    color: $buff;
+}

@@ -1,0 +1,36 @@
+{
+    "flag": true,
+    "code": 200,
+    "message": "操作成功",
+    "data": {
+        "postFltTimeDevtDtos": [
+            {
+                "fltPhase": "CRUISE",
+                "avgTimeDevt": "2.47",
+                "moreFiveRate": "1.0",
+                "moreTenRate": "1.0",
+                "moreFifteenRate": "1.0",
+                "lessFiveRate": "0.0",
+                "lessTenRate": "0.0"
+            },
+            {
+                "fltPhase": "DES",
+                "avgTimeDevt": "-13.02",
+                "moreFiveRate": "1.0",
+                "moreTenRate": "1.0",
+                "moreFifteenRate": "1.0",
+                "lessFiveRate": "0.0",
+                "lessTenRate": "0.0"
+            },
+            {
+                "fltPhase": "CLB",
+                "avgTimeDevt": "-0.29",
+                "moreFiveRate": "1.0",
+                "moreTenRate": "1.0",
+                "moreFifteenRate": "1.0",
+                "lessFiveRate": "0.0",
+                "lessTenRate": "0.0"
+            }
+        ]
+    }
+}

@@ -1,0 +1,1114 @@
+@charset 'utf-8';
+@import "./common.scss";
+@import "./images.scss";
+
+/******************** base css begin ********************/
+#index,
+main,
+div.main,
+section {
+  height: 100%;
+}
+body {
+  font-size: 100% !important;
+  background: #212328 !important;
+  overflow-y: hidden;
+}
+.menu {
+  @extend .clearfix;
+}
+th,
+td {
+  text-align: center !important;
+}
+// 滚动条样式
+// ie
+body {
+  /* 滑动条的颜色 */
+  scrollbar-face-color: #153053;
+  scrollbar-base-color: #212328;
+  /* 滑动条边框的颜色 */
+  scrollbar-shadow-color: #153053;
+  /* 槽的颜色 */
+  scrollbar-track-color: #212328;
+  /* 箭头的颜色 */
+  scrollbar-arrow-color: #153053;
+}
+// 谷歌
+::-webkit-scrollbar {
+  width: rem(10px);
+  height: rem(10px);
+}
+::-webkit-scrollbar-thumb {
+  background-color: #153053;
+  border-radius: 2em;
+}
+::-webkit-scrollbar-track {
+  background-color: #212328;
+  border-radius: 2em;
+}
+// -webkit-autofill导致chrome的输入框背景颜色黄色，此处覆盖
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #163960 inset;
+  /*内阴影遮盖背景*/
+  -webkit-background-clip: text;
+  /*防圆角漏光*/
+  text-shadow: 0 0 0px #fff, 0 0 0px #fff;
+  /*设置一个白色文字阴影*/
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.65);
+  /*设置文字填充为透明，将文字阴影完全透出*/
+}
+/******************** base css end ********************/
+
+/******************** 覆盖 begin ********************/
+.ant-layout,
+.ant-layout-sider,
+.ant-table-placeholder {
+  background: none !important;
+}
+.ant-table-tbody > tr.ant-table-row-selected td {
+  background: #555b6a !important;
+}
+.ant-btn i {
+  color: #fff;
+}
+.ant-btn:hover i,
+.ant-btn:focus i {
+  color: #40a9ff;
+}
+.ant-btn-primary:hover i,
+.ant-btn-primary:focus i {
+  color: #fff;
+}
+.ant-btn-primary[disabled] {
+  background: #626281 !important;
+  border-color: #626281 !important;
+}
+.ant-select-disabled,
+.ant-input[disabled],
+.ant-checkbox-disabled + span,
+.ant-transfer-list-content-item-disabled {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+.ant-transfer-disabled .ant-transfer-list {
+  background: #555b6a !important;
+}
+.ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: rgba(255, 255, 255, 0.65) !important;
+}
+/***** 多选一行展示 begin *****/
+.ant-select-selection--multiple .ant-select-selection__rendered {
+  overflow: hidden;
+}
+.ant-select-selection--multiple .ant-select-selection__rendered ul {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.ant-select-selection--multiple .ant-select-selection__choice {
+  float: none;
+  overflow: visible;
+}
+.ant-select-selection--multiple .ant-select-search--inline {
+  float: none;
+  position: absolute;
+}
+.ant-select-selection--multiple {
+  max-height: 32px;
+  overflow: hidden;
+}
+
+.form-GroupCustom-delModal {
+  .ant-tag-checkable {
+    margin-bottom: 10px;
+    color: #40a9ff;
+    border-color: #40a9ff;
+  }
+  .ant-tag-checkable-checked {
+    color: #fff;
+  }
+}
+/******************** 覆盖 end ********************/
+
+/******************** form begin ********************/
+Form {
+  .ant-form-item {
+    margin-bottom: 11px;
+  }
+  .ant-form-item-label {
+    float: left;
+    line-height: 34px;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    float: left;
+  }
+  .ant-form-item-control {
+    line-height: 34px;
+  }
+  Button + Button {
+    margin-bottom: rem(15px);
+    margin-left: rem(15px);
+  }
+  // 自定义组件
+  .form-explain {
+    display: inline-block;
+    padding: 0 0.5em;
+    color: #1890ff;
+    text-align: left;
+  }
+  .form-dynamicFieldSet {
+    padding: 5px;
+    color: #74767a;
+    background: #292d34;
+    border: 1px solid #363a40;
+    .top,
+    .item {
+      margin-top: 3px;
+      padding: 3px 5px;
+      border: 1px solid #363a40;
+      Button {
+        margin-bottom: 0 !important;
+      }
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      div {
+        padding-left: rem(10px);
+      }
+    }
+    .item {
+      .ant-select:first-child {
+        width: calc(100% - 286px);
+      }
+      .ant-select:nth-child(2) {
+        width: 60px;
+        margin-left: 2px;
+      }
+      .ant-input {
+        width: 150px;
+        margin-left: 2px;
+      }
+      .ant-btn {
+        width: 70px;
+        margin-left: 2px;
+        border: 1px solid #17171f;
+      }
+    }
+  }
+  .btn-GroupCustom {
+    border: solid 1px #17171f;
+  }
+  .ant-calendar-picker {
+    width: 100%;
+  }
+  .form-uploadFileCustom {
+    position: relative;
+    padding-right: 5px;
+    .btn-upload {
+      position: absolute;
+      top: 0;
+      left: 112px;
+    }
+  }
+  .form-treeSelectCustom {
+    .ant-radio-group {
+      .ant-radio-wrapper:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+// form的样式
+.form-grid-2 {
+  .ant-form-item-label {
+    width: 3em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 3em);
+  }
+}
+.form-grid-3 {
+  .ant-form-item-label {
+    width: 4em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 4em);
+  }
+}
+.form-grid-4 {
+  .ant-form-item-label {
+    width: 5em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 5em);
+  }
+}
+.form-grid-5 {
+  .ant-form-item-label {
+    width: 6em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 6em);
+  }
+}
+.form-grid-6 {
+  .ant-form-item-label {
+    width: 7em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 7em);
+  }
+}
+.form-grid-7 {
+  .ant-form-item-label {
+    width: 8em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 8em);
+  }
+}
+.form-grid-8 {
+  .ant-form-item-label {
+    width: 13em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 13em);
+  }
+}
+.form-grid-9 {
+  .ant-form-item-label {
+    width: 10em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 10em);
+  }
+}
+.form-grid-10 {
+  .ant-form-item-label {
+    width: 11em;
+  }
+  .ant-form-item-label + .ant-form-item-control-wrapper {
+    width: calc(100% - 11em);
+  }
+}
+/******************** form end ********************/
+
+/******************** comm css begin ********************/
+.no-authority-box {
+  padding: rem(300px) 0;
+  text-align: center;
+  line-height: 3;
+  font-size: rem(20px);
+}
+.card {
+  margin: 7.5px 0;
+  padding: rem(20px);
+  border: 1px solid #2d302d;
+  border-radius: 3px;
+  position: relative;
+  background: #292b33;
+  @extend .clearfix;
+  .headers {
+    margin-left: rem(-21px);
+    padding: 0 rem(10px);
+    border-left: 2px solid #158bc5;
+    font-size: rem(20px);
+    color: #fff;
+  }
+  .content {
+    padding: rem(10px);
+  }
+}
+
+// 图标提示
+.charts-tip {
+  span {
+    display: inline-block;
+    margin-left: rem(10px);
+    color: #a5a7ad;
+  }
+  .low,
+  .middle,
+  .height {
+    width: rem(15px);
+    height: rem(15px);
+    border-radius: 50%;
+  }
+  .low {
+    background: $green;
+  }
+  .middle {
+    background: $orange;
+  }
+  .height {
+    background: $red;
+  }
+}
+
+// 图表
+.charts {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+// 分页
+.pagination-css {
+  margin-top: rem(15px) !important;
+  text-align: right;
+  .ant-pagination-item-link {
+    border: none !important;
+  }
+}
+
+// comm按钮样式
+.buttons {
+  margin-bottom: rem(10px);
+  button {
+    margin-right: rem(10px);
+  }
+}
+
+.ant-btn.sort-btn {
+  @extend .btn-long-img;
+  &:hover {
+    @extend .btn-long-activi-img;
+  }
+}
+
+.table-title {
+  padding: 0 8px;
+  color: #008dd2;
+  line-height: 2;
+}
+
+.comm-tab {
+  width: 100%;
+  text-align: center;
+  button {
+    margin-right: rem(10px) !important;
+  }
+}
+.tabs-no-checked {
+  border: 1px solid #415771 !important;
+}
+.tabs-checked {
+  color: #1890ff !important;
+}
+
+.tree-btn {
+  padding: 0 rem(20px);
+  color: $blue;
+}
+
+// 右键
+.context-menu.ant-menu-vertical {
+  border-right: 1px solid #2f2d2d;
+}
+.context-menu {
+  padding: rem(10px);
+  width: 100px;
+  border-radius: 4px;
+  background-color: #434854 !important;
+  color: #fff !important;
+  z-index: 9999;
+  > .ant-menu-item {
+    height: 24px !important;
+    line-height: 24px !important;
+  }
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #1890ff !important;
+  color: #fff !important;
+}
+
+// box四角蓝色装饰
+.left-top-icon,
+.right-top-icon,
+.left-bottom-icon,
+.right-bottom-icon {
+  position: absolute;
+  width: rem(7px);
+  height: rem(7px);
+}
+.left-top-icon {
+  left: 0;
+  top: 0;
+}
+.right-top-icon {
+  right: 0;
+  top: 0;
+}
+.left-bottom-icon {
+  left: 0;
+  bottom: 0;
+}
+.right-bottom-icon {
+  right: 0;
+  bottom: 0;
+}
+
+// 自定义徽章样式
+.badge-custom {
+  padding: 3px !important;
+  border-radius: 50%;
+  color: $white !important;
+  font-weight: bold;
+  .ant-badge-count {
+    right: -8px;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-weight: bold;
+  }
+}
+.low-badge {
+  background: $green;
+  .ant-badge-count {
+    color: $green;
+  }
+}
+.middle-badge {
+  background: $orange;
+  .ant-badge-count {
+    color: $orange;
+  }
+}
+.height-badge {
+  background: $red;
+  .ant-badge-count {
+    color: $red;
+  }
+}
+/******************** comm css end ********************/
+
+/******************** 登录页 begin ********************/
+.login-content {
+  height: 100%;
+  padding-top: rem(158px);
+  @extend .bg-img;
+  .login {
+    text-align: center;
+    color: #fff;
+    .logo-img {
+      width: rem(235px);
+      height: rem(50px);
+      margin: auto;
+    }
+    .title,
+    .sec-title {
+      font-size: rem(32px);
+      line-height: rem(32px);
+    }
+    .title {
+      margin-top: rem(96px);
+      margin-bottom: rem(10px);
+    }
+    .tip {
+      height: rem(58px);
+      font-size: rem(16px);
+      line-height: rem(58px);
+      text-align: center;
+      @extend .text-danger;
+    }
+    Form {
+      margin: auto;
+      width: rem(400px);
+      text-align: left;
+      .ant-form-item {
+        margin-bottom: rem(24px);
+      }
+      .ant-form-item:last-child {
+        margin-bottom: rem(0px);
+      }
+      .ant-form-item:nth-last-child(2) {
+        margin-bottom: rem(48px);
+      }
+    }
+    input {
+      height: rem(56px);
+      background: #163960;
+      border-radius: 0;
+      border: none;
+    }
+    input:focus {
+      background: #0b5280;
+    }
+    .code-box {
+      font-size: rem(20px);
+    }
+    .code {
+      width: 100%;
+      height: rem(56px);
+      background: #282c33;
+      cursor: pointer;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .ant-btn {
+      width: 100%;
+      height: rem(56px);
+      @extend .login-img;
+      border-radius: 0;
+    }
+  }
+}
+/******************** 登录页 end ********************/
+
+/******************** index begin ********************/
+/********** 左侧 **********/
+.left-slider {
+  font-size: rem(16px);
+  z-index: 999;
+  overflow-x: hidden;
+  .ant-menu-inline-collapsed {
+    .ant-menu-item,
+    .submenu > .ant-menu-submenu-title {
+      text-align: center;
+      padding: 0;
+    }
+  }
+  .ant-menu-inline-collapsed.menu {
+    padding: 0 rem(10px);
+  }
+  // 左侧头部logo
+  .logo-cont {
+    text-align: center;
+    height: rem(90px);
+    padding: 0 rem(10px);
+    background: #353842;
+    .logo {
+      margin: rem(15px) auto;
+      width: rem(235px);
+      height: rem(50px);
+      display: inline-block;
+      @extend .logo-img;
+    }
+  }
+  // 左侧菜单
+  .menu {
+    padding: 0 rem(20px);
+    background: #434954;
+    height: calc(100% - 0.23438rem);
+    overflow: auto;
+    border: 2px solid #2d3038;
+    > li {
+      margin-top: rem(20px);
+    }
+    .ant-menu-sub {
+      background: none !important;
+      box-shadow: none !important;
+    }
+    .ant-menu-item {
+      &:hover {
+        @extend .menu-hover-img;
+      }
+    }
+    .ant-menu-submenu {
+      > div {
+        &:hover {
+          @extend .menu-hover-img;
+        }
+      }
+    }
+    .ant-menu-item-selected {
+      @extend .menu-hover-img;
+    }
+  }
+  .menu.small-menu {
+    .ant-menu-submenu {
+      > div {
+        &:hover {
+          @extend .menu-hover-small-img;
+        }
+      }
+    }
+    .ant-menu-item-selected {
+      @extend .menu-hover-small-img;
+    }
+  }
+}
+/********** 右侧内容 **********/
+.right-layout {
+  font-size: rem(16px);
+  overflow: hidden;
+  .ant-layout-header {
+    height: rem(90px);
+    padding: 0;
+    background: #353842;
+  }
+  // 头部中
+  .center-header {
+    width: 100%;
+    height: 100%;
+    padding: 0 rem(20px);
+    .trigger {
+      float: left;
+      margin-top: rem(20px);
+      font-size: rem(22px);
+    }
+    .title {
+      float: left;
+      margin: rem(15px);
+      font-size: rem(22px);
+      line-height: rem(30px);
+      color: #fff;
+    }
+    .user-info {
+      float: right;
+      line-height: rem(90px);
+      > div {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .user-img {
+        width: rem(30px);
+        height: rem(30px);
+        margin-right: rem(10px);
+      }
+      .name {
+        font-size: rem(20px);
+      }
+    }
+  }
+  // 头部右
+  .right-header {
+    width: rem(90px);
+    height: rem(90px);
+    line-height: rem(90px);
+    text-align: center;
+    .out-img {
+      display: inline-block;
+      vertical-align: middle;
+      height: rem(30px);
+      width: rem(30px);
+      cursor: pointer;
+    }
+  }
+  // 路由坐标
+  .url-router {
+    position: relative;
+    height: rem(50px);
+    line-height: rem(50px);
+    margin: rem(20px) rem(30px) rem(10px) rem(20px);
+    padding: 0 rem(20px);
+    background: #434954;
+    .title {
+      float: left;
+      font-size: rem(20px);
+      color: #fff;
+    }
+    .router {
+      float: right;
+      font-size: 14px;
+      line-height: rem(50px);
+      i {
+        margin-right: rem(10px);
+      }
+      > span:last-child span {
+        color: #e6e9f2;
+      }
+      .breadcrumb:hover span {
+        color: $primary-5;
+        cursor: pointer;
+      }
+    }
+  }
+  // 主内容区域
+  .right-content {
+    @extend .clearfix;
+    width: 100%;
+    height: calc(100% - 0.23438rem);
+    padding: 0 rem(20px);
+    overflow: auto;
+    div.main {
+      height: calc(100% - 15px);
+    }
+  }
+}
+/******************** index end ********************/
+
+/******************** home begin ********************/
+.home {
+  .card {
+    width: 100%;
+    height: rem(400px);
+    color: #9da5b1;
+    .charts {
+      width: 100%;
+      height: rem(350px);
+    }
+    .no-authority-box {
+      padding: 0;
+      line-height: rem(350px);
+    }
+  }
+  .charts-tip {
+    position: absolute;
+    right: rem(10px);
+    top: rem(30px);
+  }
+  .bar-charts,
+  .table-div {
+    .card {
+      height: auto;
+    }
+    .ant-table-wrapper {
+      margin-top: rem(80px);
+    }
+    .comm-tab {
+      position: absolute;
+      margin-top: rem(20px);
+    }
+  }
+  .bar-charts {
+    .comm-tab {
+      top: rem(60px);
+    }
+    .charts {
+      > div {
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+    }
+  }
+}
+/******************** home end ********************/
+
+/******************** 航班风险列表页 begin ********************/
+.flight-risk-tab {
+  .ant-tabs-tabpane {
+    height: 395px;
+    overflow: auto;
+  }
+  .no-authority-box {
+    padding: rem(40px) 0;
+  }
+}
+/******************** 航班风险列表页 end ********************/
+
+/******************** 航班风险页 begin ********************/
+.flight-risk {
+  .buttons {
+    button {
+      margin-right: 15px;
+    }
+  }
+}
+/******************** 航班风险页 end ********************/
+
+/******************** 航班风险详情页 begin ********************/
+.flight-risk-detail {
+  height: 100%;
+  padding: 20px;
+  font-size: rem(16px);
+  overflow-y: auto;
+  .flight-risk-detail-title {
+    position: relative;
+    margin-bottom: rem(10px);
+    padding: 0 rem(20px);
+    height: rem(50px);
+    line-height: rem(50px);
+    background: #434954;
+    font-size: rem(20px);
+    color: #fff;
+  }
+  .charts-tip {
+    position: absolute;
+    right: rem(10px);
+    top: rem(30px);
+  }
+  .info {
+    @extend .flex;
+    color: $white;
+    .small-card-img {
+      padding: rem(10px) rem(15px);
+      margin-right: rem(20px);
+      white-space: nowrap;
+      display: flex;
+      justify-content: center;
+      align-items: Center;
+      .text {
+        font-size: rem(12px);
+        color: #acb4c0;
+      }
+    }
+  }
+  .airport-button {
+    @extend .flex;
+    align-items: center;
+    button {
+      margin-right: rem(20px);
+    }
+  }
+  // 风险展示
+  .step-title {
+    padding: rem(15px);
+    font-size: rem(24px);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    .step-explain {
+      color: #9e9e9e;
+    }
+  }
+  .step-content {
+    > div:first-child {
+      color: #fff;
+      font-weight: bold;
+    }
+    .num {
+      font-weight: bold;
+    }
+  }
+}
+.flight-risk-detail-tip {
+  @extend .fr;
+  padding: rem(10px);
+  color: #acb4c0;
+  line-height: 2;
+}
+.weather-box {
+  padding: 30px;
+  background-color: #373b45;
+  .title {
+    margin-bottom: rem(20px);
+    color: #a5a7ad;
+    font-size: rem(20px);
+  }
+}
+/******************** 航班风险详情页 end ********************/
+
+/******************** 告警列表 brgin ********************/
+.tab-wrap {
+  @extend .clearfix;
+  margin-bottom: rem(30px);
+  border-bottom: solid 2px rgba(255, 255, 255, 0.65);
+  > div {
+    @extend .fl;
+    padding: 10px 10px;
+    color: rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+  }
+  .active {
+    color: $white;
+    box-shadow: 0 2px 0 0 $white;
+  }
+}
+/******************** 告警列表 end ********************/
+
+/******************** 航班列表 begin ********************/
+.flight-list {
+  .flight-list-title {
+    text-align: center;
+    font-size: rem(20px);
+    line-height: rem(40px);
+    color: #fff;
+  }
+}
+/******************** 航班列表 begin ********************/
+
+/******************** 风险配置 begin ********************/
+.risk-target {
+  height: 100% !important;
+  > div {
+    height: 100%;
+    > div {
+      height: 100%;
+      .content {
+        height: 100%;
+      }
+    }
+  }
+  .search-tree {
+    margin-left: rem(-30px) !important;
+    margin-right: rem(-30px) !important;
+    height: calc(100% - 32px);
+    overflow: auto;
+  }
+  .risk-target-content {
+    margin-left: rem(-30px) !important;
+    margin-right: rem(-30px) !important;
+    padding: 0 rem(30px);
+    height: 100%;
+    overflow: auto;
+    .no-authority-box {
+      padding: rem(20px) 0 rem(40px);
+    }
+  }
+  .risk-target-form {
+    margin-bottom: rem(20px);
+    padding-top: rem(20px);
+    padding-bottom: rem(10px);
+    border-bottom: dashed 1px #16181c;
+    .no-authority-box {
+      padding: rem(20px) 0 rem(40px);
+    }
+  }
+  .risk-target-tit {
+    display: flex;
+    justify-content: space-between;
+    > div {
+      color: #e6e9f2;
+      font-size: rem(20px);
+      line-height: 32px;
+    }
+  }
+}
+/******************** 风险配置 end ********************/
+
+/******************** 风险树 begin ********************/
+.risk-tree-show {
+  .risk-tree-box {
+    height: 1800px;
+  }
+}
+/******************** 风险树 end ********************/
+
+/******************** 日常风险配置 begin ********************/
+.daily-risk-target {
+  .update-user {
+    text-align: right;
+  }
+  .card .content {
+    padding: rem(20px) 0 0 0;
+  }
+  .fixed-height {
+    width: 100%;
+    height: 154px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .fl {
+    // 兼容ie11
+    textarea.ant-input {
+      height: 52px;
+    }
+  }
+}
+.daily-risk-target-other {
+  justify-content: space-around;
+  align-items: center;
+  .box {
+    width: 130px;
+    height: 119px;
+    padding: rem(10px);
+    background: #3b3b4d;
+    border: 1px solid #17171f;
+    border-radius: 4px;
+    overflow-x: auto;
+    overflow-y: auto;
+    div {
+      @include ellipsis(1);
+      cursor: pointer;
+    }
+    div.active {
+      background-color: #008dd2;
+      color: #fff;
+    }
+  }
+}
+.daily-risk-target-other-modal {
+  .fl {
+    width: 50%;
+  }
+  .fr {
+    width: 50%;
+    height: 432px;
+    display: flex;
+    align-items: center;
+  }
+  .search-tree {
+    height: 400px;
+    overflow: auto;
+  }
+}
+/******************** 日常风险配置 end ********************/
+
+/******************** 隶属节点维护 begin ********************/
+.rmItem-fun-point {
+  height: calc(100% - 15px);
+  padding-top: "20px";
+}
+/******************** 隶属节点维护 end ********************/
+
+/******************** 用户管理 begin ********************/
+.user-edit-transfer {
+  text-align: center;
+  .ant-transfer-list {
+    text-align: left;
+  }
+}
+/******************** 用户管理 end ********************/
+
+/******************** 角色管理 begin ********************/
+.role-edit-select {
+  label {
+    margin-right: 0;
+    min-width: 50%;
+  }
+}
+/******************** 角色管理 end ********************/
+
+/******************** 飞行高度组件Chart start ********************/
+
+.sliderStyle {
+  position: absolute;
+  top: -408px;
+  left: 50px;
+}
+
+.sliderStyleLabel {
+  position: absolute;
+  top: 170px;
+  left: 90px;
+  color: #fff;
+}
+
+.flightHeightChartStyle {
+  .content {
+    height: 600px;
+    .ant-slider-with-marks {
+      height: 300px;
+    }
+    .ant-slider-vertical {
+      .ant-slider-handle {
+        background-color: white;
+      }
+      .ant-slider-dot {
+        background-color: white;
+      }
+    }
+  }
+}
+
+.extraTime-bar-charts {
+  margin-bottom: 40px;
+  .extra-time-summary-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    .extraTimeSummary {
+      width: 200px;
+      height: 100px;
+      background-color: #fffdcc;
+      left: 50px;
+      border-style: dashed;
+      border-width: 1px;
+      border-color: rgb(240, 114, 114);
+      text-align: center;
+      padding-top: 20px;
+      p {
+        width: 200px;
+        margin: auto;
+        color: #333333;
+        .otherIol {
+          font-size: large;
+        }
+      }
+    }
+  }
+}
+
+/******************** 飞行高度组件Chart end ********************/

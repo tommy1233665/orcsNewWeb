@@ -1,0 +1,183 @@
+@charset 'utf-8';
+@import "./base.scss";
+
+.bg-cover {
+    background-size: cover !important;
+}
+
+.bg-100 {
+    background-size: 100% 100% !important;
+}
+
+// 背景图
+.bg-img {
+    background: url($imgContextPath+'bg.png') repeat;
+}
+
+// 左侧
+.top-left-img {
+    background: url($imgContextPath+'top-left.png') no-repeat;
+    background-size: 101% 100% !important;
+}
+
+// 左侧
+.split-ver-img {
+    background: url($imgContextPath+'split-ver.png') no-repeat;
+    @extend .bg-cover;
+}
+
+// 左侧
+.split-line-img {
+    background: url($imgContextPath+'split-line.png') no-repeat;
+    @extend .bg-cover;
+}
+
+// 中侧
+.top-center-img {
+    background: url($imgContextPath+'top-center.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+// 右侧
+.top-right-img {
+    background: url($imgContextPath+'top-right.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+//logo
+.logo-img {
+    background: url($imgContextPath+'logo.png') no-repeat;
+    @extend .bg-cover;
+}
+
+//退出
+.out-img {
+    background: url($imgContextPath+'out.png') no-repeat;
+    @extend .bg-cover;
+}
+
+//登录
+.login-img {
+    background: url($imgContextPath+'login.png') no-repeat;
+    @extend .bg-cover;
+}
+
+//用户
+.user-img {
+    background: url($imgContextPath+'user.png') no-repeat;
+    @extend .bg-cover;
+}
+
+
+// 菜单-鼠标经过-点击
+.menu-hover-img {
+    background: url($imgContextPath+'menu-hover.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+.menu-hover-small-img {
+    background: url($imgContextPath+'menu-hover-small.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+// 路由背景
+.url-bg-img {
+    background: url($imgContextPath+'url-bg.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+//卡片背景
+.card-bg-img {
+    background: url($imgContextPath+'card-bg.png') no-repeat;
+    background-size: 100% 100% !important;
+}
+
+//步骤图
+.step-item-img {
+    background-image: url($imgContextPath+'step-item.png');
+    background-position: center;
+    background-repeat: repeat-y;
+}
+
+//步骤图标
+.step-item-icon {
+    background: url($imgContextPath+'step-item-icon.png') no-repeat;
+    @extend .bg-cover;
+}
+
+//小模块背景图
+.small-card-img {
+    background: url($imgContextPath+'small-card.png') no-repeat;
+    background-size: 100% 100% !important;
+}
+
+// 首页图标
+.active-icon {
+    background: url($imgContextPath+'active.png') no-repeat;
+    @extend .bg-cover;
+}
+
+//特殊按钮背景
+.btn-sort-img {
+    background: url($imgContextPath+'btn2.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+//特殊按钮背景激活
+.btn-sort-activi-img {
+    background: url($imgContextPath+'btn1.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+
+//特殊按钮背景
+.btn-long-img {
+    background: url($imgContextPath+'btn4.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+//特殊按钮背景激活
+.btn-long-activi-img {
+    background: url($imgContextPath+'btn3.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+//卡片四角
+.left-top-icon {
+    background: url($imgContextPath+'left-top.png') no-repeat !important;
+    background-size: 100% 100% !important;                  
+}
+.right-top-icon {
+    background: url($imgContextPath+'right-top.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+.left-bottom-icon {
+    background: url($imgContextPath+'left-bottom.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+.right-bottom-icon {
+    background: url($imgContextPath+'right-bottom.png') no-repeat !important;
+    background-size: 100% 100% !important;
+}
+
+.liveness-icon {
+    background: url($imgContextPath+'liveness.png') no-repeat;
+    @extend .bg-cover;
+}
+
+.member-add-icon {
+    background: url($imgContextPath+'member-add.png') no-repeat;
+    @extend .bg-cover;
+}
+
+.money-icon {
+    background: url($imgContextPath+'money.png') no-repeat;
+    @extend .bg-cover;
+}
+
+.arrow-up {
+    background: url($imgContextPath+'arrow-up.png') no-repeat center center;
+}
+.arrow-down {
+    background: url($imgContextPath+'arrow-down.png') no-repeat center center;
+}
