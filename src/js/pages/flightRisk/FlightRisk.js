@@ -9,7 +9,7 @@ import { post } from "common/http";
 import PageModel from 'model/pageModel';
 import RiskValueTree from 'common/custom/riskValueTree';
 import React, { Component } from 'react';
-import { Menu, Icon,Switch } from 'antd';
+import { Menu, Icon, Switch } from 'antd';
 const SubMenu = Menu.SubMenu;
 
 const { confirm } = Modal;
@@ -17,7 +17,7 @@ const { TabPane } = Tabs;
 
 const LIST = "flightRiskShow.list"; // 查询航班风险
 const LISTHISTORY = "flightRiskShow.listHistory"; // 航班历史风险查询
-const COUNTFLIGHTRISKVALUE = "flightRiskShow.countFlightRiskValue"; // 计算航班风险值 
+const COUNTFLIGHTRISKVALUE = "flightRiskShow.countFlightRiskValue"; // 计算航班风险值
 
 // 目前航班风险页面和历史航班风险页面用的是相同的，以后若需不同，直接改下面对应的值就行
 const CURRENTTREE = "flightRiskShow.currentTree"; // 航班风险树信息--航班风险页面
@@ -41,15 +41,15 @@ class FlightRisk extends React.Component {
             table: new PageModel(),
             selectedRowKeys: [],
             selectedRows: [], // table里被选中的行
-            treeParams:{}, // 请求树时使用                         
+            treeParams: {}, // 请求树时使用
             form: {
                 performanceTypeList: [], // 性能机型数据
                 branchInfoList: [], // 公司下拉数据
-                userBelongsToCompany: "", //登录员工属于的公司的三字码  
-     //           riskParamsMapList:[],//风险参数数据             
+                userBelongsToCompany: "", //登录员工属于的公司的三字码
+                //           riskParamsMapList:[],//风险参数数据
             },
-            historyTable: new PageModel({pageSize: 5}),
-            fltNr: "",        
+            historyTable: new PageModel({ pageSize: 5 }),
+            fltNr: "",
             authorityList: isAuthority(authorityListString, props.authority),
             authorityCountFlightRiskValue: isAuthority(COUNTFLIGHTRISKVALUE, props.authority),
             authorityCurrentTree: isAuthority(CURRENTTREE, props.authority),
@@ -66,57 +66,57 @@ class FlightRisk extends React.Component {
         this.form;
         this.modal1;
         this.modal2;
-        this.detailUrl = this.state.isHistory ? "/HistoryFlightRiskDetail/" : "/FlightRiskDetail/"; 
+        this.detailUrl = this.state.isHistory ? "/HistoryFlightRiskDetail/" : "/FlightRiskDetail/";
         this.timer;
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getData();
         this.columns = riskCAirportColumns({
-            detailUrl: this.detailUrl, 
+            detailUrl: this.detailUrl,
             onLook: (data) => {
                 this.setState({
-                    treeParams: {soflSeqNr: data.flightCode},
+                    treeParams: { soflSeqNr: data.flightCode },
                     fltNr: data.fltNr
                 });
                 this.modal1.show();
-                this.getHisTotaleRiskValue({params: {soflSeqNr: data.flightCode}});
+                this.getHisTotaleRiskValue({ params: { soflSeqNr: data.flightCode } });
             }
         });
         this.historyColumns = [
-            { title: "风险计算时间", dataIndex: "analysisTime"},
+            { title: "风险计算时间", dataIndex: "analysisTime" },
             { title: "起飞阶段风险值", dataIndex: "flyingRiskValue" },
             { title: "巡航阶段风险值", dataIndex: "cruiseRiskValue" },
             { title: "着陆阶段风险值", dataIndex: "landRiskValue" },
-            { 
-                title: "风险明细", 
-                key: "action1", 
+            {
+                title: "风险明细",
+                key: "action1",
                 render: (text, record) => {
                     return <a onClick={() => this.onLook2(record)}>查看</a>;
                 }
             },
-            { 
-                title: "风险详情", 
-                key: "action2", 
+            {
+                title: "风险详情",
+                key: "action2",
                 render: (text, record) => {
                     const { isHistory, authorityHistoryDetail, authorityHistoryDetailHistory } = this.state;
-                    if( (isHistory && authorityHistoryDetailHistory) || (!isHistory && authorityHistoryDetail) ){
+                    if ((isHistory && authorityHistoryDetailHistory) || (!isHistory && authorityHistoryDetail)) {
                         return <Link to={`${this.detailUrl}${record.flightCode}/${record.batchNum}`} target="_blank">查看</Link>
-                    }else{
-                        return <a onClick={() => {message.info("没有权限查看")}}>查看</a>
+                    } else {
+                        return <a onClick={() => { message.info("没有权限查看") }}>查看</a>
                     }
                 }
             }
         ];
 
         //获得风险参数列表
-       // this.getAllRiskTabs();
-       
-     //   this.getAllRiskParams();
+        // this.getAllRiskTabs();
+
+        //   this.getAllRiskParams();
         // 是否是历史航班风险
         const { isHistory } = this.state;
-        if( !isHistory ){
-            this.timer = setInterval( () => {
+        if (!isHistory) {
+            this.timer = setInterval(() => {
                 this.refresh();
             }, 30000);
         }
@@ -133,32 +133,32 @@ class FlightRisk extends React.Component {
         });
     }*/
 
-    componentWillUnmount(){
-        if( !this.state.isHistory ){
+    componentWillUnmount() {
+        if (!this.state.isHistory) {
             clearInterval(this.timer);
         }
         this.setState = (state, callback) => {
             return;
         };
     }
-    
-    componentDidUpdate(){
-		document.addEventListener('keydown',this.onkeydown);
+
+    componentDidUpdate() {
+        document.addEventListener('keydown', this.onkeydown);
     }
-    
-    onkeydown = (e)=>{
-		if (e.keyCode === 13) {
-			this.submit()
-		}
-	}
-    onLook2(data){
+
+    onkeydown = (e) => {
+        if (e.keyCode === 13) {
+            this.submit()
+        }
+    }
+    onLook2(data) {
         const { isHistory, authorityHistoryTree, authorityHistoryTreeHistory } = this.state;
-        if( (isHistory && authorityHistoryTreeHistory) || (!isHistory && authorityHistoryTree)){
+        if ((isHistory && authorityHistoryTreeHistory) || (!isHistory && authorityHistoryTree)) {
             this.setState({
-                treeParams: {soflSeqNr: data.flightCode, batchNum: data.batchNum}
+                treeParams: { soflSeqNr: data.flightCode, batchNum: data.batchNum }
             });
             this.modal2.show();
-        }else{
+        } else {
             message.info("没有查看权限");
         }
     }
@@ -166,11 +166,11 @@ class FlightRisk extends React.Component {
     /**
      * 定时任务，定时刷新页面，根据查询条件
      */
-    refresh(){
+    refresh() {
         post({
             url: "airLineRisk/queryRedisKeys",
             success: (data) => {
-                if( data.success == "1" ){
+                if (data.success == "1") {
                     this.getList();
                 }
             }
@@ -179,13 +179,13 @@ class FlightRisk extends React.Component {
 
     /**
      * 查询公司、机型
-     */ 
+     */
     getData() {
         let url = this.state.isHistory ? "airLineRisk/queryHisRiskFlightAll" : "airLineRisk/queryRiskFlightAll";
         post({
             url: url,
             success: data => {
-                this.setState({form: data});
+                this.setState({ form: data });
                 this.getList();
             }
         });
@@ -195,9 +195,9 @@ class FlightRisk extends React.Component {
      * 计算
      * callback:通用按钮的按钮状态恢复
      */
-    calculate(callback){
+    calculate(callback) {
         let selectedRows = this.state.selectedRows;
-        if( selectedRows.length == 0 ) {
+        if (selectedRows.length == 0) {
             Modal.info({ content: "请选择需要计算的航班！!" });
             callback();
             return;
@@ -216,17 +216,17 @@ class FlightRisk extends React.Component {
                 msgFun && typeof msgFun == "function" && msgFun();
             },
             success: data => {
-                if( data.success ){
+                if (data.success) {
                     confirm({
                         title: "计算风险完毕！是否需要刷新页面？",
                         onOk() {
                             This.getList({
-                                params: {filtSoflSeqNrs: selectedRows.map((item) => item.soflSeqNr)}, 
+                                params: { filtSoflSeqNrs: selectedRows.map((item) => item.soflSeqNr) },
                                 pageNum: 1
                             });
                         }
                     });
-                }else{
+                } else {
                     message.error("网络出错，计算风险值失败！");
                 }
             }
@@ -236,16 +236,20 @@ class FlightRisk extends React.Component {
     /**
      * 告警列表
      */
-    warnList(callback){
+    warnList(callback) {
         callback(); // 按钮状态恢复
         const url = "/index/flightRisk/RiskWarnList";
         var currentMenus = getCurrentMenu(this.props, url);
         this.props.updateCurrentMenu({
             currentMenus: currentMenus
         });
-        href(this, url);
+        let params = {
+            name: currentMenus[currentMenus.length - 1].name,
+            key: currentMenus[currentMenus.length - 1].key
+        }
+        href(this, url, params);
     }
-    
+
     /**
      * 勾选选择
      */
@@ -257,22 +261,22 @@ class FlightRisk extends React.Component {
      * 请求list接口
      * 特殊处理查询参数中的全部
      */
-    getList = ( obj = {} ) => {
+    getList = (obj = {}) => {
         var values = this.form ? this.handleSearchParams(this.form.getFieldsValue()) : {};
         obj.params = Object.assign({}, values, obj.params);
         const table = this.state.table;
         table.setPage(obj);
         let params = table.getParmaData();
         // 校验
-        if( !(params.fltNr || ( params.latestDepArpChineseName && params.latestArvArpChineseName ) ) ){
+        if (!(params.fltNr || (params.latestDepArpChineseName && params.latestArvArpChineseName))) {
             const date = moment(params.start, "YYYY-MM-DD");
             const date2 = moment(params.end, "YYYY-MM-DD");
             const diffTime = date2.diff(date, "minute"); //计算相差的分钟数
-           // const nowDate =moment().format("YYYY-MM-DD");
-           // const diffNowTme = date1.diff(nowDate,"days");
-           // const diffNowTme2 = date2.diff(nowDate,"days");
-            if( diffTime >= 2*24*60 ){
-                Modal.info({content: "未指定航班或航线，只能查询1天范围数据！"});
+            // const nowDate =moment().format("YYYY-MM-DD");
+            // const diffNowTme = date1.diff(nowDate,"days");
+            // const diffNowTme2 = date2.diff(nowDate,"days");
+            if (diffTime >= 2 * 24 * 60) {
+                Modal.info({ content: "未指定航班或航线，只能查询1天范围数据！" });
                 return;
             }
             /*if(diffNowTme>0 || diffNowTme2>0){
@@ -281,13 +285,13 @@ class FlightRisk extends React.Component {
             }*/
 
         }
-        
+
         let url = this.state.isHistory ? "airLineRisk/queryHisRiskFlightByParam" : "airLineRisk/queryAirLineRiskByParam";
         post({
             url: url,
             data: params,
             success: (res) => {
-                if( res && res.pages ){
+                if (res && res.pages) {
                     let result = res.pages;
                     table.setPage({ dataList: result.list, total: result.total, pageNum: result.pageNum, pageSize: result.pageSize });
                     this.setState({ table, selectedRowKeys: [], selectedRows: [] });
@@ -299,7 +303,7 @@ class FlightRisk extends React.Component {
     /**
      * 请求历史风险
      */
-    getHisTotaleRiskValue = ( obj = {} ) => {
+    getHisTotaleRiskValue = (obj = {}) => {
         const table = this.state.historyTable;
         table.setPage(obj);
         let params = table.getParmaData();
@@ -314,7 +318,7 @@ class FlightRisk extends React.Component {
             }
         });
     }
-    
+
 
     //接收子组件传过来的数据
     /*recieveRiskTabsData(data){
@@ -326,33 +330,33 @@ class FlightRisk extends React.Component {
      * 处理查询参数（航班日期范围的特殊处理）
      * 处理参数中要处理“全部”这种特殊情况
      */
-    handleSearchParams(values){
+    handleSearchParams(values) {
         const params = handleInParams(values);
-        for(let key in params){
-            if( key == "date" && params[key].length == 2 ){
+        for (let key in params) {
+            if (key == "date" && params[key].length == 2) {
                 params["start"] = moment(params[key][0]).format("YYYY-MM-DD");
                 params["end"] = moment(params[key][1]).format("YYYY-MM-DD");
                 delete params[key];
             }
-            if( key == "latestEqpCds" ){
-                if( !Array.isArray(params[key]) && params[key].value ){
+            if (key == "latestEqpCds") {
+                if (!Array.isArray(params[key]) && params[key].value) {
                     params[key] = params[key].value;
                 }
             }
-            if(key == "riskTabs"){
-                if(params[key] != ""){
-                 //   params[key] = params[key].riskParamsMapList;
-                  params[key] = params[key].value;
+            if (key == "riskTabs") {
+                if (params[key] != "") {
+                    //   params[key] = params[key].riskParamsMapList;
+                    params[key] = params[key].value;
                 }
-                              
-            }       
-            if(key == "riskValue"){
-                if(params[key] != ""){
-                 //   params[key] = params[key].riskParamsMapList;
-                  params[key] = params[key].value;
+
+            }
+            if (key == "riskValue") {
+                if (params[key] != "") {
+                    //   params[key] = params[key].riskParamsMapList;
+                    params[key] = params[key].value;
                 }
-                              
-            }                
+
+            }
         }
         return params;
     }
@@ -364,9 +368,9 @@ class FlightRisk extends React.Component {
         callback && typeof callback == "function" && callback();
         event.preventDefault();
         this.form.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = this.handleSearchParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -383,28 +387,28 @@ class FlightRisk extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
-        const { isHistory,riskParamsMapList } = this.state;
+    getFormOptions() {
+        const { isHistory, riskParamsMapList } = this.state;
         { /*滤掉重庆选项*/ }
-        const branchInfoList = this.state.form.branchInfoList.filter( item => item.branchCd != 'CKG').map((item, index) => {
-            return {key: item.branchCd, text: item.branchCd + item.chnDescShort};
+        const branchInfoList = this.state.form.branchInfoList.filter(item => item.branchCd != 'CKG').map((item, index) => {
+            return { key: item.branchCd, text: item.branchCd + item.chnDescShort };
         });
         const performanceTypeList = this.state.form.performanceTypeList.map((item) => {
             return { label: item.performanceType, value: item.performanceType }
         });
-    //    const riskParamsMapList = this.state.form.riskParamsMapList;
-           
-        var date = isHistory ? moment().subtract(3, 'days') : moment(); // 获取7天前的日期 
-    //    var date2 =isHistory ? moment().subtract(1,'days') : moment();
+        //    const riskParamsMapList = this.state.form.riskParamsMapList;
+
+        var date = isHistory ? moment().subtract(3, 'days') : moment(); // 获取7天前的日期
+        //    var date2 =isHistory ? moment().subtract(1,'days') : moment();
         var comp = isHistory ? this.state.form.userBelongsToCompany : "";
-        var datas = { 
-            date: [date, date], 
-            comp: comp, 
-         //   condition: "conditionBranchCode",
+        var datas = {
+            date: [date, date],
+            comp: comp,
+            //   condition: "conditionBranchCode",
             latestEqpCds: performanceTypeList.map(item => item.value),
             flightStatus: "",
-            riskValue: "",  
-            riskTabs:"",        
+            riskValue: "",
+            riskTabs: "",
             sorder: "update_time"
         };
         return [
@@ -445,9 +449,9 @@ class FlightRisk extends React.Component {
                 span: 4,
                 length: 3,
                 list: [
-                    {key: "flying", text: "起飞阶段"},
-                    {key: "cruise", text: "巡航阶段"},
-                    {key: "landed", text: "着陆阶段"},
+                    { key: "flying", text: "起飞阶段" },
+                    { key: "cruise", text: "巡航阶段" },
+                    { key: "landed", text: "着陆阶段" },
                 ],
                 options: {
                     initialValue: datas.flightStatus
@@ -465,23 +469,23 @@ class FlightRisk extends React.Component {
                     initialValue: datas.comp
                 }
             },
-          /*  {
-                type: "Select",
-                name: "condition",
-                span: 3,
-                list: [
-                    {key: "conditionTailNr", text: "按飞机"},
-                    {key: "conditionBranchCode", text: "按航班"},
-                    {key: "crew", text: "按机组"},
-                ],
-                options: {
-                    initialValue: datas.condition
-                },
-                isHasAllSelect: false,
-                hide: () => {
-                    return this.form && this.form.getFieldValue("comp") == "" ? true : false;
-                }
-            },*/
+            /*  {
+                  type: "Select",
+                  name: "condition",
+                  span: 3,
+                  list: [
+                      {key: "conditionTailNr", text: "按飞机"},
+                      {key: "conditionBranchCode", text: "按航班"},
+                      {key: "crew", text: "按机组"},
+                  ],
+                  options: {
+                      initialValue: datas.condition
+                  },
+                  isHasAllSelect: false,
+                  hide: () => {
+                      return this.form && this.form.getFieldValue("comp") == "" ? true : false;
+                  }
+              },*/
             {
                 type: "Input",
                 label: "到达机场",
@@ -510,10 +514,10 @@ class FlightRisk extends React.Component {
                 span: 4,
                 length: 3,
                 list: [
-                    {key: "update_time", text: "按更新时间"} ,
-                    {key: "latest_dep_dt", text: "按滑出时间"},
-                    {key: "latest_arv_dt", text: "按滑入时间"},
-                    {key: "total_value", text: "按风险值"}
+                    { key: "update_time", text: "按更新时间" },
+                    { key: "latest_dep_dt", text: "按滑出时间" },
+                    { key: "latest_arv_dt", text: "按滑入时间" },
+                    { key: "total_value", text: "按风险值" }
                 ],
                 options: {
                     initialValue: datas.sorder
@@ -523,17 +527,17 @@ class FlightRisk extends React.Component {
                 type: "CheckboxCustom",
                 label: "机型组",
                 name: "latestEqpCds",
-                span: 16,
+                span: 13,
                 list: performanceTypeList,
                 options: { initialValue: datas.latestEqpCds },
             },
-          {
-              //  type: "RiskTabsCustom", 
-                type: "RiskTabsTreeSelect", 
+            {
+                //  type: "RiskTabsCustom",
+                type: "RiskTabsTreeSelect",
                 label: "风险项",
                 name: "riskTabs",
-                span: 4,
-                length: 3,               
+                span: 7,
+                length: 3,
                 list: riskParamsMapList,
                 options: {
                     initialValue: datas.riskTabs
@@ -546,25 +550,25 @@ class FlightRisk extends React.Component {
                 span: 4,
                 length: 3,
                 list: [
-                    {key: "H", text: "高"},
-                    {key: "M", text: "中"},
-                    {key: "L", text: "低"},
+                    { key: "H", text: "高" },
+                    { key: "M", text: "中" },
+                    { key: "L", text: "低" },
                 ],
                 options: {
                     initialValue: datas.riskValue
                 }
             },
-            
+
         ];
     }
 
     render() {
         // 表单参数
         const formOptions = this.getFormOptions();
-        
-        const { isHistory, treeParams, table, historyTable, selectedRowKeys, 
-            authorityList, authorityCountFlightRiskValue, 
-            authorityCurrentTree, authorityCurrentTreeHistory, 
+
+        const { isHistory, treeParams, table, historyTable, selectedRowKeys,
+            authorityList, authorityCountFlightRiskValue,
+            authorityCurrentTree, authorityCurrentTreeHistory,
             authorityHistoryList, authorityHistoryListHistory } = this.state;
         // 航班风险表格参数
         const tableOptions = {
@@ -588,10 +592,10 @@ class FlightRisk extends React.Component {
         // 按钮组
         const btns = authorityList ? [
             { name: "查询", id: authorityList, type: "primary", icon: "search", onClick: this.submit.bind(this) },
-            { name: "重置", id: authorityList, icon: "reload", onClick: this.reset.bind(this)},
+            { name: "重置", id: authorityList, icon: "reload", onClick: this.reset.bind(this) },
         ] : [];
-        if( !isHistory ) {
-            if( authorityCountFlightRiskValue ) btns.push({ name: "计算", icon: "calculator", type: "primary", onClick: this.calculate.bind(this) });
+        if (!isHistory) {
+            if (authorityCountFlightRiskValue) btns.push({ name: "计算", icon: "calculator", type: "primary", onClick: this.calculate.bind(this) });
             btns.push({ name: "告警列表", icon: "unordered-list", onClick: this.warnList.bind(this) });
         }
 
@@ -602,7 +606,7 @@ class FlightRisk extends React.Component {
                 footer: null,
                 width: "60%",
             },
-            onRef: (ref) => {this.modal1 = ref}
+            onRef: (ref) => { this.modal1 = ref }
         };
         const modalOptions2 = {
             options: {
@@ -613,11 +617,11 @@ class FlightRisk extends React.Component {
                     overflow: "auto"
                 }
             },
-            onRef: (ref) => {this.modal2 = ref}
+            onRef: (ref) => { this.modal2 = ref }
         };
         return (
             <CardCommon className="flight-risk">
-                { authorityList && <CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}}></CommonForm>}
+                { authorityList && <CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }}></CommonForm>}
                 <div className="buttons clearfix">
                     <CommonBtns btns={btns} />
                     <div className="fr">
@@ -626,20 +630,20 @@ class FlightRisk extends React.Component {
                     </div>
                 </div>
                 { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...modalOptions1}>
                     <Tabs className="flight-risk-tab" defaultActiveKey="1" size="small">
                         <TabPane tab="当前风险" key="1">
-                            { authorityCurrentTree && !isHistory && <RiskValueTree treeParams={treeParams} isHistory={isHistory} hasAction={isHistory?false:true} />}
-                            { !authorityCurrentTree && !isHistory && <div className="no-authority-box">无权限查看</div> }
-                            { authorityCurrentTreeHistory && isHistory && <RiskValueTree treeParams={treeParams} isHistory={isHistory} hasAction={isHistory?false:true} />}
-                            { !authorityCurrentTreeHistory && isHistory && <div className="no-authority-box">无权限查看</div> }
+                            {authorityCurrentTree && !isHistory && <RiskValueTree treeParams={treeParams} isHistory={isHistory} hasAction={isHistory ? false : true} />}
+                            {!authorityCurrentTree && !isHistory && <div className="no-authority-box">无权限查看</div>}
+                            {authorityCurrentTreeHistory && isHistory && <RiskValueTree treeParams={treeParams} isHistory={isHistory} hasAction={isHistory ? false : true} />}
+                            {!authorityCurrentTreeHistory && isHistory && <div className="no-authority-box">无权限查看</div>}
                         </TabPane>
                         <TabPane tab="历史风险" key="2">
-                            { authorityHistoryList && !isHistory && <CommonTable options={historyTableOptions}></CommonTable> }
-                            { !authorityHistoryList && !isHistory && <div className="no-authority-box">无权限查看</div> }
-                            { authorityHistoryListHistory && isHistory && <CommonTable options={historyTableOptions}></CommonTable> }
-                            { !authorityHistoryListHistory && isHistory && <div className="no-authority-box">无权限查看</div> }
+                            {authorityHistoryList && !isHistory && <CommonTable options={historyTableOptions}></CommonTable>}
+                            {!authorityHistoryList && !isHistory && <div className="no-authority-box">无权限查看</div>}
+                            {authorityHistoryListHistory && isHistory && <CommonTable options={historyTableOptions}></CommonTable>}
+                            {!authorityHistoryListHistory && isHistory && <div className="no-authority-box">无权限查看</div>}
                             <CommonModal {...modalOptions2}>
                                 <RiskValueTree treeParams={treeParams} isHistory={isHistory} />
                             </CommonModal>

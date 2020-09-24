@@ -7,7 +7,7 @@ import {
   updateCurrentMenu,
 } from "reduxs/action";
 import { Layout, Menu, Breadcrumb, Icon, BackTop, message } from "antd";
-import { href } from "common/commonFn";
+import { href, getUrlSearch } from "common/commonFn";
 import { FourBorder } from "common/component";
 import { get, post } from "common/http";
 import CenterRouter from "./CenterRouter";
@@ -20,6 +20,7 @@ class Index extends React.Component {
     super(props);
     this.state = {
       collapsed: false,
+      changeOpenKey: [],
     };
     this.currentMenus = [];
     this.opParentMenu = {};
@@ -40,7 +41,25 @@ class Index extends React.Component {
         });
       },
     });
+    window.addEventListener("hashchange", this.routerEvent);
   }
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.routerEvent);
+  }
+
+  routerEvent = (e) => {
+    let urlParams = e.target.location.hash.replace("#", "");
+    // 去掉#就能获取即将跳转的那个路由的url了
+    if (urlParams === "/index") {
+      this.setState({
+        changeOpenKey: ["1"],
+      });
+    } else {
+      this.setState({
+        changeOpenKey: [getUrlSearch(urlParams, 1).key.slice(0, 1)],
+      });
+    }
+  };
 
   // 根据权限和总菜单处理菜单数据
   getMenu(data) {
@@ -110,22 +129,37 @@ class Index extends React.Component {
   //只打开一个1级菜单
   onOpenChange = (openKeys) => {
     //清空数据
-    this.opParentMenu = {};
-    this.currentMenus = [];
-    //获取当前点击的key
-    const menu = this.props.currentMenu;
-    const latestOpenKey = openKeys.find(
-      (key) => menu.openKeys.includes(key) == false
-    );
-    let keys;
-    if (latestOpenKey) {
-      this.getAllParentNodes(this.props.permission, latestOpenKey);
-      keys = this.currentMenus.map((item) => item.key).reverse();
+    // this.opParentMenu = {};
+    // this.currentMenus = [];
+    // //获取当前点击的key
+    // const menu = this.props.currentMenu;
+    // const latestOpenKey = openKeys.find(
+    //   (key) => menu.openKeys.includes(key) == false
+    // );
+    // let keys;
+    // if (latestOpenKey) {
+    //   console.log(latestOpenKey, 'latestOpenKey')
+    //   this.getAllParentNodes(this.props.permission, latestOpenKey);
+    //   keys = this.currentMenus.map((item) => item.key).reverse();
+    // } else {
+    //   console.log(openKeys, 'openKeys')
+    //   keys = openKeys;
+    // }
+    // // 提取key数组
+    // this.props.updateCurrentMenu({ openKeys: keys });
+
+    // fixBug 返回时更新菜单展开状态
+    const latestOpenKey = openKeys.find(key => this.state.changeOpenKey.indexOf(key) === -1);
+    const res = this.props.permission.map(item => item.key)
+    if (res.indexOf(latestOpenKey) === -1) {
+      this.setState({
+        changeOpenKey: []
+      });
     } else {
-      keys = openKeys;
+      this.setState({
+        changeOpenKey: latestOpenKey ? [latestOpenKey] : [],
+      });
     }
-    // 提取key数组
-    this.props.updateCurrentMenu({ openKeys: keys });
   };
 
   //点击菜单
@@ -145,9 +179,12 @@ class Index extends React.Component {
         openKeys: this.props.currentMenu.openKeys,
       });
     }
-    href(this, menu.url);
+    let params = {
+      name: menu.name,
+      key: menu.key,
+    };
+    href(this, menu.url, params);
   };
-
   //递归获取菜单结构
   getMenuDom = (permission) => {
     if (!permission || permission.length == 0) {
@@ -199,7 +236,11 @@ class Index extends React.Component {
         // 特殊处理
         this.props.history.goBack();
       } else {
-        href(this, menu.url);
+        let params = {
+          name: currentMenus[currentMenus.length - 2].name,
+          key: currentMenus[currentMenus.length - 2].key,
+        }
+        href(this, menu.url, params);
       }
     }
   }
@@ -223,9 +264,9 @@ class Index extends React.Component {
           </div>
           <Menu
             theme="dark"
-            openKeys={currentMenu.openKeys}
-            defaultSelectedKeys={currentId}
-            selectedKeys={currentId}
+            // openKeys={getOpenKeys(currentMenu.openKeys, this.props.location)}
+            selectedKeys={[getUrlSearch(this.props.location).key]}
+            openKeys={this.state.changeOpenKey}
             onOpenChange={this.onOpenChange}
             mode="inline"
             className={"menu " + (collapsed ? "small-menu" : "")}
@@ -260,11 +301,15 @@ class Index extends React.Component {
             {/* 路标 */}
             <div className="url-router">
               <FourBorder></FourBorder>
-              <div className="title">
+              {/* <div className="title">
                 {currentMenus.length !== 0 &&
                   currentMenus[currentMenus.length - 1].name}
+              </div> */}
+              <div className="title">
+                {this.props.location.pathname === "/index"
+                  ? "主页"
+                  : decodeURIComponent(getUrlSearch(this.props.location).name)}
               </div>
-
               <Breadcrumb className="router">
                 {currentMenus
                   .filter((item, index) => index < currentMenus.length - 1)
@@ -285,7 +330,11 @@ class Index extends React.Component {
                   .map((item, index) => {
                     return (
                       <Breadcrumb.Item key={item.key}>
-                        {item.name}
+                        {this.props.location.pathname === "/index"
+                          ? "主页"
+                          : decodeURIComponent(
+                            getUrlSearch(this.props.location).name
+                          )}
                       </Breadcrumb.Item>
                     );
                   })}

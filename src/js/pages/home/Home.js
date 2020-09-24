@@ -29,43 +29,43 @@ class Home extends React.Component {
             { name: "广州", id: GZTOP10, checked: true, url: "flight/queryHightFlitCanTop10New" },
             { name: "全公司", id: ALLTOP10, checked: false, url: "flight/queryHightFlitTop10New" },
         ].filter(item => isAuthority(item.id, props.authority));
-        if( this.tabsTable.length == 1 ) this.tabsTable[0].checked = true;
-        
+        if (this.tabsTable.length == 1) this.tabsTable[0].checked = true;
+
         this.columns;
         this.barChart;
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.columns = riskCAirportColumns({
             judge: this.judge
         });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    judge(record){
+    judge(record) {
         post({
             url: "flight/querySysRoleBranch",
             success: data => {
                 var branchList = data.branchList;
                 var flag = false;
-                if( branchList.length > 0){
-                    for(var i = 0; i < branchList.length; i++){
-                        if( branchList[i] == record.chnDescShort ){
+                if (branchList.length > 0) {
+                    for (var i = 0; i < branchList.length; i++) {
+                        if (branchList[i] == record.chnDescShort) {
                             flag = true;
                             break;
                         }
                     }
                 }
-                if( flag ){
+                if (flag) {
                     var detailUrl = "FlightRiskDetail/";
                     var url = `${window.w_url}${detailUrl}${record.soflSeqNr}`;
                     window.open(url);
-                }else{
+                } else {
                     message.info("无权限查看");
                 }
             }
@@ -87,10 +87,10 @@ class Home extends React.Component {
 
     onTabTable = (tab) => {
         post({
-            url : tab.url,
+            url: tab.url,
             success: data => {
                 this.setState({
-                    tableList: data.map( item => {
+                    tableList: data.map(item => {
                         item.latestDepArpChineseName = item.latestDepArpCd;
                         item.latestArvArpChineseName = item.latestArvArpCd;
                         return item;
@@ -103,10 +103,10 @@ class Home extends React.Component {
 
     render() {
         const { tableList, loading } = this.state;
-        const { authority } = this.props; 
+        const { authority } = this.props;
         // 列表表格参数
         const tableOptions = {
-            table: {dataList: tableList, loading: loading},
+            table: { dataList: tableList, loading: loading },
             columns: this.columns,
             notCheck: true,
             needPage: false
@@ -117,12 +117,12 @@ class Home extends React.Component {
                     <Col span={14}>
                         <CardCommon title="当日高、中、低风险航班比例（全公司）">
                             <ChartsTip></ChartsTip>
-                            <PieCharts parentThis={this} authority={authority}/>
+                            <PieCharts parentThis={this} authority={authority} />
                         </CardCommon>
                     </Col>
                     <Col span={10}>
                         <CardCommon title="当日各公司高、中风险航班数">
-                            <MapCharts parentThis={this} authority={authority}/>
+                            <MapCharts parentThis={this} authority={authority} />
                         </CardCommon>
                     </Col>
                 </Row>
@@ -140,8 +140,8 @@ class Home extends React.Component {
                         <CardCommon title="当日高风险航班TOP10">
                             <CommonTabs tabs={this.tabsTable} onClick={this.onTabTable} />
                             <ChartsTip height="7.1-10.0" middle="4.1-7.0" low="1.0-4.0"></ChartsTip>
-                            { this.tabsTable.length > 0 && <CommonTable options={tableOptions}></CommonTable> }
-                            { this.tabsTable.length == 0 && <div className="no-authority-box">无权限查看</div> }
+                            {this.tabsTable.length > 0 && <CommonTable options={tableOptions}></CommonTable>}
+                            {this.tabsTable.length == 0 && <div className="no-authority-box">无权限查看</div>}
                         </CardCommon>
                     </Col>
                 </Row>
@@ -205,19 +205,19 @@ class PieCharts extends React.Component {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getLevelOfRisk(1, "起飞阶段");
         this.getLevelOfRisk(2, "巡航阶段");
         this.getLevelOfRisk(3, "着陆阶段");
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    handleData(pieOptions, data, name){
+    handleData(pieOptions, data, name) {
         pieOptions.series[0].data[0].value = data.hight;
         pieOptions.series[0].data[1].value = data.medium;
         pieOptions.series[0].data[2].value = data.low;
@@ -226,50 +226,50 @@ class PieCharts extends React.Component {
         return pieOptions;
     }
 
-    getLevelOfRisk(num, name){
+    getLevelOfRisk(num, name) {
         let This = this;
         post({
             url: "flight/querylevelOfRisk",
             data: { status: num.toString() },
             success: (data) => {
-                switch(num){
+                switch (num) {
                     case 1:
                         let { pieOptions1 } = this.state;
                         pieOptions1 = This.handleData(pieOptions1, data, name);
-                        This.setState({pieOptions1: pieOptions1});
+                        This.setState({ pieOptions1: pieOptions1 });
                         break;
                     case 2:
                         let { pieOptions2 } = this.state;
                         pieOptions2 = This.handleData(pieOptions2, data, name);
-                        This.setState({pieOptions2: pieOptions2});
+                        This.setState({ pieOptions2: pieOptions2 });
                         break;
                     case 3:
                         let { pieOptions3 } = this.state;
                         pieOptions3 = This.handleData(pieOptions3, data, name);
-                        This.setState({pieOptions3: pieOptions3});
+                        This.setState({ pieOptions3: pieOptions3 });
                         break;
                 }
-                
+
             }
         })
     }
 
-    onClick(params){
+    onClick(params) {
         var type = "pie";
         var riskValue = params.name;
         var flightStatus = params.seriesName;
-        if( riskValue == "高风险" ){
+        if (riskValue == "高风险") {
             riskValue = "H";
-        }else if( riskValue == "中风险" ){
+        } else if (riskValue == "中风险") {
             riskValue = "M";
-        }else if( riskValue == "低风险" ){
+        } else if (riskValue == "低风险") {
             riskValue = "L";
         }
-        if( flightStatus == "起飞阶段" ){
+        if (flightStatus == "起飞阶段") {
             flightStatus = "flying";
-        }else if( flightStatus == "巡航阶段" ){
+        } else if (flightStatus == "巡航阶段") {
             flightStatus = "cruise";
-        }else if( flightStatus == "着陆阶段" ){
+        } else if (flightStatus == "着陆阶段") {
             flightStatus = "landed";
         }
         var url = `/index/flightRisk/FlightList`;
@@ -277,8 +277,12 @@ class PieCharts extends React.Component {
         this.props.parentThis.props.updateCurrentMenu({
             currentMenus: currentMenus
         });
-        setSession("flightList", JSON.stringify({riskValue, flightStatus, type}));
-        href(this.props.parentThis, url);
+        setSession("flightList", JSON.stringify({ riskValue, flightStatus, type }));
+        let urlParams = {
+            name: currentMenus[currentMenus.length - 1].name,
+            key: currentMenus[currentMenus.length - 1].key
+        }
+        href(this.props.parentThis, url, urlParams);
     }
 
     render() {
@@ -287,15 +291,15 @@ class PieCharts extends React.Component {
             <Row gutter={8}>
                 <Col span={8}>
                     {authorityShow && <Charts id="pie1" options={this.state.pieOptions1} onClick={params => this.onClick(params)} />}
-                    { !authorityShow && <div className="no-authority-box">无权限查看</div> }
+                    {!authorityShow && <div className="no-authority-box">无权限查看</div>}
                 </Col>
                 <Col span={8}>
                     {authorityShow && <Charts id="pie2" options={this.state.pieOptions2} onClick={params => this.onClick(params)} />}
-                    { !authorityShow && <div className="no-authority-box">无权限查看</div> }
+                    {!authorityShow && <div className="no-authority-box">无权限查看</div>}
                 </Col>
                 <Col span={8}>
                     {authorityShow && <Charts id="pie3" options={this.state.pieOptions3} onClick={params => this.onClick(params)} />}
-                    { !authorityShow && <div className="no-authority-box">无权限查看</div> }
+                    {!authorityShow && <div className="no-authority-box">无权限查看</div>}
                 </Col>
             </Row>
         )
@@ -361,17 +365,17 @@ class MapCharts extends React.Component {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getHightRickNumAll();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getHightRickNumAll(){
+    getHightRickNumAll() {
         const This = this;
         post({
             url: "flight/queryhightRickNumAll",
@@ -387,25 +391,29 @@ class MapCharts extends React.Component {
     }
 
     onClick(params) {
-        if(params.componentType == "series"){
+        if (params.componentType == "series") {
             var type = "map";
             var chnDescShort = params.name;
             var flag = false;
             this.state.data.forEach(item => {
-                if( item.branchList && item.branchList == chnDescShort ){
+                if (item.branchList && item.branchList == chnDescShort) {
                     flag = true;
                 }
             });
-            if( flag ){
+            if (flag) {
                 var url = `/index/flightRisk/FlightList`;
                 var currentMenus = getCurrentMenu(this.props.parentThis.props, url);
                 this.props.parentThis.props.updateCurrentMenu({
                     currentMenus: currentMenus
                 });
-                setSession("flightList", JSON.stringify({type, chnDescShort}));
-                href(this.props.parentThis, url);
-            }else{
-            	message.error("无权限查看");
+                setSession("flightList", JSON.stringify({ type, chnDescShort }));
+                let urlParams = {
+                    name: currentMenus[currentMenus.length - 1].name,
+                    key: currentMenus[currentMenus.length - 1].key
+                }
+                href(this.props.parentThis, url, urlParams);
+            } else {
+                message.error("无权限查看");
             }
         }
     }
@@ -414,8 +422,8 @@ class MapCharts extends React.Component {
         const { authorityShow } = this.state;
         return (
             <React.Fragment>
-                {authorityShow && <Charts id="map1" options={this.state.mapOptions} onClick={(params) => this.onClick(params)} /> }
-                { !authorityShow && <div className="no-authority-box">无权限查看</div> }
+                {authorityShow && <Charts id="map1" options={this.state.mapOptions} onClick={(params) => this.onClick(params)} />}
+                { !authorityShow && <div className="no-authority-box">无权限查看</div>}
             </React.Fragment>
         )
     }
@@ -432,7 +440,7 @@ class BarCharts extends React.Component {
                 textStyle: { color: "#fff", fontSize: "16" }
             },
             offset: 0,
-            grid:{
+            grid: {
                 left: 30,
                 right: 0,
             },
@@ -552,9 +560,9 @@ class BarCharts extends React.Component {
         };
         this.state = {
             authorityShow: isAuthority(BAR, props.authority),
-            params1: {condition: "", flightStatus: ""},
-            params2: {condition: "", flightStatus: ""},
-            params3: {condition: "", flightStatus: ""},
+            params1: { condition: "", flightStatus: "" },
+            params2: { condition: "", flightStatus: "" },
+            params3: { condition: "", flightStatus: "" },
             branchList1: [],
             branchList2: [],
             branchList3: [],
@@ -564,18 +572,18 @@ class BarCharts extends React.Component {
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         // 调用父组件方法把当前实例传给父组件
         this.props.onRef(this);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    handleData(barOptions, data, name){
+    handleData(barOptions, data, name) {
         barOptions.series[0].data = data.lowRisk;
         barOptions.series[1].data = data.mediumRisk;
         barOptions.series[2].data = data.hightRick;
@@ -584,14 +592,14 @@ class BarCharts extends React.Component {
         return barOptions;
     }
 
-    getAllHangBili(num, name, dimension){
+    getAllHangBili(num, name, dimension) {
         let This = this;
         post({
             url: "flight/queryAllHangBili",
-            data: {dimension: dimension, status: num.toString()},
+            data: { dimension: dimension, status: num.toString() },
             timeout: 120,
             success: data => {
-                switch( num ){
+                switch (num) {
                     case 1:
                         let { barOptions1 } = this.state;
                         barOptions1 = This.handleData(barOptions1, data, name);
@@ -618,56 +626,60 @@ class BarCharts extends React.Component {
                             params3: { condition: dimension, flightStatus: name },
                             branchList3: data.branchList
                         });
-                        break;     
+                        break;
                 }
             }
         });
     }
 
-    goto(branchList, riskValue, flightStatus, type, condition, chnDescShort){
-        if( branchList.indexOf(chnDescShort) > -1 ){
+    goto(branchList, riskValue, flightStatus, type, condition, chnDescShort) {
+        if (branchList.indexOf(chnDescShort) > -1) {
             var url = `/index/flightRisk/FlightList`;
             var currentMenus = getCurrentMenu(this.props.parentThis.props, url);
             this.props.parentThis.props.updateCurrentMenu({
                 currentMenus: currentMenus
             });
-            setSession("flightList", JSON.stringify({riskValue, flightStatus, type, condition, chnDescShort}));
-            href(this.props.parentThis, url);
-        }else{
+            setSession("flightList", JSON.stringify({ riskValue, flightStatus, type, condition, chnDescShort }));
+            let urlParams = {
+                name: currentMenus[currentMenus.length - 1].name,
+                key: currentMenus[currentMenus.length - 1].key
+            }
+            href(this.props.parentThis, url, urlParams);
+        } else {
             message.error("无权限查看");
         }
     }
 
-    onClick(params, obj){
+    onClick(params, obj) {
         var type = "bar";
         var chnDescShort = params.name;
         var riskValue = params.seriesName;
         var condition = obj.condition;
         var flightStatus = obj.flightStatus;
-        if( riskValue == "高风险" ){
+        if (riskValue == "高风险") {
             riskValue = "H";
-        }else if( riskValue == "中风险" ){
+        } else if (riskValue == "中风险") {
             riskValue = "M";
-        }else if( riskValue == "低风险" ){
+        } else if (riskValue == "低风险") {
             riskValue = "L";
         }
-        if( condition == "flit" ){
+        if (condition == "flit") {
             condition = "conditionBranchCode";
-        }else if( condition == "acft" ){
+        } else if (condition == "acft") {
             condition = "conditionTailNr";
-        }else if( condition == "crew" ){
+        } else if (condition == "crew") {
             condition = "crew";
-        }else if( condition == "arpt" ){
+        } else if (condition == "arpt") {
             condition = "arpt";
         }
         var branchList = [];
-        if( flightStatus == "起飞" ){
+        if (flightStatus == "起飞") {
             flightStatus = "flying";
             branchList = this.state.branchList1;
-        }else if( flightStatus == "航巡" ){
+        } else if (flightStatus == "航巡") {
             flightStatus = "cruise";
             branchList = this.state.branchList2;
-        }else if( flightStatus == "着陆" ){
+        } else if (flightStatus == "着陆") {
             flightStatus = "landed";
             branchList = this.state.branchList3;
         }
@@ -678,12 +690,12 @@ class BarCharts extends React.Component {
         const { authorityShow } = this.state;
         return (
             <React.Fragment>
-                { authorityShow && <Charts id="bar1" className="mt70" options={this.state.barOptions1} onClick={params => this.onClick(params, this.state.params1)} /> }
-                { !authorityShow && <div className="no-authority-box mt70">无权限查看</div> }
-                { authorityShow && <Charts id="bar2" options={this.state.barOptions2} onClick={params => this.onClick(params, this.state.params2)} /> }
-                { !authorityShow && <div className="no-authority-box">无权限查看</div> }
-                { authorityShow && <Charts id="bar3" options={this.state.barOptions3} onClick={params => this.onClick(params, this.state.params3)} /> }
-                { !authorityShow && <div className="no-authority-box">无权限查看</div> }
+                { authorityShow && <Charts id="bar1" className="mt70" options={this.state.barOptions1} onClick={params => this.onClick(params, this.state.params1)} />}
+                { !authorityShow && <div className="no-authority-box mt70">无权限查看</div>}
+                { authorityShow && <Charts id="bar2" options={this.state.barOptions2} onClick={params => this.onClick(params, this.state.params2)} />}
+                { !authorityShow && <div className="no-authority-box">无权限查看</div>}
+                { authorityShow && <Charts id="bar3" options={this.state.barOptions3} onClick={params => this.onClick(params, this.state.params3)} />}
+                { !authorityShow && <div className="no-authority-box">无权限查看</div>}
             </React.Fragment>
         )
     }

@@ -1,19 +1,23 @@
 import "babel-polyfill";
+import "css/theme.scss";
+// 添加404错误页
+import "ant-design-pro/dist/ant-design-pro.css";
+import Exception from "ant-design-pro/lib/Exception";
 import { Provider } from "react-redux";
 import { HashRouter, Switch, Route } from "react-router-dom";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { ConfigProvider } from "antd";
 import zh_CN from "antd/es/locale/zh_CN";
-import "css/theme.scss";
 import { store, persistor } from "reduxs/store";
 import { PageContainer } from "common/component";
+// 入口页面
 import Index from "./pages/Index";
+// 登录
 import Login from "./pages/Login";
 import FlightRiskDetail from "./pages/FlightRiskDetail";
+// 计划油量与实际耗油图
 import QarOilAnalysis from "./pages/QarOilAnalysis";
 import NewFlightRiskDetail from "./pages/NewFlightRiskDetail";
-import "ant-design-pro/dist/ant-design-pro.css";
-import Exception from "ant-design-pro/lib/Exception";
 
 /**
  * 生产环境：
@@ -35,8 +39,10 @@ if (PRODUCTION) {
   window.w_url = "/orcs-web/#/";
 } else if (DEVELEPMENT) {
   // 开发环境
-  window.g_url = "http://10.95.18.218:8080/orcs-web/";
-  window.w_url = "/#/";
+  window.g_url = "https://orcs.csair.com/";
+  window.w_url = "#/";
+  // window.g_url = "http://10.95.18.218:8080/orcs-web/";
+  // window.w_url = "/#/";
   // window.g_url = "http://10.79.8.168/";
   // window.w_url = "/orcs-web/#/";
 }
@@ -88,4 +94,5 @@ class App extends React.Component {
     );
   }
 }
+
 ReactDOM.render(<App />, document.getElementById("index"));

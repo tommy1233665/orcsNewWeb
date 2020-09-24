@@ -17,12 +17,12 @@ class FlightRiskDetail extends React.Component {
     constructor(props) {
         super(props);
         var btns = [
-            {name: "QAR监控事件", id: QAR, className: "sort-btn", options: commonBtnOpt.envitOpt, key: "depArpCd", event: this.onEvent },
-            {name: "QAR监控事件", id: QAR, className: "sort-btn", options: commonBtnOpt.envitOpt, key: "latestArvArpCd", event: this.onEvent },
-            {name: "重要数据通告", id: NOTICE, className: "sort-btn", options: commonBtnOpt.envitOpt, event: this.onEvent },         
-            {name: "QAR航线视图入口", id: QARROUTE, className: "sort-btn", options: commonBtnOpt.envitOpt, key:"qarRoute",event: this.onEvent},                 
+            { name: "QAR监控事件", id: QAR, className: "sort-btn", options: commonBtnOpt.envitOpt, key: "depArpCd", event: this.onEvent },
+            { name: "QAR监控事件", id: QAR, className: "sort-btn", options: commonBtnOpt.envitOpt, key: "latestArvArpCd", event: this.onEvent },
+            { name: "重要数据通告", id: NOTICE, className: "sort-btn", options: commonBtnOpt.envitOpt, event: this.onEvent },
+            { name: "QAR航线视图入口", id: QARROUTE, className: "sort-btn", options: commonBtnOpt.envitOpt, key: "qarRoute", event: this.onEvent },
         ];
-        
+
         this.state = {
             table: new PageModel(),
             isHistory: props.match.path.indexOf("History") == -1 ? false : true,
@@ -46,29 +46,29 @@ class FlightRiskDetail extends React.Component {
             riskValue: {}
         };
         this.drawer;
-        this.detailUrl = "/#/QarOilAnalysis/";    
-        this.newResultUrl = "/NewFlightRiskDetail/" 
+        this.detailUrl = "/#/QarOilAnalysis/";
+        this.newResultUrl = "/NewFlightRiskDetail/"
     }
 
     componentDidMount() {
 
         let url;
-        if( this.state.isHistory ){
+        if (this.state.isHistory) {
             url = this.state.batchNum ? "relieveMeasure/queryAllFlightHisInformation" : "relieveMeasure/queryAllFlightInformationForHis";
-        }else{
+        } else {
             url = this.state.batchNum ? "relieveMeasure/queryHisAllFlightInformations" : "relieveMeasure/queryAllFlightInformation";
         }
         let params = { flightCode: this.state.flightCode };
-        if( this.state.batchNum )  params.batchNum = this.state.batchNum;
+        if (this.state.batchNum) params.batchNum = this.state.batchNum;
         post({
             url: url,
             data: params,
             success: (data) => {
                 let { btns } = this.state;
                 btns.forEach(item => {
-                    if( item.key == "depArpCd" ){
+                    if (item.key == "depArpCd") {
                         item.name = data.flitInfo.depArpCdChineseName + "QAR监控事件";
-                    }else if(item.key == "latestArvArpCd"){
+                    } else if (item.key == "latestArvArpCd") {
                         item.name = data.flitInfo.latestArvArpCdChineseName + "QAR监控事件";
                     }
                 });
@@ -82,25 +82,25 @@ class FlightRiskDetail extends React.Component {
                     cruiseFlitRiskDetailList: data.cruiseFlitRiskDetailList,
                     landFlitRiskDetailList: data.landFlitRiskDetailList,
                     flyAssoRiskNum: data.flyAssoRiskNum,
-                    cruiseAssoRiskNum: data.cruiseAssoRiskNum, 
-                    landAssoRiskNum: data.landAssoRiskNum, 
+                    cruiseAssoRiskNum: data.cruiseAssoRiskNum,
+                    landAssoRiskNum: data.landAssoRiskNum,
                     riskValue: data.riskValue,
                     flyRmArptRiskList: data.flyRmArptRiskList,
                     landRmArptRiskList: data.landRmArptRiskList,
                     steps: [data.flyAssoRiskList.length + data.flyFlitRiskDetailList.length, data.cruiseAssoRiskList.length + data.cruiseFlitRiskDetailList.length, data.landAssoRiskList.length + data.landFlitRiskDetailList.length],
                 });
             }
-        });          
+        });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getArpQar(obj = {}, btn){
-        obj.params = Object.assign({}, {queryArpQar: btn ? this.state.flitInfo[btn.key] : this.state.table.getParmaData().queryArpQar}, obj.params);
+    getArpQar(obj = {}, btn) {
+        obj.params = Object.assign({}, { queryArpQar: btn ? this.state.flitInfo[btn.key] : this.state.table.getParmaData().queryArpQar }, obj.params);
         const table = this.state.table;
         table.setPage(obj);
         let params = table.getParmaData();
@@ -108,15 +108,15 @@ class FlightRiskDetail extends React.Component {
             url: "relieveMeasure/queryArpQar",
             data: params,
             success: data => {
-                if( btn ) this.setState({ currentBtn: btn });
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( obj.pageNum - 1 ) * obj.pageSize + i + 1;
+                if (btn) this.setState({ currentBtn: btn });
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (obj.pageNum - 1) * obj.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
-                    this.setState({ 
-                        table 
+                    this.setState({
+                        table
                     });
                     this.drawer.show();
                 }
@@ -124,7 +124,7 @@ class FlightRiskDetail extends React.Component {
         });
     }
 
-    /*getQarOilInfo(obj = {},btn){ 
+    /*getQarOilInfo(obj = {},btn){
         obj.params = Object.assign({}, {queryFltOilContrast: btn ? this.state.flitInfo[btn.key] : this.state.table.getParmaData().queryFltOilContrast}, obj.params);
         const table = this.state.table;
         table.setPage(obj);
@@ -140,8 +140,8 @@ class FlightRiskDetail extends React.Component {
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
-                    this.setState({ 
-                        table 
+                    this.setState({
+                        table
                     });
                     this.drawer.show();
                 }
@@ -153,17 +153,17 @@ class FlightRiskDetail extends React.Component {
      * QAR监控事件
      */
     onEvent = (btn) => {
-        if( btn.key ){ // QAR监控事件
-            if(btn.key == "qarRoute"){
-            
-              const w=window.open('about:blank');
-              w.location.href=this.detailUrl+this.state.flightCode;
-              
-            }else{
+        if (btn.key) { // QAR监控事件
+            if (btn.key == "qarRoute") {
+
+                const w = window.open('about:blank');
+                w.location.href = this.detailUrl + this.state.flightCode;
+
+            } else {
                 this.getArpQar({}, btn);
-            }     
-                        
-        }else{ // 重要数据通告
+            }
+
+        } else { // 重要数据通告
             const msgFun = message.loading('正在获取重要数据通告，耐心等候', 0);
             post({
                 url: "relieveMeasure/queryArpImportantNotams",
@@ -175,7 +175,7 @@ class FlightRiskDetail extends React.Component {
                 success: (data) => {
                     msgFun && typeof msgFun == "function" && msgFun();
                     var arr = [];
-                    for(let key in data.notamMap){
+                    for (let key in data.notamMap) {
                         arr.push({ type: key, content: data.notamMap[key] });
                     }
                     this.setState({
@@ -206,26 +206,26 @@ class FlightRiskDetail extends React.Component {
             { title: "事件数", dataIndex: "count", width: 70 },
         ];
         const columns2 = [
-            { title: "通告类型", dataIndex: "type" , width: 130 },
-            { title: "通告内容", dataIndex: "content", render: (text) => <div dangerouslySetInnerHTML={{ __html: text }} />},
+            { title: "通告类型", dataIndex: "type", width: 130 },
+            { title: "通告内容", dataIndex: "content", render: (text) => <div dangerouslySetInnerHTML={{ __html: text }} /> },
         ];
 
         // 列表表格参数
-        let tableOptions = {  
+        let tableOptions = {
             notCheck: true,
             bordered: false,
             scroll: { y: 594 },
             columns: columns1,
             table: table,
-            onChange: this.getArpQar.bind(this),                                                                        
+            onChange: this.getArpQar.bind(this),
         };
-        let tableOptions2 = {  
+        let tableOptions2 = {
             notCheck: true,
             bordered: false,
             scroll: { y: 594 },
             columns: columns2,
-            table: {dataList: dataSource2, loading: false},
-            needPage: false                                                                        
+            table: { dataList: dataSource2, loading: false },
+            needPage: false
         };
         const columns3 = [
             { title: "编号", dataIndex: "itemNum", width: 100 },
@@ -234,27 +234,27 @@ class FlightRiskDetail extends React.Component {
             { title: "风险值", dataIndex: "riskValue", width: 100 },
             { title: "风险详细描述", dataIndex: "riskDetail", width: 250, className: "text-left", isTooltip: true }
         ];
-        let tableOptions3 = {  
+        let tableOptions3 = {
             notCheck: true,
             bordered: false,
             scroll: { x: 1000, y: 350 },
             columns: columns3,
-            table: {dataList: flyRmArptRiskList, loading: false},
-            needPage: false                                                                    
+            table: { dataList: flyRmArptRiskList, loading: false },
+            needPage: false
         };
-        let tableOptions4 = {  
+        let tableOptions4 = {
             notCheck: true,
             bordered: false,
             scroll: { x: 1000, y: 350 },
             columns: columns3,
-            table: {dataList: landRmArptRiskList, loading: false},
-            needPage: false                                                                         
+            table: { dataList: landRmArptRiskList, loading: false },
+            needPage: false
         };
         const drawerOptions = {
             options: {
                 title: currentBtn.name,
             },
-            onRef: (ref) => {this.drawer = ref}
+            onRef: (ref) => { this.drawer = ref }
         }
         return (
             <div className="flight-risk-detail">
@@ -263,14 +263,14 @@ class FlightRiskDetail extends React.Component {
                     <div>{flitInfo.fltNr}</div>
                 </div>
                 <CardCommon title="航班信息">
-                    <div className="info">   
+                    <div className="info">
                         {
                             list.map((item, index) => {
                                 return (
                                     <div className="small-card-img" key={index}>
                                         <div>
                                             <div className="text">{item.text}</div>
-                                            <div className="value">{item.value?item.value:"无"}</div>
+                                            <div className="value">{item.value ? item.value : "无"}</div>
                                         </div>
                                     </div>
                                 )
@@ -279,11 +279,11 @@ class FlightRiskDetail extends React.Component {
                         {
                             !this.state.batchNum && <div className="airport-button">
                                 {
-                                    btns.map( (btn, i) => {
-                                        return <Button key={i} className={btn.className} onClick={() => {btn.event && btn.event(btn)}} {...btn.options}>{btn.name}</Button>
-                                    })                                 
+                                    btns.map((btn, i) => {
+                                        return <Button key={i} className={btn.className} onClick={() => { btn.event && btn.event(btn) }} {...btn.options}>{btn.name}</Button>
+                                    })
                                 }
-                                <Link to={`${this.newResultUrl}${this.state.flightCode}`} target="_blank">新模型计算结果</Link>                                                             
+                                <Link to={`${this.newResultUrl}${this.state.flightCode}`} target="_blank">新模型计算结果</Link>
                                 <CommonDrawer {...drawerOptions}>
                                     {currentBtn.key && <CommonTable options={tableOptions}></CommonTable>}
                                     {currentBtn.key && <div className="flight-risk-detail-tip">统计时间范围：过去的六个月</div>}
@@ -295,29 +295,29 @@ class FlightRiskDetail extends React.Component {
                 </CardCommon>
                 <CardCommon title="风险展示">
                     <ChartsTip height="7.1-10.0" middle="4.1-7.0" low="1.0-4.0"></ChartsTip>
-                    <RiskTable 
-                        title="起飞阶段" 
+                    <RiskTable
+                        title="起飞阶段"
                         value={riskValue.flyingValue}
-                        environmentValue={riskValue.flyingEnvironmentValue} 
-                        machineValue={riskValue.flyingMachineValue} 
+                        environmentValue={riskValue.flyingEnvironmentValue}
+                        machineValue={riskValue.flyingMachineValue}
                         persionValue={riskValue.flyingPersionValue}
                         riskList={flyAssoRiskList}
-                        riskDetailList={flyFlitRiskDetailList} 
+                        riskDetailList={flyFlitRiskDetailList}
                     />
-                    <RiskTable 
-                        title="巡航阶段" 
-                        value={riskValue.cruiseValue} 
-                        environmentValue={riskValue.cruiseEnvironmentValue} 
-                        machineValue={riskValue.cruiseMachineValue} 
+                    <RiskTable
+                        title="巡航阶段"
+                        value={riskValue.cruiseValue}
+                        environmentValue={riskValue.cruiseEnvironmentValue}
+                        machineValue={riskValue.cruiseMachineValue}
                         persionValue={riskValue.cruisePersionValue}
                         riskList={cruiseAssoRiskList}
                         riskDetailList={cruiseFlitRiskDetailList}
                     />
                     <RiskTable
-                        title="着陆阶段" 
-                        value={riskValue.landedValue} 
-                        environmentValue={riskValue.landedEnvironmentValue} 
-                        machineValue={riskValue.landedMachineValue} 
+                        title="着陆阶段"
+                        value={riskValue.landedValue}
+                        environmentValue={riskValue.landedEnvironmentValue}
+                        machineValue={riskValue.landedMachineValue}
                         persionValue={riskValue.landedPersionValue}
                         riskList={landAssoRiskList}
                         riskDetailList={landFlitRiskDetailList}
@@ -335,29 +335,29 @@ class FlightRiskDetail extends React.Component {
 }
 
 class RiskTable extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.loading = true;
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.loading = false;
     }
 
-    getRiskValueDom(value){
+    getRiskValueDom(value) {
         var className = "num ";
         if (value >= 1 && value <= 4) {
             className += "text-success";
-        }else if (value > 4 && value <= 7) {
+        } else if (value > 4 && value <= 7) {
             className += "text-warning";
-        }else if (value > 7 && value <= 10) {
+        } else if (value > 7 && value <= 10) {
             className += "text-danger";
         }
         return <span className={className}>{value}</span>;
     }
 
-    handleList(list){
-        return list.map( item => {
+    handleList(list) {
+        return list.map(item => {
             return (
                 <div className="step-content">
                     <div>关联风险{item.rmItemRuleIds}：{item.associateNames} {this.getRiskValueDom(item.riskValues)}</div>
@@ -368,33 +368,33 @@ class RiskTable extends React.Component {
         });
     }
 
-    handleDetailList(list){
-        return list.map( item => {
+    handleDetailList(list) {
+        return list.map(item => {
             return (
                 <div className="step-content">
                     <div>{item.code}：{item.riskName} {this.getRiskValueDom(item.riskValue)}</div>
-                    {item.informationDescription && <div><TextHtml data={item.informationDescription} /></div> }
-                    <div>建议措施：<TextHtml data={item.mitigatingMeasures} /></div> 
+                    {item.informationDescription && <div><TextHtml data={item.informationDescription} /></div>}
+                    <div>建议措施：<TextHtml data={item.mitigatingMeasures} /></div>
                 </div>
             )
         });
     }
 
-    render(){
+    render() {
         const { title, value, environmentValue, machineValue, persionValue, riskList, riskDetailList } = this.props;
-        var arr = this.handleList(riskList).concat( this.handleDetailList(riskDetailList) );
+        var arr = this.handleList(riskList).concat(this.handleDetailList(riskDetailList));
         var dataList = arr.map((item, i) => {
-            return { num: i+1, content: item }
+            return { num: i + 1, content: item }
         });
-        let tableOptions = {  
+        let tableOptions = {
             notCheck: true,
             columns: [
                 { title: "序号", dataIndex: "num", width: 100 },
                 { title: "内容", dataIndex: "content", className: "text-left" }
             ],
-            table: {dataList: dataList, loading: this.loading},
+            table: { dataList: dataList, loading: this.loading },
             needPage: false,
-            scroll: { y: 240 },                                                               
+            scroll: { y: 240 },
         };
         return (
             <React.Fragment>
@@ -409,7 +409,7 @@ class RiskTable extends React.Component {
 }
 
 class TextHtml extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             data: [],
@@ -423,79 +423,79 @@ class TextHtml extends React.Component {
         this.modal2;
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.setState({
             data: this.handleHtml(this.props.data)
         });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    handleHtml(str){
+    handleHtml(str) {
         var arr = [];
-        if( str ){
-            if( str.indexOf("onclick") > -1 ){
+        if (str) {
+            if (str.indexOf("onclick") > -1) {
                 var list = str.split("<a ");
-                for(var i = 0; i < list.length; i++){
-                    if( list[i] && list[i].indexOf("onclick") > -1 ){
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i] && list[i].indexOf("onclick") > -1) {
                         var arr1 = list[i].split("</a>");
                         list.splice(i, 1, arr1[0], arr1[1]);
                     }
                 }
                 arr = list.map(item => {
-                    if( item && item.indexOf("onclick") > -1 ){
-                        var content = item.slice(item.indexOf(">")+1);
-                        var paramsStr = item.slice( item.indexOf("(")+1, item.indexOf(")") );
+                    if (item && item.indexOf("onclick") > -1) {
+                        var content = item.slice(item.indexOf(">") + 1);
+                        var paramsStr = item.slice(item.indexOf("(") + 1, item.indexOf(")"));
                         var paramsArr = paramsStr.split(",").map(item => item.replace(/"|'/g, ""));
-                        if( item.indexOf("showMEL") > -1 ){
+                        if (item.indexOf("showMEL") > -1) {
                             return {
                                 type: "mel",
                                 content: content,
                                 params: paramsArr
                             };
-                        }else if( item.indexOf("showWeatherValid") > -1 ){
+                        } else if (item.indexOf("showWeatherValid") > -1) {
                             return {
                                 type: "weatherValid",
                                 content: content,
                                 params: paramsArr
                             };
-                        }else if( item.indexOf("showWeatherAll") > -1 ){
+                        } else if (item.indexOf("showWeatherAll") > -1) {
                             return {
                                 type: "weatherAll",
                                 content: content,
                                 params: paramsArr
                             };
-                        }else if( item.indexOf("showWeather") > -1 ){
+                        } else if (item.indexOf("showWeather") > -1) {
                             return {
                                 type: "weather",
                                 content: content,
                                 params: paramsArr
                             };
-                        }else if( item.indexOf("reviewFiles") > -1 ){
+                        } else if (item.indexOf("reviewFiles") > -1) {
                             return {
                                 type: "reviewFiles",
                                 content: content,
                                 params: paramsArr
                             };
-                        }else if( item.indexOf("showTempWeatherValid") >-1){
-                            return{
-                                type:"tempWeatherValid",
+                        } else if (item.indexOf("showTempWeatherValid") > -1) {
+                            return {
+                                type: "tempWeatherValid",
                                 content: content,
                                 params: paramsArr
                             }
                         }
-                    }else{
+                    } else {
                         return {
                             type: "text",
                             content: item
                         };
                     }
-                }); 
-            }else{
+                });
+            } else {
                 arr = [{
                     type: "text",
                     content: str
@@ -505,27 +505,27 @@ class TextHtml extends React.Component {
         return arr;
     }
 
-    showMEL(params){
+    showMEL(params) {
         var This = this;
         post({
             url: "relieveMeasure/queryMel",
-            data: {flightCode: params[0], melInfoId: params[1]},
+            data: { flightCode: params[0], melInfoId: params[1] },
             success: data => {
-                if( data && data.deferralLongdesc ){
-                    This.setState({mel: data.deferralLongdesc});
+                if (data && data.deferralLongdesc) {
+                    This.setState({ mel: data.deferralLongdesc });
                     This.modal1.show();
-                }else{
+                } else {
                     message.error("暂无MEL信息");
                 }
             }
         });
     }
 
-    showWeatherValid(params){
+    showWeatherValid(params) {
         var This = this;
         post({
             url: "relieveMeasure/queryWeatherValid",
-            data: {saspReportId: params[0], fcftReportId: params[1], effectReportId: params[2]},
+            data: { saspReportId: params[0], fcftReportId: params[1], effectReportId: params[2] },
             success: data => {
                 This.setState({
                     saspReportId: data.saspReport ? data.saspReport : "没有相关实况报文！",
@@ -536,11 +536,11 @@ class TextHtml extends React.Component {
         });
     }
 
-    showWeatherAll(params){
+    showWeatherAll(params) {
         var This = this;
         post({
             url: "relieveMeasure/queryWeatherReportNew",
-            data: {saspReportId: params[0], fcftReportId: params[1], arpCd: params[2], effectReportId: params[3]},
+            data: { saspReportId: params[0], fcftReportId: params[1], arpCd: params[2], effectReportId: params[3] },
             success: data => {
                 This.setState({
                     saspReportId: data.saspReport ? data.saspReport : "没有相关实况报文！",
@@ -551,11 +551,11 @@ class TextHtml extends React.Component {
         });
     }
 
-    showWeather(params){
+    showWeather(params) {
         var This = this;
         post({
             url: "relieveMeasure/queryWeatherReportByid",
-            data: {saspReportId: params[0], fcftReportId: params[1]},
+            data: { saspReportId: params[0], fcftReportId: params[1] },
             success: data => {
                 This.setState({
                     saspReportId: data.saspReportId ? data.saspReportId : "没有相关实况报文！",
@@ -566,51 +566,51 @@ class TextHtml extends React.Component {
         });
     }
 
-    reviewFiles(params){
-        if(params && params.length == 1){
+    reviewFiles(params) {
+        if (params && params.length == 1) {
             var fileName = params[0];
             const a = document.createElement('a');
-            a.href = window.g_url + "js/pdfjs/web/viewer.html?file=" + encodeURIComponent(window.g_url + "dailyAssociateRisk/pdfStreamHandeler?fileName=" + fileName);
+            a.href = window.g_url + "js/pdfjs/web/viewer.html?file=" + encodeURIComponent(window.g_url + "dailyAssociateRisk/pdfStreamHandeler?fileName=" + fileName);
             a.target = "_blank";
-            a.click();
+            a.click();
         }
     }
 
-    showTempWeatherValid(params){
+    showTempWeatherValid(params) {
         var This = this;
         post({
             url: "relieveMeasure/queryTempWeatherValid",
-            data: {weatherTempoForecastId: params[0]},
+            data: { weatherTempoForecastId: params[0] },
             success: data => {
                 This.setState({
-                    weatherTempoForecastId: data.tempoForecastReport ? data.tempoForecastReport : "没有相关短时报文！"              
+                    weatherTempoForecastId: data.tempoForecastReport ? data.tempoForecastReport : "没有相关短时报文！"
                 });
                 This.modal2.show();
             }
         });
     }
 
-    render(){
+    render() {
         const modalOptions1 = {
             options: {
                 title: "MEL信息",
                 footer: null,
             },
-            onRef: (ref) => {this.modal1 = ref}
+            onRef: (ref) => { this.modal1 = ref }
         };
         const modalOptions2 = {
             options: {
                 title: "天气预报",
                 footer: null,
             },
-            onRef: (ref) => {this.modal2 = ref}
+            onRef: (ref) => { this.modal2 = ref }
         };
         return (
             <React.Fragment>
                 {
-                    this.state.data.map( (item, index) => {
-                        if( item && item.type ){
-                            switch(item.type){
+                    this.state.data.map((item, index) => {
+                        if (item && item.type) {
+                            switch (item.type) {
                                 case "text":
                                     return <span key={index} dangerouslySetInnerHTML={{ __html: item.content }} />;
                                 case "mel":
@@ -624,7 +624,7 @@ class TextHtml extends React.Component {
                                 case "reviewFiles":
                                     return (<a key={index} onClick={() => this.reviewFiles(item.params)}>{item.content}</a>);
                                 case "tempWeatherValid":
-                                        return (<a key={index} onClick={() => this.showTempWeatherValid(item.params)}>{item.content}</a>);
+                                    return (<a key={index} onClick={() => this.showTempWeatherValid(item.params)}>{item.content}</a>);
                             }
                         }
                     })
@@ -637,7 +637,7 @@ class TextHtml extends React.Component {
                         <div className="title">实况报文</div>
                         <div className="mb70" dangerouslySetInnerHTML={{ __html: this.state.saspReportId }} />
                         <div className="title">预报报文</div>
-                        <div dangerouslySetInnerHTML={{ __html: this.state.fcftReportId }} />                      
+                        <div dangerouslySetInnerHTML={{ __html: this.state.fcftReportId }} />
                     </div>
                 </CommonModal>
             </React.Fragment>

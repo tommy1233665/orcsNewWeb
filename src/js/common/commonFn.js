@@ -5,31 +5,50 @@ import { authorityMap } from 'common/datas';
  * @param {*} _this 当前组件this对象 [必需]
  * @param {*} url 跳转路径 [必需]
  */
-function href(_this, url) {
+function href(_this, url, params = '') {
     if (_this && _this.props.history) {
-        _this.props.history.push(url);
+        // 点击menu菜单的时候把必要参数记录上，以便返回时使用
+        if (params && params.name !== '主页') {
+            _this.props.history.push(`${url}/s?name=${params.name}&key=${params.key}`);
+        } else {
+            _this.props.history.push(url);
+        }
     } else {
         console.error("请对组件使用react-router-dom的withRouter！");
     }
+}
+
+// 获取url后面参数后台浏览器时改变菜单栏的状态
+function getUrlSearch(obj, windowEvent) {
+    // console.log(obj)
+    let urlParamsArr = (windowEvent && obj.substring(1).split("&")) || obj.search.substring(1).split("&"),
+        i,
+        objParams = {};
+    urlParamsArr.forEach((item) => {
+        i = item.indexOf("=");
+        objParams[item.slice(0, i)] = item.slice(i + 1);
+    });
+    // console.log(objParams);
+    return objParams
 }
 
 /**
  * @param {*} menus permission [必需]
  * @param {*} url 跳转路径 [必需]
  */
-function getMenuByUrl(menus, url){
+function getMenuByUrl(menus, url) {
     var result = null;
-    var getMenu = function(menus, url){
-        for(var i = 0; i < menus.length; i++){
-            if( menus[i].children.length > 0 ){
+    var getMenu = function (menus, url) {
+        for (var i = 0; i < menus.length; i++) {
+            if (menus[i].children.length > 0) {
                 getMenu(menus[i].children, url)
-            }else if( menus[i].url == url ){
+            } else if (menus[i].url == url) {
                 result = menus[i];
-            }else{
+            } else {
                 var index = menus[i].url.indexOf(":");
-                if(index > -1){
+                if (index > -1) {
                     var prev = menus[i].url.slice(0, index);
-                    if( url.indexOf(prev) > -1 ){
+                    if (url.indexOf(prev) > -1) {
                         result = menus[i];
                     }
                 }
@@ -43,13 +62,13 @@ function getMenuByUrl(menus, url){
 /**
  * name 可空
  */
-function getCurrentMenu(props, url, name){
+function getCurrentMenu(props, url, name) {
     const { currentMenu, permission } = props;
     const { currentMenus } = currentMenu;
     var result = getMenuByUrl(permission, url);
-    if(result){
-        if(name) result.name = name;
-        if(currentMenus.indexOf(result) == -1) currentMenus.push(result);
+    if (result) {
+        if (name) result.name = name;
+        if (currentMenus.indexOf(result) == -1) currentMenus.push(result);
     }
     return currentMenus;
 }
@@ -57,11 +76,11 @@ function getCurrentMenu(props, url, name){
 /**
  * 处理入参 过滤掉unerfined、null
  */
-function handleInParams(obj){
+function handleInParams(obj) {
     const newObj = {};
-    for(let key in obj){
+    for (let key in obj) {
         const value = obj[key];
-        if( typeof value !== "undefined" && value != null ){
+        if (typeof value !== "undefined" && value != null) {
             newObj[key] = value;
         }
     }
@@ -76,95 +95,95 @@ function copyObj(data) {
 function encrypt(data) {
     var key = CryptoJS.enc.Latin1.parse('0123456789abcdef');
     var iv = CryptoJS.enc.Latin1.parse('0123456789abcdef');
-    return CryptoJS.AES.encrypt(data, key, {iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding}).toString();
+    return CryptoJS.AES.encrypt(data, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding }).toString();
 }
 
 // 保存数据到sessionStorage
-function setSession(key, value){
+function setSession(key, value) {
     sessionStorage.setItem(key, value);
 }
 
 // 从sessionStorage里获取数据
-function getSession(key){
+function getSession(key) {
     return sessionStorage.getItem(key);
 }
 
 // 下载文件、导出表单
-function downloadFile(data, name){
+function downloadFile(data, name) {
     var fileName = name + new Date().getTime() + ".xls";
     if (window.navigator && window.navigator.msSaveBlob) {
         window.navigator.msSaveBlob(data, fileName);
-    }else{
+    } else {
         const url = window.URL.createObjectURL(data);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = url;
         a.download = fileName;
-        a.click();
+        a.click();
     }
 }
 
 // 导出相关
-function onSelect(record, selected, selectedRows, nativeEvent){
+function onSelect(record, selected, selectedRows, nativeEvent) {
     var selectedExport = this.state.selectedExport;
-    if( selected ){
+    if (selected) {
         var flag = false;
         selectedExport.forEach((item, i) => {
-            if( item.id == record.id ){
+            if (item.id == record.id) {
                 flag = true;
                 return;
             }
         });
-        if( !flag ) selectedExport.push(record);
-    }else{
+        if (!flag) selectedExport.push(record);
+    } else {
         selectedExport.forEach((item, i) => {
-            if( item.id == record.id ){
+            if (item.id == record.id) {
                 selectedExport.splice(i, 1);
                 return;
             }
         });
     }
-    this.setState({selectedExport});
+    this.setState({ selectedExport });
 }
 
-function onSelectAll(selected, selectedRows, changeRows){
+function onSelectAll(selected, selectedRows, changeRows) {
     var selectedExport = this.state.selectedExport;
-    if( selected ){
+    if (selected) {
         changeRows.forEach(item => {
             var flag = false;
             selectedExport.forEach((item2, i) => {
-                if(item2.id == item.id){
+                if (item2.id == item.id) {
                     flag = true;
                     return;
                 }
             });
-            if( !flag ) selectedExport.push( item );
+            if (!flag) selectedExport.push(item);
         });
-    }else{
+    } else {
         changeRows.forEach(item => {
             selectedExport.forEach((item2, i) => {
-                if(item2.id == item.id){
+                if (item2.id == item.id) {
                     selectedExport.splice(i, 1);
                     return;
                 }
             });
         });
     }
-    this.setState({selectedExport});
+    this.setState({ selectedExport });
 }
 
-function isAuthority(name, list){
+function isAuthority(name, list) {
     var arr = name.split(".");
     var id = authorityMap;
-    for(var i = 0; i < arr.length; i++){
+    for (var i = 0; i < arr.length; i++) {
         id = id[arr[i]];
     }
     var flag = false;
-    for(var i = 0; i < list.length; i++){
-        if( list[i].id == id ){
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].id == id) {
             flag = true;
         }
     }
     return flag;
 }
 
-export { href, getCurrentMenu, handleInParams, copyObj, encrypt, setSession, getSession, downloadFile, onSelect, onSelectAll, isAuthority };
+export { href, getCurrentMenu, handleInParams, copyObj, encrypt, setSession, getSession, downloadFile, onSelect, onSelectAll, isAuthority, getUrlSearch };

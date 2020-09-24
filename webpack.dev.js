@@ -31,12 +31,5 @@ module.exports = merge(common, {
      */
     // host: "10.95.18.218",
     // disableHostCheck: true,
-    // historyApiFallback: true,
-    // proxy: {
-    //   "/api": {
-    //     target: "http://10.95.18.218:3000",
-    //     pathRewrite: { "^/api": "/api" },
-    //   },
-    // },
   },
 });

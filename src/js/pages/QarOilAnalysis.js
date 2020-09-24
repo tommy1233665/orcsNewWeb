@@ -21,7 +21,6 @@ class QarOilAnalysis extends React.Component {
   // 初始化表单数据
   constructor(props) {
     super(props);
-
     // 用来实时更新表格中风险详情值
     this.state = {
       flyRmArptRiskList: [],

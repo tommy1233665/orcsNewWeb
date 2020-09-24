@@ -10,7 +10,6 @@ import RiskTargetMain from "./riskTarget/main";
 import ActivityMain from "./activity/main";
 //系统管理
 import SystemMain from "./system/main";
-
 // 右侧内容主入口路由
 class CenterRouter extends React.Component {
   render() {
