@@ -62,18 +62,18 @@ class DailyRiskTarget extends React.Component {
 
     componentDidMount() {
         this.getAllBranch(data => {
-            this.setState({allBranch: data});
+            this.setState({ allBranch: data });
             this.getList();
         });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getAllBranch(callback){
+    getAllBranch(callback) {
         post({
             url: "acfData/getAllBranch",
             success: data => {
@@ -90,8 +90,8 @@ class DailyRiskTarget extends React.Component {
             url: "dailyAssociateRisk/queryDailyAssoRiskListByParam",
             data: params,
             success: data => {
-                var dataList = data.rows.map( (item, i) => {
-                    item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                var dataList = data.rows.map((item, i) => {
+                    item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                     return item;
                 });
                 table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -112,17 +112,17 @@ class DailyRiskTarget extends React.Component {
     /**
      * 处理查询参数（航班日期范围的特殊处理）
      */
-    handleSearchParams(values){
+    handleSearchParams(values) {
         const params = handleInParams(values);
-        for(let key in params){
-            if( key == "startAndEnd" && params[key].length == 2 ){
+        for (let key in params) {
+            if (key == "startAndEnd" && params[key].length == 2) {
                 params["startDt"] = moment(params[key][0]).format("YYYY-MM-DD");
                 params["endDt"] = moment(params[key][1]).format("YYYY-MM-DD");
                 delete params[key];
             }
-            if( key == "treeSelectCustom" ){
-                for(var i in params[key].value){
-                    if(i == "acftType") params[i] = params[key].value[i];
+            if (key == "treeSelectCustom") {
+                for (var i in params[key].value) {
+                    if (i == "acftType") params[i] = params[key].value[i];
                 }
                 delete params[key];
             }
@@ -133,9 +133,9 @@ class DailyRiskTarget extends React.Component {
     search = () => {
         event.preventDefault();
         this.searcForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = this.handleSearchParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -149,13 +149,13 @@ class DailyRiskTarget extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             this.setState({
                 currentAction: "edit"
@@ -165,17 +165,17 @@ class DailyRiskTarget extends React.Component {
     }
 
     submit = () => {
-        this.editFrom.submit( () => {
+        this.editFrom.submit(() => {
             this.modal.hide();
-            this.getList({pageNum: 1});
+            this.getList({ pageNum: 1 });
         });
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var ids = this.state.selectedRows.map(item => item.id);
             var names = this.state.selectedRows.map(item => item.riskName);
             confirm({
@@ -184,11 +184,11 @@ class DailyRiskTarget extends React.Component {
                 onOk: () => {
                     post({
                         url: "dailyAssociateRisk/deleteDailyAssoRisksInfo",
-                        data: {dailyAssoRiskIds: ids},
+                        data: { dailyAssoRiskIds: ids },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
-                            this.getList({pageNum: 1});
+                            this.getList({ pageNum: 1 });
                         }
                     });
                 },
@@ -200,8 +200,8 @@ class DailyRiskTarget extends React.Component {
     /**
      * 获取searchForm表的配置
      */
-    getSearchFormOptions(){
-        var allBranch = this.state.allBranch.map( item => {
+    getSearchFormOptions() {
+        var allBranch = this.state.allBranch.map(item => {
             return item.branchCd;
         });
         return [
@@ -211,9 +211,9 @@ class DailyRiskTarget extends React.Component {
                 name: "riskValue",
                 span: 4,
                 list: [
-                    {key: "低", text: "低0-4.0"},
-                    {key: "中", text: "中4.1-7.0"},
-                    {key: "高", text: "高7.1-10"}
+                    { key: "低", text: "低0-4.0" },
+                    { key: "中", text: "中4.1-7.0" },
+                    { key: "高", text: "高7.1-10" }
                 ],
                 length: 3,
                 isHasAllSelect: false
@@ -267,7 +267,7 @@ class DailyRiskTarget extends React.Component {
                 label: "维护部门",
                 name: "maintenanceDept",
                 span: 4,
-                list: ["运指中心","信息中心","安监部","飞行总队","机务工程部"],
+                list: ["运指中心", "信息中心", "安监部", "飞行总队", "机务工程部"],
                 length: 4,
                 isHasAllSelect: false
             },
@@ -290,7 +290,7 @@ class DailyRiskTarget extends React.Component {
                 label: "状态",
                 name: "status",
                 span: 4,
-                list: ["当前有效","已失效","全部"],
+                list: ["当前有效", "已失效", "全部"],
                 length: 4,
                 isHasAllSelect: false
             },
@@ -322,13 +322,13 @@ class DailyRiskTarget extends React.Component {
                 label: "机型",
                 name: "treeSelectCustom",
                 span: 10,
-                detailSpan: [8,16],
+                detailSpan: [8, 16],
                 length: 2
             }
         ];
     }
 
-    render(){
+    render() {
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
         const btnOptions = {
@@ -336,7 +336,7 @@ class DailyRiskTarget extends React.Component {
             span: 2,
             list: [
                 //{text: "重置", options: "resetOpt", event: this.reset},
-                {text: "查询", options: "queryOpt", event: this.search}
+                { text: "查询", options: "queryOpt", event: this.search }
             ]
         };
         // 增删改
@@ -348,7 +348,7 @@ class DailyRiskTarget extends React.Component {
         const tableOptions = {
             columns: this.columns,
             table: table,
-            scroll: {x: "2360px"},
+            scroll: { x: "2360px" },
             onRow: (record) => {
                 return {
                     onDoubleClick: event => {
@@ -370,7 +370,7 @@ class DailyRiskTarget extends React.Component {
         }
         // 模态框
         var title = this.state.currentAction == "add" ? "新增" : this.state.currentAction == "edit" ? "修改" : "查看";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title + "日常风险",
                 width: "1000px",
@@ -380,29 +380,29 @@ class DailyRiskTarget extends React.Component {
                 },
                 okButtonProps: { loading: false }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
-        if(this.state.currentAction == "detail"){
+        if (this.state.currentAction == "detail") {
             modalOptions.options.footer = null;
         }
         var datas = this.state.currentAction == "edit" ? this.state.selectedRows[0] : this.state.currentAction == "detail" ? this.state.currentRow : {};
-        return(
+        return (
             <CardCommon>
-                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searcForm = form.props.form;}} />}
+                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searcForm = form.props.form; }} />}
                 <div className="buttons"><CommonBtns options={commonBtnOptions} btns={this.state.btns} /></div>
-                { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}      
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }
+                { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...modalOptions}>
                     <EditFrom allBranch={this.state.allBranch} datas={datas} userInfo={this.props.userInfo} currentAction={this.state.currentAction} onRef={ref => this.editFrom = ref} />
                 </CommonModal>
-            </CardCommon>            
+            </CardCommon>
         );
     }
 }
 
 class EditFrom extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             options1: [],
@@ -422,9 +422,9 @@ class EditFrom extends React.Component {
         this.form7;
         this.otherConfig;
     }
-    componentDidMount(){
-        if( this.props.onRef ) this.props.onRef(this, "CommonModal");
-        const newAllBranch = this.props.allBranch.map( item => {
+    componentDidMount() {
+        if (this.props.onRef) this.props.onRef(this, "CommonModal");
+        const newAllBranch = this.props.allBranch.map(item => {
             return item.branchCd;
         });
         const datas = this.props.datas;
@@ -438,14 +438,14 @@ class EditFrom extends React.Component {
             options7: this.getOptions7(datas),
         });
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
-    getOptions1(datas){
+    getOptions1(datas) {
         return [{
-            type:"GroupCustom",
+            type: "GroupCustom",
             label: "机组",
             name: "fltCrew",
             span: 18,
@@ -454,15 +454,26 @@ class EditFrom extends React.Component {
             variableTemp: "fltCrew",
             tooltip: "多个机组请用英文分号;隔开",
             options: {
-                initialValue: datas.fltCrew
+                initialValue: datas.fltCrew,
+                rules: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^0$|^[0-9;]*$/;
+                            if (value.value && !reg.test(value.value)) {
+                                callback('输入规范的员工号！')
+                            }
+                            callback();
+                        }
+                    }
+                ]
             }
         }];
     }
-    getOptions2(allBranch, datas){
+    getOptions2(allBranch, datas) {
         var melType = datas.melType ? datas.melType : "MEL";
         return [
             {
-                type:"GroupCustom",
+                type: "GroupCustom",
                 label: "机尾号",
                 name: "latestTailNr",
                 span: 15,
@@ -475,16 +486,15 @@ class EditFrom extends React.Component {
                     rules: [
                         {
                             validator: (rule, value, callback) => {
-                                //const reg = /^0$|^[1-9]\d*$|^[1-9]\d*.\d{1,2}$|^0.\d{1,2}$/;
-                                const reg =  /^0$|^[A-Za-z0-9]{5}$/;
-                                if ( value.value.latestTailNr && !reg.test(value.value.latestTailNr) ) {
+                                const reg = /^0$|^[A-Z0-9;]*$/;
+                                if (value.value && !reg.test(value.value)) {
                                     callback('输入规范的机尾号！')
                                 }
                                 callback();
                             }
                         }
                     ]
-                }                         
+                }
             },
             {
                 type: "Select",
@@ -503,10 +513,10 @@ class EditFrom extends React.Component {
                 label: "机型",
                 name: "treeSelectCustom",
                 span: 24,
-                detailSpan: [10,14],
+                detailSpan: [10, 14],
                 length: 4,
                 options: {
-                    initialValue: {acftType: datas.acftType, eqpType: datas.eqpType}
+                    initialValue: { acftType: datas.acftType, eqpType: datas.eqpType }
                 }
             },
             {
@@ -532,14 +542,14 @@ class EditFrom extends React.Component {
             }
         ];
     }
-    getOptions3(allBranch, datas){
+    getOptions3(allBranch, datas) {
         var arr = [];
-        if( datas.depArpCd ) arr.push("depArpCd");
-        if( datas.destArpt ) arr.push("destArpt");
-        if( datas.destBjArpt ) arr.push("destBjArpt");
+        if (datas.depArpCd) arr.push("depArpCd");
+        if (datas.destArpt) arr.push("destArpt");
+        if (datas.destBjArpt) arr.push("destBjArpt");
         return [
             {
-                type:"GroupCustom",
+                type: "GroupCustom",
                 label: "机场",
                 name: "arpName",
                 span: 18,
@@ -548,25 +558,36 @@ class EditFrom extends React.Component {
                 variableTemp: "arpName",
                 tooltip: "多个机场请用英文分号;隔开",
                 options: {
-                    initialValue: datas.arpName
+                    initialValue: datas.arpName,
+                    rules: [
+                        {
+                            validator: (rule, value, callback) => {
+                                const reg = /^[A-Z;]*$/;
+                                if (value.value && !reg.test(value.value)) {
+                                    callback('输入规范的机场编码！')
+                                }
+                                callback();
+                            }
+                        }
+                    ]
                 }
             },
             {
                 type: "Radio",
                 name: "depArpCdDestArptDestBjArpt",
                 list: [
-                    {key: "depArpCd", text: "起飞机场"},
-                    {key: "destArpt", text: "目的地机场"},
-                    {key: "destBjArpt", text: "目的地备降场"}
+                    { key: "depArpCd", text: "起飞机场" },
+                    { key: "destArpt", text: "目的地机场" },
+                    { key: "destBjArpt", text: "目的地备降场" }
                 ],
                 span: 24,
-                style: {marginLeft: "5em"},
+                style: { marginLeft: "5em" },
                 options: {
                     initialValue: arr
                 }
             },
             {
-                type:"GroupCustom",
+                type: "GroupCustom",
                 label: "航班号",
                 name: "fltNr",
                 span: 18,
@@ -605,11 +626,11 @@ class EditFrom extends React.Component {
             }
         ];
     }
-    getOptions4(datas){
+    getOptions4(datas) {
         var arr = [];
-        if( datas.takeOff ) arr.push("takeOff");
-        if( datas.cruise ) arr.push("cruise");
-        if( datas.landing ) arr.push("landing");
+        if (datas.takeOff) arr.push("takeOff");
+        if (datas.cruise) arr.push("cruise");
+        if (datas.landing) arr.push("landing");
         return [
             {
                 type: "Input",
@@ -619,7 +640,7 @@ class EditFrom extends React.Component {
                 length: 5,
                 options: {
                     initialValue: datas.riskName,
-                    rules: [{required: true, message: "风险名称不可为空！"}]
+                    rules: [{ required: true, message: "风险名称不可为空！" }]
                 }
             },
             {
@@ -634,13 +655,16 @@ class EditFrom extends React.Component {
                         riskValue: datas.riskValue,
                         presentation: datas.presentation
                     },
-                    rules : [
+                    rules: [
                         {
                             validator: (rule, value, callback) => {
                                 //const reg = /^0$|^[1-9]\d*$|^[1-9]\d*.\d{1,2}$|^0.\d{1,2}$/;
-                                const reg = /^0$|^[1-9]\d*$|^[1-9]\d*.\d{1}$|^0/;
-                                if ( value.value.riskValue && !reg.test(value.value.riskValue) ) {
-                                    callback('最多保留1位小数！')
+                                const reg = /^0$|^[0-9]\d*$|^[0-9]\d*.\d{1}$|^0/;
+                                if (value.value.riskValue && !reg.test(value.value.riskValue)) {
+                                    callback('保留1位小数！')
+                                }
+                                if (value.value.riskValue && value.value.riskValue > 10) {
+                                    callback('不能大于10')
                                 }
                                 callback();
                             }
@@ -653,21 +677,21 @@ class EditFrom extends React.Component {
                 label: "阶段",
                 name: "takeOffCruiseLanding",
                 list: [
-                    {value: "takeOff", label: "起飞"},
-                    {value: "cruise", label: "巡航"},
-                    {value: "landing", label: "着陆"}
+                    { value: "takeOff", label: "起飞" },
+                    { value: "cruise", label: "巡航" },
+                    { value: "landing", label: "着陆" }
                 ],
                 span: 24,
                 length: 5,
                 options: {
                     initialValue: arr,
-                    rules: [{required: true, message: "阶段不可为空！"}]
+                    rules: [{ required: true, message: "阶段不可为空！" }]
                 }
             },
         ];
     }
 
-    getOptions5(datas){
+    getOptions5(datas) {
         return [
             {
                 type: "UploadFileCustom",
@@ -688,7 +712,7 @@ class EditFrom extends React.Component {
         ];
     }
 
-    getOptions6(datas){
+    getOptions6(datas) {
         return [
             {
                 type: "UploadFileCustom",
@@ -709,7 +733,7 @@ class EditFrom extends React.Component {
         ];
     }
 
-    getOptions7(datas){
+    getOptions7(datas) {
         return [
             {
                 type: "DatePicker",
@@ -719,7 +743,7 @@ class EditFrom extends React.Component {
                 length: 5,
                 options: {
                     initialValue: moment(datas.effectiveTime),
-                    rules: [{required: true, message: "生效时间不可为空！"}]
+                    rules: [{ required: true, message: "生效时间不可为空！" }]
                 }
             },
             {
@@ -730,7 +754,7 @@ class EditFrom extends React.Component {
                 length: 5,
                 options: {
                     initialValue: moment(datas.invalidTime),
-                    rules: [{required: true, message: "失效时间不可为空！"}]
+                    rules: [{ required: true, message: "失效时间不可为空！" }]
                 }
             },
             {
@@ -738,12 +762,12 @@ class EditFrom extends React.Component {
                 label: "维护部门",
                 name: "maintenanceDept",
                 span: 12,
-                list: ["运指中心","信息中心","安监部","飞行总队","机务工程部"],
+                list: ["运指中心", "信息中心", "安监部", "飞行总队", "机务工程部"],
                 length: 5,
                 isHasAllSelect: false,
                 options: {
                     initialValue: datas.maintenanceDept,
-                    rules: [{required: true, message: "维护部门不可为空！"}]
+                    rules: [{ required: true, message: "维护部门不可为空！" }]
                 }
             },
             {
@@ -751,65 +775,66 @@ class EditFrom extends React.Component {
                 label: "提醒对象",
                 name: "reminder",
                 span: 12,
-                list: ["签派","机组","全部"],
+                list: ["签派", "机组", "全部"],
                 length: 5,
                 isHasAllSelect: false,
                 options: {
                     initialValue: datas.reminder,
-                    rules: [{required: true, message: "提醒对象不可为空！"}]
+                    rules: [{ required: true, message: "提醒对象不可为空！" }]
                 }
             }
         ];
     }
 
-    handleValues(result, form, cb){
+    handleValues(result, form, cb) {
         form.validateFields((err, values) => {
-            if(!err){
-                for(var key in values){
-                    if( (key == "fltCrew" || key == "latestTailNr" || key == "arpName" || key == "fltNr" || key == "riskTipsAppendix" || key == "mitigationMeasuresAppendix" ) && values[key]) values[key] = values[key].value;
-                    if(key == "treeSelectCustom" || key == "riskValuePresentation" ){
-                        if( values[key] && values[key].value ){
-                            for(var i in values[key].value){
+            if (!err) {
+                for (var key in values) {
+                    if ((key == "fltCrew" || key == "latestTailNr" || key == "arpName" || key == "fltNr" || key == "riskTipsAppendix" || key == "mitigationMeasuresAppendix") && values[key]) values[key] = values[key].value;
+                    if (key == "treeSelectCustom" || key == "riskValuePresentation") {
+                        if (values[key] && values[key].value) {
+                            for (var i in values[key].value) {
                                 values[i] = values[key].value[i];
                             }
                             delete values[key];
                         }
                     }
                     // depArpCd、destArpt、destBjArpt
-                    if(key == "depArpCdDestArptDestBjArpt"){
-                        if( values[key] ){
-                            if( values[key] == "depArpCd" ) values.depArpCd = true;
-                            if( values[key] == "destArpt" ) values.destArpt = true;
-                            if( values[key] == "destBjArpt" ) values.destBjArpt = true;
+                    if (key == "depArpCdDestArptDestBjArpt") {
+                        if (values[key]) {
+                            if (values[key] == "depArpCd") values.depArpCd = true;
+                            if (values[key] == "destArpt") values.destArpt = true;
+                            if (values[key] == "destBjArpt") values.destBjArpt = true;
                         }
-                        if(!values.depArpCd) values.depArpCd = false;
-                        if(!values.destArpt) values.destArpt = false;
-                        if(!values.destBjArpt) values.destBjArpt = false;
+                        if (!values.depArpCd) values.depArpCd = false;
+                        if (!values.destArpt) values.destArpt = false;
+                        if (!values.destBjArpt) values.destBjArpt = false;
                         delete values[key];
                     }
                     // takeOff、cruise、landing
-                    if(key == "takeOffCruiseLanding"){
-                        if( values[key] ){
-                            values[key].forEach( (item, i) => {
+                    if (key == "takeOffCruiseLanding") {
+                        if (values[key]) {
+                            values[key].forEach((item, i) => {
                                 values[item] = true;
                             });
                         }
-                        if(!values.takeOff) values.takeOff = false;
-                        if(!values.cruise) values.cruise = false;
-                        if(!values.landing) values.landing = false;
+                        if (!values.takeOff) values.takeOff = false;
+                        if (!values.cruise) values.cruise = false;
+                        if (!values.landing) values.landing = false;
                         delete values[key];
                     }
-                    if( key == "effectiveTime" || key == "invalidTime" ){
+                    if (key == "effectiveTime" || key == "invalidTime") {
                         values[key] = moment(values[key]).format('YYYY-MM-DD HH:mm:ss');
                     }
                 }
                 Object.assign(result, values);
+                // console.log(result, values, '获取input')
                 cb && typeof cb == "function" && cb();
             }
         });
     }
 
-    submit = ( callback ) => {
+    submit = (callback) => {
         var result = {};
         this.handleValues(result, this.form1, () => {
             this.handleValues(result, this.form2, () => {
@@ -819,30 +844,30 @@ class EditFrom extends React.Component {
                             this.handleValues(result, this.form6, () => {
                                 this.handleValues(result, this.form7, () => {
                                     var obj = {};
-                                    this.otherConfig.state.list.forEach( (item, i) => {
+                                    this.otherConfig.state.list.forEach((item, i) => {
                                         obj[item.id] = item.riskValue;
                                     });
-                                    result.rmItemIds = JSON.stringify(obj).replace("{","").replace("}","");
+                                    result.rmItemIds = JSON.stringify(obj).replace("{", "").replace("}", "");
                                     const params = handleInParams(result);
                                     const currentAction = this.props.currentAction;
                                     var url, msg;
-                                    if( currentAction == "add" ){
+                                    if (currentAction == "add") {
                                         url = "dailyAssociateRisk/addDailyAssoRisksInfo";
                                         msg = "添加";
-                                    }else if( currentAction == "edit" ){
+                                    } else if (currentAction == "edit") {
                                         url = "dailyAssociateRisk/updateDailyAssoRisksInfo";
                                         msg = "修改";
                                         params.id = this.props.datas.id;
                                     }
-                                    if( url ){
+                                    if (url) {
                                         post({
                                             url: url,
                                             data: params,
                                             success: res => {
-                                                if( res.success ){
+                                                if (res.success) {
                                                     message.success(msg + "成功！");
                                                     callback && typeof callback == "function" && callback();
-                                                }else{
+                                                } else {
                                                     message.error(msg + "失败！");
                                                 }
                                             }
@@ -857,41 +882,41 @@ class EditFrom extends React.Component {
         });
     }
 
-    render(){
-        const {userInfo = {} } = this.props;
+    render() {
+        const { userInfo = {} } = this.props;
         return (
             <div className="daily-risk-target">
                 <div className="update-user">更新人：{userInfo.userCode}</div>
-                <div className="fl" style={{width: "53%"}}>
+                <div className="fl" style={{ width: "53%" }}>
                     <CardCommon title="机组配置">
-                        <CommonForm options={this.state.options1} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form1 = form.props.form}}/>
+                        <CommonForm options={this.state.options1} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form1 = form.props.form }} />
                     </CardCommon>
                     <CardCommon title="飞机配置">
-                        <CommonForm options={this.state.options2} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form2 = form.props.form}}/>
+                        <CommonForm options={this.state.options2} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form2 = form.props.form }} />
                     </CardCommon>
                     <CardCommon title="航班配置">
-                        <CommonForm options={this.state.options3} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form3 = form.props.form}}/>
+                        <CommonForm options={this.state.options3} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form3 = form.props.form }} />
                     </CardCommon>
                     <div className="mt20">
-                        <CommonForm options={this.state.options4} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form4 = form.props.form}}/>
+                        <CommonForm options={this.state.options4} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form4 = form.props.form }} />
                     </div>
                 </div>
-                <div className="fr pl15" style={{width: "47%"}}>
+                <div className="fr pl15" style={{ width: "47%" }}>
                     <CardCommon title="其他配置">
                         <OtherConfig datas={this.props.datas.rmItemIdList} onRef={ref => this.otherConfig = ref} />
                     </CardCommon>
                     <CardCommon title="风险提示">
                         <div className="fixed-height">
-                            <CommonForm options={this.state.options5} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form5 = form.props.form}}/>
+                            <CommonForm options={this.state.options5} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form5 = form.props.form }} />
                         </div>
                     </CardCommon>
                     <CardCommon title="缓解措施">
                         <div className="fixed-height">
-                            <CommonForm options={this.state.options6} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form6 = form.props.form}}/>
+                            <CommonForm options={this.state.options6} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form6 = form.props.form }} />
                         </div>
                     </CardCommon>
                     <div className="mt20">
-                        <CommonForm options={this.state.options7} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form7 = form.props.form}}/>
+                        <CommonForm options={this.state.options7} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form7 = form.props.form }} />
                     </div>
                 </div>
             </div>
@@ -902,24 +927,24 @@ class EditFrom extends React.Component {
 
 class OtherConfig extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             list: [],
             currentItem: {}
         };
         this.btns = [
-            {name: "新增", icon: "plus", onClick: this.add},
-            {name: "删除", icon: "minus", onClick: this.del}
+            { name: "新增", icon: "plus", onClick: this.add },
+            { name: "删除", icon: "minus", onClick: this.del }
         ];
         this.form;
     }
 
-    componentDidMount(){
-        if( this.props.onRef ) this.props.onRef(this);
-        if( this.props.datas ){
+    componentDidMount() {
+        if (this.props.onRef) this.props.onRef(this);
+        if (this.props.datas) {
             var list = [];
-            for(var key in this.props.datas){
+            for (var key in this.props.datas) {
                 var obj = {
                     id: key.substring(0, key.indexOf("*")),
                     path: key.substring(key.lastIndexOf("*") + 1),
@@ -928,17 +953,17 @@ class OtherConfig extends React.Component {
                 }
                 list.push(obj);
             }
-            this.setState({list});
+            this.setState({ list });
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getFormOptions(){
+    getFormOptions() {
         return [
             {
                 type: "Hidden",
@@ -964,8 +989,8 @@ class OtherConfig extends React.Component {
             },
         ];
     }
-    
-    onSelect(data){
+
+    onSelect(data) {
         this.form.setFieldsValue({
             id: data.id,
             path: data.path,
@@ -980,18 +1005,18 @@ class OtherConfig extends React.Component {
     }
 
     submit = () => {
-        this.form.validateFields( (err, values) => {
-            if(!err){
+        this.form.validateFields((err, values) => {
+            if (!err) {
                 var list = this.state.list;
                 list.push(values);
-                this.setState({list});
+                this.setState({ list });
                 this.modal.hide();
             }
         });
     }
 
     onClick = (data) => {
-        var list = this.state.list.map( (item, i) => {
+        var list = this.state.list.map((item, i) => {
             item.active = item.id == data.id ? true : false;
             return item;
         });
@@ -1004,17 +1029,17 @@ class OtherConfig extends React.Component {
     del = (callback) => {
         callback();
         const { list, currentItem } = this.state;
-        var arr = list.filter( (item, i) => item.id != currentItem.id );
+        var arr = list.filter((item, i) => item.id != currentItem.id);
         this.setState({
             list: arr,
             currentItem: {}
         });
     }
-    
+
     render() {
-        const modalOptions =  {
+        const modalOptions = {
             options: { title: "新增其他配置" },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
         const formOptions = this.getFormOptions();
@@ -1022,13 +1047,13 @@ class OtherConfig extends React.Component {
             <div className="daily-risk-target-other flex">
                 <div className="box">
                     {
-                        this.state.list.map( (item, i ) => {
+                        this.state.list.map((item, i) => {
                             var path = "";
-                            if( item.path ) path = item.path.substring(0, 2);
-                            var title = <div>阶段：{path}<br />父节点：{item.path}<br />风险值 >= {item.riskValue}</div>;
+                            if (item.path) path = item.path.substring(0, 2);
+                            var title = `<div>阶段：${path}<br />父节点：${item.path}<br />风险值 >= ${item.riskValue}</div>`;
                             return (
                                 <Tooltip title={title} key={i} >
-                                    <div className={item.active?"active":""} onClick={() => this.onClick(item)}>{item.riskName}</div>
+                                    <div className={item.active ? "active" : ""} onClick={() => this.onClick(item)}>{item.riskName}</div>
                                 </Tooltip>
                             )
                         })
@@ -1040,7 +1065,7 @@ class OtherConfig extends React.Component {
                 <CommonModal {...modalOptions}>
                     <div className="daily-risk-target-other-modal clearfix">
                         <div className="fl"><RmItemTree onSelect={data => this.onSelect(data)} /></div>
-                        <div className="fr"><CommonForm options={formOptions} wrappedComponentRef={(form) =>{if(form && form.props && form.props.form) this.form = form.props.form}}/></div>
+                        <div className="fr"><CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form }} /></div>
                     </div>
                 </CommonModal>
             </div>
@@ -1051,7 +1076,7 @@ class OtherConfig extends React.Component {
 
 class RmItemTree extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             treeData: [],
@@ -1063,20 +1088,20 @@ class RmItemTree extends React.Component {
         };
     }
 
-    componentDidMount(){
-        this.getRiskValue("root", data => this.setState({treeData: data}));
+    componentDidMount() {
+        this.getRiskValue("root", data => this.setState({ treeData: data }));
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getRiskValue(parentId, callback){
+    getRiskValue(parentId, callback) {
         post({
             url: "rmItem/loadRmItemTreeChildren",
-            data: {parentId: parentId},
+            data: { parentId: parentId },
             success: data => {
                 var arr = data.map(item => {
                     return {
@@ -1098,12 +1123,12 @@ class RmItemTree extends React.Component {
         }
         this.getRiskValue(node.props.dataRef.key, data => {
             node.props.dataRef.children = data;
-            this.setState({treeData:  [...this.state.treeData]});
+            this.setState({ treeData: [...this.state.treeData] });
             resolve();
         });
     });
 
-    onExpand = (expandedKeys, {expanded, node}) => {
+    onExpand = (expandedKeys, { expanded, node }) => {
         this.setState({
             expandedKeys: expandedKeys
         });
@@ -1115,22 +1140,22 @@ class RmItemTree extends React.Component {
         const beforeStr = item.title.substr(0, index);
         const afterStr = item.title.substr(index + searchValue.length);
         let title = index == -1 ? item.title : (<React.Fragment>{beforeStr} <span className="text-danger">{searchValue}</span> {afterStr}</React.Fragment>);
-        if(item.children) {
+        if (item.children) {
             return (
                 <TreeNode title={title} key={item.key} isLeaf={item.isLeaf} dataRef={item}>
                     {this.renderTreeNodes(item.children)}
                 </TreeNode>
             );
         }
-        return <TreeNode title={title} key={item.key} isLeaf={item.isLeaf} dataRef={item}/>;
+        return <TreeNode title={title} key={item.key} isLeaf={item.isLeaf} dataRef={item} />;
     });
 
-    treeReplace(list, data, parentId){
-        if( list ){
-            list.forEach( item => {
-                if( item.key == parentId ){
+    treeReplace(list, data, parentId) {
+        if (list) {
+            list.forEach(item => {
+                if (item.key == parentId) {
                     item.children = data;
-                }else if( item.children ){
+                } else if (item.children) {
                     item.children = this.treeReplace(item.children, data, parentId);
                 }
             });
@@ -1138,29 +1163,29 @@ class RmItemTree extends React.Component {
         return list;
     }
 
-    onSearch(value){
-        if( value ){
+    onSearch(value) {
+        if (value) {
             let This = this;
             post({
                 url: "rmItem/searchRmImte",
-                data: {name: value},
+                data: { name: value },
                 success: data => {
-                    if( data ){
+                    if (data) {
                         let { treeData } = this.state;
                         // 递归请求接口
                         var i = 0;
                         _ajaxRiskValue();
-                        function _ajaxRiskValue(){
+                        function _ajaxRiskValue() {
                             var id = data[i].id;
                             This.getRiskValue(id, res => {
                                 treeData = This.treeReplace(treeData, res, id);
                                 i++;
-                                if( i < data.length ){
+                                if (i < data.length) {
                                     _ajaxRiskValue();
-                                }else{
+                                } else {
                                     This.setState({
                                         treeData: treeData,
-                                        expandedKeys: data.map((item) => {return item.id}),
+                                        expandedKeys: data.map((item) => { return item.id }),
                                         searchValue: value,
                                     });
                                 }
@@ -1169,15 +1194,15 @@ class RmItemTree extends React.Component {
                     }
                 }
             });
-        }else{
+        } else {
             message.warning(this.state.tip);
         }
     }
 
     onSelect = (selectedKeys, e) => {
-        if( e.selectedNodes.length > 0 ){
+        if (e.selectedNodes.length > 0) {
             var data = e.selectedNodes[0].props.dataRef.datas;
-            if( data.isLeaf == "Y" ){
+            if (data.isLeaf == "Y") {
                 this.props.onSelect(data);
             }
         }
@@ -1188,13 +1213,13 @@ class RmItemTree extends React.Component {
             <React.Fragment>
                 <Search placeholder={this.state.tip} onSearch={value => this.onSearch(value)} />
                 <div className="search-tree">
-                    <DirectoryTree 
+                    <DirectoryTree
                         loadData={this.onLoadData}
                         onExpand={this.onExpand}
                         expandedKeys={this.state.expandedKeys}
                         autoExpandParent={this.state.autoExpandParent}
                         onSelect={this.onSelect}
-                        >{this.renderTreeNodes(this.state.treeData)}</DirectoryTree>
+                    >{this.renderTreeNodes(this.state.treeData)}</DirectoryTree>
                 </div>
             </React.Fragment>
         );

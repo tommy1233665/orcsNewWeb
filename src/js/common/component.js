@@ -48,12 +48,12 @@ const commonBtnOpt = {
     },
     calculatorOpt: {//计算
         //shape: "round", size: "small",
-        type: "primary", 
+        type: "primary",
         icon: "calculator"
     },
     listOpt: {//计算
         //shape: "round", size: "small",
-        //type: "dashed", 
+        //type: "dashed",
         icon: "unordered-list"
     },
     noticeOpt: {//通知
@@ -67,7 +67,7 @@ const commonBtnOpt = {
     }
 };
 
-/** 
+/**
  * 页面级权限路由控制
  */
 class PermissionRouter extends React.Component {
@@ -116,7 +116,7 @@ class CommonTabs extends React.Component {
     render() {
         const { tabs } = this.state;
         var className = "comm-tab ";
-        if( this.props.className ) className += this.props.className;
+        if (this.props.className) className += this.props.className;
         return (
             <div className={className}>
                 {
@@ -327,12 +327,12 @@ class CheckboxCustom extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         const { list, options } = nextProps.options;
         const { initialValue } = options;
-        if( list.length > 0 && nextProps.value && nextProps.value.length > 0 ){
+        if (list.length > 0 && nextProps.value && nextProps.value.length > 0) {
             this.setState({
-                value: nextProps.value, 
+                value: nextProps.value,
                 indeterminate: !!initialValue.length && initialValue.length < list.length,
                 checkAll: initialValue.length === list.length,
             });
@@ -451,7 +451,7 @@ class DynamicFieldSetCustom extends React.Component {
                                         {this.state.symbols.map((item, index) => <Option key={index} value={item.code}>{item.name}</Option>)}
                                     </Select>
                                     <Tooltip title={item.setValue}>
-                                        <Input onChange={(e) => this.onChange(e.target.value, index, "setValue")} value={item.setValue} disabled={disabled}/>
+                                        <Input onChange={(e) => this.onChange(e.target.value, index, "setValue")} value={item.setValue} disabled={disabled} />
                                     </Tooltip>
                                     <Button onClick={() => this.onDel(index)} disabled={disabled}>删除</Button>
                                 </InputGroup>
@@ -495,7 +495,7 @@ class InputExplainFrom extends React.Component {
         return (
             <React.Fragment>
                 <Input onChange={this.onChange} value={this.state.value} placeholder={obj.placeholder} style={{ width: 'calc( 100% - ' + width + ')' }} />
-                { obj.isHelp && <Tooltip title={obj.isHelp}><Icon type="question-circle" style={{marginLeft: "5px"}} /></Tooltip> }
+                { obj.isHelp && <Tooltip title={obj.isHelp}><Icon type="question-circle" style={{ marginLeft: "5px" }} /></Tooltip>}
                 { !obj.isHelp && obj.explain && <span className={obj.explainClassName} style={{ width: width }}>{obj.explain}</span>}
             </React.Fragment>
         )
@@ -531,7 +531,7 @@ class GroupCustom extends React.Component {
     componentDidMount() {
         if (this.state.value && this.state.value != {}) this.triggerChange({ value: this.state.value });
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
@@ -702,9 +702,9 @@ class GroupCustom extends React.Component {
                     };
                 });
                 this.setState({ groupTypes });
-                if( groupTypes.length > 0 ){
+                if (groupTypes.length > 0) {
                     this.getGroupList(groupTypes[0].text);
-                } 
+                }
                 callback && typeof callback == "function" && callback(res);
             }
         });
@@ -771,7 +771,7 @@ class GroupCustom extends React.Component {
         this.form2.validateFields((err, values) => {
             if (err) {
                 this.setState({ modalOkBtnLoading2: false });
-            } else{
+            } else {
                 var groupTableType = this.state.groupTypes.find((item) => {
                     return (item.key == values.groupTableType);
                 }).text;
@@ -779,13 +779,13 @@ class GroupCustom extends React.Component {
                 post({
                     url: "dailyAssociateRisk/addGroupTableInfo",
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading2: false}),
+                    btn: () => this.setState({ modalOkBtnLoading2: false }),
                     success: data => {
                         if (data.success) {
                             message.success("添加成功");
                             this.modal2.hide();
                             // 更新group数据
-                            if( this.state.groupTypes.length > 0 ){
+                            if (this.state.groupTypes.length > 0) {
                                 this.getGroupList(this.state.groupTypes[0].text);
                             }
                         }
@@ -797,7 +797,7 @@ class GroupCustom extends React.Component {
     submit3 = () => {
         const This = this;
         const groupTableIds = This.state.selectedTags;
-        if( This.state.selectedTags.length == 0 ){
+        if (This.state.selectedTags.length == 0) {
             message.warning("请选择需要删除的群组！");
             return;
         }
@@ -806,20 +806,20 @@ class GroupCustom extends React.Component {
             onOk() {
                 post({
                     url: "dailyAssociateRisk/deleteGroupTableInfo",
-                    data: {groupTableIds: groupTableIds},
-                    btn: () => This.setState({modalOkBtnLoading3: false, selectedTags: []}),
+                    data: { groupTableIds: groupTableIds },
+                    btn: () => This.setState({ modalOkBtnLoading3: false, selectedTags: [] }),
                     success: data => {
                         if (data.success) {
                             message.success("删除成功");
                             This.modal3.hide();
                             // 更新group数据
                             var params = This.form1.getFieldsValue();
-                            if( groupTableIds.indexOf(params.groupTableName) > -1 ){
+                            if (groupTableIds.indexOf(params.groupTableName) > -1) {
                                 params.groupTableName = "";
                                 params.groupTableContent = "";
                                 This.form1.setFieldsValue(params);
                             }
-                            if( This.state.groupTypes.length > 0 ){
+                            if (This.state.groupTypes.length > 0) {
                                 This.getGroupList(This.state.groupTypes[0].text);
                             }
                         }
@@ -833,19 +833,19 @@ class GroupCustom extends React.Component {
         this.form4.validateFields((err, values) => {
             if (err) {
                 this.setState({ modalOkBtnLoading4: false });
-            } else{
+            } else {
                 delete values.groupTableType;
                 post({
                     url: "dailyAssociateRisk/updateGroupTableInfo",
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading4: false}),
+                    btn: () => this.setState({ modalOkBtnLoading4: false }),
                     success: data => {
                         if (data.success) {
                             message.success("修改成功");
                             this.modal4.hide();
                             // 更新group数据
                             var params = this.form1.getFieldsValue();
-                            if( params.groupTableName == values.groupTableId ){
+                            if (params.groupTableName == values.groupTableId) {
                                 params.groupTableContent = values.groupTableContent;
                                 this.form1.setFieldsValue(params);
                             }
@@ -928,8 +928,8 @@ class GroupCustom extends React.Component {
                             groups.map((item, i) => {
                                 var colors = ["magenta", "red", "#f50"];
                                 return (
-                                    <CheckableTag key={i} 
-                                        checked={selectedTags.indexOf(item.key) > -1} 
+                                    <CheckableTag key={i}
+                                        checked={selectedTags.indexOf(item.key) > -1}
                                         onChange={checked => this.handleChange(item, checked)}>
                                         {item.text}
                                     </CheckableTag>
@@ -969,7 +969,7 @@ class TreeSelectCustom extends React.Component {
         }
         if (value && value != {}) this.triggerChange({ value });
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
@@ -980,7 +980,7 @@ class TreeSelectCustom extends React.Component {
             onChange(Object.assign({}, this.state, changedValue));
         }
     }
-    
+
     onChange = (value, label, extra) => {
         var value = this.state.value;
         value.acftType = label[0];
@@ -1038,23 +1038,23 @@ class TreeSelectCustom extends React.Component {
 class RiskTabsCustom extends React.Component {
     constructor(props) {
         super(props);
-        var initialValue = props.options.options && props.options.options.initialValue ? props.options.options.initialValue : {};       
+        var initialValue = props.options.options && props.options.options.initialValue ? props.options.options.initialValue : {};
         this.state = {
             value: props.value || initialValue,
-            treeData: []             
+            treeData: []
         }
-        
+
     }
     componentDidMount() {
         const { value } = this.state;
         this.getAllRiskTabs(data => {
-            this.setState({riskTabsList: data});  
-            this.setState({ treeData: JSON.parse(data) });        
+            this.setState({ riskTabsList: data });
+            this.setState({ treeData: JSON.parse(data) });
         });
-        if (value && value != {}) this.triggerChange({ value }); 
+        if (value && value != {}) this.triggerChange({ value });
     }
 
-    getAllRiskTabs(callback){
+    getAllRiskTabs(callback) {
         post({
             url: "airLineRisk/getAllRiskTabs",
             success: data => {
@@ -1062,14 +1062,14 @@ class RiskTabsCustom extends React.Component {
             }
         });
     }
-  
-    componentWillUnmount(){
-       
+
+    componentWillUnmount() {
+
         this.setState = (state, callback) => {
             return;
         };
     }
-    
+
     triggerChange = (changedValue) => {
         const onChange = this.props.onChange;
         if (onChange) {
@@ -1078,11 +1078,11 @@ class RiskTabsCustom extends React.Component {
     }
     onChange = (value, label, extra) => {
         var value = this.state.value;
-       // value.acftType = label[0];
+        // value.acftType = label[0];
         this.setState({ value });
         this.triggerChange({ value });
     }
-    
+
     handleData(list) {
         var arr = [];
         for (var i = 0; i < list.length; i++) {
@@ -1104,8 +1104,8 @@ class RiskTabsCustom extends React.Component {
             <React.Fragment>
                 <Row gutter={24} className="form-treeSelectCustom">
                     <Col span={detailSpan[0]}>
-                        <TreeSelect onChange={this.onChange}  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} />
-                    </Col>                   
+                        <TreeSelect onChange={this.onChange} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} treeData={treeData} />
+                    </Col>
                 </Row>
             </React.Fragment>
         );
@@ -1141,7 +1141,8 @@ class InputCheckboxCustom extends React.Component {
     onCheckedChange = (e) => {
         const value = this.state.value;
         value.presentation = e.target.checked;
-        if (e.target.checked) value.riskValue = "";
+        // if (e.target.checked) value.riskValue = '0.0';
+        value.riskValue = e.target.checked === false ? '' : '0.0'
         this.setState({ value });
         this.triggerChange({ value });
     }
@@ -1173,8 +1174,8 @@ class MultipleSelect extends React.Component {
     componentWillReceiveProps(nextProps) {
         var nextValue = nextProps ? nextProps.value ? nextProps.value.value ? nextProps.value.value : nextProps.value : [] : [];
         var value = this.props.value ? this.props.value.value ? this.props.value.value : this.props.value : [];
-        if( nextValue.sort().toString() !== value.sort().toString() ) {
-            this.setState({value: nextValue});
+        if (nextValue.sort().toString() !== value.sort().toString()) {
+            this.setState({ value: nextValue });
         }
     }
     triggerChange = (changedValue) => {
@@ -1186,10 +1187,10 @@ class MultipleSelect extends React.Component {
     onSelect = (val) => {
         var { list, onSelect } = this.props.options;
         var value = this.state.value;
-        if ( val == "全部" ){
-        value = list.map(item => item.key =="全部"?"":item.key);
-         //value = list.map(item => item.key);
-        }else{
+        if (val == "全部") {
+            value = list.map(item => item.key == "全部" ? "" : item.key);
+            //value = list.map(item => item.key);
+        } else {
             value.push(val);
         }
         this.setState({ value });
@@ -1200,11 +1201,11 @@ class MultipleSelect extends React.Component {
     onDeselect = (val) => {
         var { onDeselect } = this.props.options;
         var value = this.state.value;
-        if ( val == "全部" ){
+        if (val == "全部") {
             value = [];
-        }else{
+        } else {
             value.splice(value.indexOf(val), 1);
-            if( value.indexOf("全部") > -1 ){
+            if (value.indexOf("全部") > -1) {
                 value.splice(value.indexOf("全部"), 1);
             }
         }
@@ -1215,18 +1216,18 @@ class MultipleSelect extends React.Component {
     }
     render() {
         var obj = this.props.options;
-        if( obj.isHasAllSelect ){
+        if (obj.isHasAllSelect) {
             var flag = false;
-            obj.list.find( item => {
-                if(item.key == "全部"){
+            obj.list.find(item => {
+                if (item.key == "全部") {
                     flag = true;
                 }
             });
-            if( !flag ) obj.list.unshift({key: "全部", text: "全部"});
+            if (!flag) obj.list.unshift({ key: "全部", text: "全部" });
         }
         return (
-            <Select  mode="multiple" onSelect={this.onSelect} onDeselect={this.onDeselect} value={this.state.value} disabled={obj.disabled} >       
-                {obj.list.map((item, i) => <Option key={i} value={item.key}>{item.text}</Option>)}                  
+            <Select mode="multiple" onSelect={this.onSelect} onDeselect={this.onDeselect} value={this.state.value} disabled={obj.disabled} >
+                {obj.list.map((item, i) => <Option key={i} value={item.key}>{item.text}</Option>)}
             </Select>
 
         );
@@ -1245,9 +1246,9 @@ class UploadFileCustom extends React.Component {
         }
     }
 
-    getDefaultFileList(names){
-        if( names.length == 0 ) return [];
-        if( names.length > 0 ){
+    getDefaultFileList(names) {
+        if (names.length == 0) return [];
+        if (names.length > 0) {
             var arr = [];
             names.forEach((name, i) => {
                 arr.push({
@@ -1272,7 +1273,7 @@ class UploadFileCustom extends React.Component {
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
@@ -1285,7 +1286,7 @@ class UploadFileCustom extends React.Component {
         }
     }
 
-    uploadPdf(value, successCallback, errorCallback){
+    uploadPdf(value, successCallback, errorCallback) {
         const formData = new FormData();
         formData.append('file', value);
         post({
@@ -1306,13 +1307,13 @@ class UploadFileCustom extends React.Component {
         });
     }
 
-    setValue(newValue){
+    setValue(newValue) {
         this.setState({
             value: newValue,
             uploading: false,
             fileList: this.getDefaultFileList(newValue),
         });
-        this.triggerChange({value: newValue.join(",")})
+        this.triggerChange({ value: newValue.join(",") })
     }
 
     handleUpload = () => {
@@ -1320,19 +1321,19 @@ class UploadFileCustom extends React.Component {
         const { fileList } = this.state;
         var fileListOld = fileList.filter(item => item.url);
         var fileListNew = fileList.filter(item => !item.url);
-        if( fileListNew.length == 0 ){
+        if (fileListNew.length == 0) {
             message.warning("请至少选择一个文件！");
             return;
         }
         // 递归上传pdf
         var i = 0;
         _uploadPdf();
-        function _uploadPdf(){
+        function _uploadPdf() {
             This.uploadPdf(fileListNew[i], () => {
                 i++;
-                if( i < fileListNew.length ){
+                if (i < fileListNew.length) {
                     _uploadPdf();
-                }else{
+                } else {
                     var newValue = fileList.map(item => item.name);
                     This.setValue(newValue);
                 }
@@ -1354,13 +1355,13 @@ class UploadFileCustom extends React.Component {
                     const newFileList = state.fileList.slice();
                     newFileList.splice(index, 1);
                     const newValue = newFileList.map(item => item.name);
-                    if( file.url ){
+                    if (file.url) {
                         this.triggerChange({ value: newValue.join(",") });
                         return {
                             fileList: newFileList,
                             value: newValue
                         }
-                    }else{
+                    } else {
                         return {
                             fileList: newFileList,
                         };
@@ -1369,14 +1370,14 @@ class UploadFileCustom extends React.Component {
             },
             beforeUpload: file => {
                 const isType = file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type == 'application/msword';
-                if(!isType) {
+                if (!isType) {
                     message.warning('只能上传pdf和word格式的文件!');
                 }
                 const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isLt2M) {
                     message.warning('文件必须小于2MB!');
                 }
-                if( isType && isLt2M ){
+                if (isType && isLt2M) {
                     this.setState(state => ({
                         fileList: [...state.fileList, file],
                     }));
@@ -1483,7 +1484,7 @@ class commForm extends React.Component {
                     break;
                 case "CheckboxCustom":
                     obj = this.formatList(obj);
-                    dom = <CheckboxCustom options={obj}/>;
+                    dom = <CheckboxCustom options={obj} />;
                     break;
                 case "TreeSelect":
                     dom = <TreeSelect treeData={obj.list} dropdownStyle={{ maxHeight: 400, overflow: 'auto' }} />
@@ -1510,12 +1511,12 @@ class commForm extends React.Component {
                     dom = <UploadFileCustom options={obj} />
                     break;
                 case "RiskTabsTreeSelect":
-                    dom = <RiskTabsTreeSelect options={obj}/>
+                    dom = <RiskTabsTreeSelect options={obj} />
                     break;
                 case "MultipleSelect":
                     obj = this.formatList(obj);
                     // 默认为true，即默认有全部
-                   // if (typeof obj.isHasAllSelect == "undefined") obj.isHasAllSelect = true;
+                    // if (typeof obj.isHasAllSelect == "undefined") obj.isHasAllSelect = true;
                     dom = <MultipleSelect options={obj} />
                     break;
             }
@@ -1533,12 +1534,12 @@ class commForm extends React.Component {
                 result.push(
                     <Col span={span} key={i} className={obj.className}>
                         <Item label={obj.label} className={"form-grid-" + fontNum}>
-                        
+
                             {
                                 obj.tooltip ? <Tooltip title={obj.tooltip}>
-                                    { obj.name && getFieldDecorator(obj.name, obj.options)(dom) }
+                                    {obj.name && getFieldDecorator(obj.name, obj.options)(dom)}
                                 </Tooltip> :
-                                obj.name && getFieldDecorator(obj.name, obj.options)(dom)
+                                    obj.name && getFieldDecorator(obj.name, obj.options)(dom)
                             }
                         </Item>
                     </Col>,
@@ -1581,26 +1582,26 @@ const CommonForm = Form.create({})(commForm);
 /**新增TreeSelect,实现展示书结构并进行多选 */
 class RiskTabsTreeSelect extends React.Component {
     constructor(props) {
-      super(props);  
-     // var initialValue = props.options.options && props.options.options.initialValue ? props.options.options.initialValue : {};
-      
-      this.state = {   
-        treeData: [] ,              
-      //  riskParamsMapList :[] , 
-        value: undefined 
-        //value: props.value || initialValue        
-      };
+        super(props);
+        // var initialValue = props.options.options && props.options.options.initialValue ? props.options.options.initialValue : {};
+
+        this.state = {
+            treeData: [],
+            //  riskParamsMapList :[] ,
+            value: undefined
+            //value: props.value || initialValue
+        };
     }
     componentDidMount() {
         const { value } = this.state;
         this.getAllRiskTabs(data => {
-          //  this.setState({riskTabsList: data});  
-            this.setState({ treeData: JSON.parse(data) });        
+            //  this.setState({riskTabsList: data});
+            this.setState({ treeData: JSON.parse(data) });
         });
- 
+
     }
 
-    getAllRiskTabs(callback){
+    getAllRiskTabs(callback) {
         post({
             url: "airLineRisk/getAllRiskTabs",
             success: data => {
@@ -1617,14 +1618,14 @@ class RiskTabsTreeSelect extends React.Component {
             }
         });
     }*/
-  
-    componentWillUnmount(){    
+
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
-    
-   
+
+
     /*onChange = (value, label, extra) => {
         var value = this.state.value;
        if(value == null || value == "" || value == undefined){
@@ -1634,7 +1635,7 @@ class RiskTabsTreeSelect extends React.Component {
         }   *
         this.setState({ value });
         this.triggerChange({ value });
-        
+
     } */
 
     triggerChange = (changedValue) => {
@@ -1642,40 +1643,40 @@ class RiskTabsTreeSelect extends React.Component {
         if (onChange) {
             onChange(Object.assign({}, this.state, changedValue));
         }
-    } 
-    
-   onSelect = value => {    
-   //  this.getValidParams(value,this.state.treeData);     
-  //    var value = this.state.value;
-  //     this.getValidParams(value,this.state.treeData);
-       this.setState({ value });
-       this.triggerChange({value});
+    }
+
+    onSelect = value => {
+        //  this.getValidParams(value,this.state.treeData);
+        //    var value = this.state.value;
+        //     this.getValidParams(value,this.state.treeData);
+        this.setState({ value });
+        this.triggerChange({ value });
     };
 
-    onChange = value => {         
-            this.setState({ value });
-            this.triggerChange({value});
-         };
-   /* onBlur = value =>{
-        if(value == null || value == "" || value == undefined){
-            this.state.riskParamsMapList = [];
-        }
-    }*/
+    onChange = value => {
+        this.setState({ value });
+        this.triggerChange({ value });
+    };
+    /* onBlur = value =>{
+         if(value == null || value == "" || value == undefined){
+             this.state.riskParamsMapList = [];
+         }
+     }*/
 
-   getValidParams(value,list){
-      let riskName = "";   
-       for(var i = 0; i < list.length; i++){
+    getValidParams(value, list) {
+        let riskName = "";
+        for (var i = 0; i < list.length; i++) {
             var obj = {
-            title: list[i].text,
-            value: list[i].children,
-            key: list[i].id
-        };
-           for(var j=0;j<obj.value.length;j++){
-               if(obj.value[j].id == value) riskName = obj.value[j].text;             
-           }            
+                title: list[i].text,
+                value: list[i].children,
+                key: list[i].id
+            };
+            for (var j = 0; j < obj.value.length; j++) {
+                if (obj.value[j].id == value) riskName = obj.value[j].text;
+            }
         }
-        this.state.riskParamsMapList.push(riskName);            
-   }
+        this.state.riskParamsMapList.push(riskName);
+    }
 
     handleData(list) {
         var arr = [];
@@ -1690,33 +1691,33 @@ class RiskTabsTreeSelect extends React.Component {
         }
         return arr;
     }
-  render() {
-     var treeData = this.handleData(this.state.treeData);
- //  const { viewSearchValue } = this.state;
-     const { value } = this.state;
-     return (
-                     <TreeSelect
-                      allowClear
-                      searchPlaceholder='请选择'                  
-                      multiple
-                      treeCheckable
-                      value={this.state.value}
-                      style={{ width: "100%" }}
-                      dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-                      treeData={treeData}
-                     // treeNodeFilterProp="title"
-                      treeDefaultExpandAll
-                      onSearch={this.qureHandleSearch}                             
-                      onChange={this.onChange}
-                 //     onSelect={this.onSelect}
-                //      onBlur={this.onBlur}
-                    />
-   
-    )
-  }
-   
-  }
-  
+    render() {
+        var treeData = this.handleData(this.state.treeData);
+        //  const { viewSearchValue } = this.state;
+        const { value } = this.state;
+        return (
+            <TreeSelect
+                allowClear
+                searchPlaceholder='请选择'
+                multiple
+                treeCheckable
+                value={this.state.value}
+                style={{ width: "100%" }}
+                dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+                treeData={treeData}
+                // treeNodeFilterProp="title"
+                treeDefaultExpandAll
+                onSearch={this.qureHandleSearch}
+                onChange={this.onChange}
+            //     onSelect={this.onSelect}
+            //      onBlur={this.onBlur}
+            />
+
+        )
+    }
+
+}
+
 
 
 /**
@@ -1755,40 +1756,40 @@ class CommonTable extends React.Component {
     onRowKey = (record, i) => {
         const { table, key, needPage = true } = this.props.options;
         const { pageNum, pageSize } = table;
-        if( key ){
+        if (key) {
             return record[key];
-        }else if(record.id){
+        } else if (record.id) {
             return record.id;
-        }else if(needPage){
-            return (pageNum - 1)*pageSize + i;
-        }else{
+        } else if (needPage) {
+            return (pageNum - 1) * pageSize + i;
+        } else {
             return i;
         }
     }
 
-    handleColumns(list){
+    handleColumns(list) {
         return list.map(item => {
             var Fun = item.render;
-            if( !Fun ){
-                if( !item.onCell ){
-                    if( item.isTooltip ){
+            if (!Fun) {
+                if (!item.onCell) {
+                    if (item.isTooltip) {
                         item.onCell = (record, rowIndex) => {
                             return {
                                 style: {
                                     maxWidth: item.width,
                                     overflow: 'hidden',
                                     whiteSpace: 'nowrap',
-                                    textOverflow:'ellipsis',
-                                    cursor:'pointer'
+                                    textOverflow: 'ellipsis',
+                                    cursor: 'pointer'
                                 }
                             }
                         };
                         item.render = (text) => <Tooltip title={text}>{text}</Tooltip>;
                     }
-                }else{
+                } else {
                     // 以后若有item.onCell再进行扩展；
                 }
-            }else{
+            } else {
                 // 自定义了render的，在自定义的render里加Tooltip
             }
             return item;
@@ -1799,28 +1800,28 @@ class CommonTable extends React.Component {
         var { table = {}, columns = [], notCheck = false, rowSelection, needPage = true, key, selectedRowKeys, scroll, onRow } = this.props.options;
         columns = this.handleColumns(columns);
         // 表格行可选择时：默认情况下
-        if( !notCheck ) rowSelection = rowSelection || this.rowSelection;
+        if (!notCheck) rowSelection = rowSelection || this.rowSelection;
         const { pageNum, pageSize, total, loading = true, dataList = [] } = table;
         let pageOptions = {};
-        Object.assign(pageOptions, this.pageOptions, {current: pageNum, pageSize, total});
+        Object.assign(pageOptions, this.pageOptions, { current: pageNum, pageSize, total });
         var data = { columns, dataSource: dataList, notCheck };
-        if( key ) data.key = key;
-        if( selectedRowKeys ) data.selectedRowKeys = selectedRowKeys;
-        if( !notCheck ) data.rowSelection = rowSelection;
-        if( scroll ) data.scroll = scroll;
-        if( onRow ) data.onRow = onRow;
+        if (key) data.key = key;
+        if (selectedRowKeys) data.selectedRowKeys = selectedRowKeys;
+        if (!notCheck) data.rowSelection = rowSelection;
+        if (scroll) data.scroll = scroll;
+        if (onRow) data.onRow = onRow;
         var tableOptions = {};
-        Object.assign(tableOptions, this.tableOptions, data );
+        Object.assign(tableOptions, this.tableOptions, data);
         return (
             <React.Fragment>
                 {
-                    !loading && <Table rowKey={this.onRowKey} {...tableOptions} />  
+                    !loading && <Table rowKey={this.onRowKey} {...tableOptions} />
                 }
                 {
                     !loading && needPage && total > 0 &&
                     <Pagination {...pageOptions}
                         onChange={this.onChange}
-                        onShowSizeChange={this.onShowSizeChange}/>
+                        onShowSizeChange={this.onShowSizeChange} />
                 }
             </React.Fragment>
         );
@@ -1830,13 +1831,14 @@ class CommonTable extends React.Component {
 /**
  * 风险航班表格头
  */
-function riskCAirportColumns({detailUrl, judge, onLook}) {
+function riskCAirportColumns({ detailUrl, judge, onLook }) {
     var arr = [
         { title: "航班日期", dataIndex: "fltDt", render: (text) => moment(text).format("YYYY-MM-DD") },
-        { title: "航班号", dataIndex: "fltNr", render: (text, record) => {
-                if( judge ){
+        {
+            title: "航班号", dataIndex: "fltNr", render: (text, record) => {
+                if (judge) {
                     return <a onClick={() => judge(record)}>{text}</a>;
-                }else{
+                } else {
                     return <Link to={`${detailUrl}${record.soflSeqNr}`} target="_blank">{text}</Link>;
                 }
             }
@@ -2004,13 +2006,13 @@ function FourBorder() {
 /**
  * 三新风险维护（新机型老航线、新开航线）导入
  */
-function getUploadProps(url, callback){
+function getUploadProps(url, callback) {
     const props = {
         accept: "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         fileList: [],
         beforeUpload(file) {
             const isExcel = file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-            if(!isExcel) {
+            if (!isExcel) {
                 message.error('只能上传excel!');
             }
             const isLt2M = file.size / 1024 / 1024 < 2;

@@ -66,24 +66,24 @@ class AcfData extends React.Component {
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getAllFleet(){
+    getAllFleet() {
         post({
             url: "acfData/queryAllFleet",
             success: data => {
                 this.setState({
-                    allFleet: data.map(item => {return {key: item.value, text: item.text}})
+                    allFleet: data.map(item => { return { key: item.value, text: item.text } })
                 });
             }
         });
     }
 
-    getFleetTailMap(){
+    getFleetTailMap() {
         post({
             url: "acfData/queryFleetTailMap",
             success: data => {
@@ -94,16 +94,16 @@ class AcfData extends React.Component {
         });
     }
 
-    getAllBranch(){
+    getAllBranch() {
         post({
             url: "acfData/getAllBranch",
             success: data => {
-                this.setState({allBranch: data});
+                this.setState({ allBranch: data });
             }
         });
     }
 
-    getSubPerformanceTypeMap(){
+    getSubPerformanceTypeMap() {
         post({
             url: "acfData/querySubPerformanceType",
             success: data => {
@@ -122,9 +122,9 @@ class AcfData extends React.Component {
             url: "acfData/queryAcfList",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -138,11 +138,11 @@ class AcfData extends React.Component {
         this.setState({ selectedRowKeys, selectedRows });
     }
 
-    getSearchFormValue(values){
-        for(var key in values){
-            if( key == "tailFleetSelector" ) delete values[key];
-            if( (key == "branchCds" || key == "tailNrs" || key == "fleetCds") && values[key] ) values[key] = values[key].value ? values[key].value : values[key];
-            if( key == "tailNr" ){
+    getSearchFormValue(values) {
+        for (var key in values) {
+            if (key == "tailFleetSelector") delete values[key];
+            if ((key == "branchCds" || key == "tailNrs" || key == "fleetCds") && values[key]) values[key] = values[key].value ? values[key].value : values[key];
+            if (key == "tailNr") {
                 values.tailNrs = values[key];
                 delete values[key];
             }
@@ -153,9 +153,9 @@ class AcfData extends React.Component {
 
     search = () => {
         this.searchForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = this.getSearchFormValue(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -171,20 +171,20 @@ class AcfData extends React.Component {
     }
 
     addSubmit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.addForm.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
                 values = handleInParams(values);
                 post({
                     url: "acfData/addAcfBasic",
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         message.success("添加用户成功！");
                         this.addModal.hide();
-                        this.getList({pageNum: 1});
+                        this.getList({ pageNum: 1 });
                     }
                 });
             }
@@ -192,13 +192,13 @@ class AcfData extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             this.setState({
                 currentAction: "edit",
@@ -209,33 +209,33 @@ class AcfData extends React.Component {
     }
 
     detail = (text) => {
-        if( this.state.authorityDetail ){
+        if (this.state.authorityDetail) {
             this.setState({
                 currentAction: "detail",
                 currentData: text
             });
             this.modal.show();
-        }else{
+        } else {
             message.info("无权限查看");
         }
     }
 
     submit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
                 values = handleInParams(values);
                 values.aircraftsStr = JSON.stringify(this.tableCustom.state.dataSource);
                 post({
                     url: "acfData/saveAcfDetail",
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         message.success("修改成功");
                         this.modal.hide();
-                        this.getList({pageNum: 1});
+                        this.getList({ pageNum: 1 });
                     }
                 });
             }
@@ -243,10 +243,10 @@ class AcfData extends React.Component {
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var list = this.state.selectedRows.map(item => item.tailNr);
             confirm({
                 title: "确认删除【" + list.join("、") + "】吗?",
@@ -254,11 +254,11 @@ class AcfData extends React.Component {
                 onOk: () => {
                     post({
                         url: "acfData/deleteAcf",
-                        data: {tailNrs: list},
+                        data: { tailNrs: list },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
-                            this.getList({pageNum: 1});
+                            this.getList({ pageNum: 1 });
                         }
                     });
                 },
@@ -267,18 +267,18 @@ class AcfData extends React.Component {
         }
     }
 
-    getSearchFormOptions(){
+    getSearchFormOptions() {
         var { allFleet, fleetTailMap, allBranch } = this.state;
         var allBranchList = allBranch.map(item => {
-            return {key: item.branchCd, text: item.branchCd}
+            return { key: item.branchCd, text: item.branchCd }
         });
         return [
             {
                 type: "Radio",
                 name: "tailFleetSelector",
                 list: [
-                    {text: "按机尾号", key: "tail"},
-                    {text: "按机型", key: "fleet"}
+                    { text: "按机尾号", key: "tail" },
+                    { text: "按机型", key: "fleet" }
                 ],
                 span: 6,
                 options: {
@@ -290,7 +290,7 @@ class AcfData extends React.Component {
                 label: "机尾号",
                 name: "tailNr",
                 span: 6,
-                placeholder: "多个用逗号隔开",
+                placeholder: "多个用分号隔开",
                 hide: () => {
                     return this.searchForm && this.searchForm.getFieldValue("tailFleetSelector") == "fleet" ? true : false;
                 }
@@ -305,13 +305,13 @@ class AcfData extends React.Component {
                 onSelect: (value) => {
                     var fleetTailList = [];
                     value.forEach(item => {
-                        fleetTailList = fleetTailList.concat( 
+                        fleetTailList = fleetTailList.concat(
                             fleetTailMap[item].map(key => {
-                                return {key: key, text: key}
+                                return { key: key, text: key }
                             })
                         );
                     });
-                    this.setState({fleetTailList});
+                    this.setState({ fleetTailList });
                 },
                 hide: () => {
                     return this.searchForm && this.searchForm.getFieldValue("tailFleetSelector") == "tail" ? true : false;
@@ -344,14 +344,14 @@ class AcfData extends React.Component {
         ];
     }
 
-    getAddFormOptions(){
+    getAddFormOptions() {
         const { fleetTailMap, subPerformanceTypeMap, allBranch } = this.state;
         var acftTypeList = [];
-        for( var key in fleetTailMap){
+        for (var key in fleetTailMap) {
             acftTypeList.push(key);
         }
         var allBranchList = allBranch.map(item => {
-            return {key: item.branchCd, text: item.branchCd}
+            return { key: item.branchCd, text: item.branchCd }
         });
         return [
             {
@@ -361,10 +361,10 @@ class AcfData extends React.Component {
                 span: 22,
                 options: {
                     rules: [
-                        {required: true, message: "机尾号不可为空！"},
+                        { required: true, message: "机尾号不可为空！" },
                         {
                             validator: (rule, value, callback) => {
-                                if (value && (value == "B" || value.trim() == "B" || value.trim() == "" || value.length > 12) ) {
+                                if (value && (value == "B" || value.trim() == "B" || value.trim() == "" || value.length > 12)) {
                                     callback('请输入正确的机尾号！')
                                 }
                                 callback();
@@ -381,9 +381,9 @@ class AcfData extends React.Component {
                 list: acftTypeList,
                 isHasAllSelect: false,
                 onSelect: (value) => {
-                    this.addForm.setFieldsValue({subPerformance: null});
+                    this.addForm.setFieldsValue({ subPerformance: null });
                     var subPerformanceList = subPerformanceTypeMap[value];
-                    this.setState({subPerformanceList});
+                    this.setState({ subPerformanceList });
                 },
             },
             {
@@ -402,7 +402,7 @@ class AcfData extends React.Component {
                 placeholder: "长度不能超过50",
                 options: {
                     rules: [
-                        {max: 50, message: "engineType的长度不能大于50"}
+                        { max: 50, message: "engineType的长度不能大于50" }
                     ]
                 }
             },
@@ -414,7 +414,7 @@ class AcfData extends React.Component {
                 placeholder: "长度不能超过50",
                 options: {
                     rules: [
-                        {max: 50, message: "msn的长度不能大于50"}
+                        { max: 50, message: "msn的长度不能大于50" }
                     ]
                 }
             },
@@ -432,15 +432,15 @@ class AcfData extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
+    getFormOptions() {
         var datas = this.state.currentData;
         const { fleetTailMap, allBranch } = this.state;
         var acftTypeList = [];
-        for( var key in fleetTailMap){
+        for (var key in fleetTailMap) {
             acftTypeList.push(key);
         }
         var allBranchList = allBranch.map(item => {
-            return {key: item.branchCd, text: item.branchCd}
+            return { key: item.branchCd, text: item.branchCd }
         });
         var arr = [
             {
@@ -464,7 +464,7 @@ class AcfData extends React.Component {
                 tooltip: "长度不能超过50",
                 options: {
                     initialValue: datas.engineType,
-                    rules: [{max: 50, message: "engineType的长度不能大于50"}]
+                    rules: [{ max: 50, message: "engineType的长度不能大于50" }]
                 }
             },
             {
@@ -500,7 +500,7 @@ class AcfData extends React.Component {
                 placeholder: "长度不能超过50",
                 options: {
                     initialValue: datas.msn,
-                    rules: [{max: 50, message: "msn的长度不能大于50"}]
+                    rules: [{ max: 50, message: "msn的长度不能大于50" }]
                 }
             },
             {
@@ -516,7 +516,7 @@ class AcfData extends React.Component {
                 }
             },
         ];
-        if( this.state.currentAction == "detail" ){
+        if (this.state.currentAction == "detail") {
             arr = arr.map(item => {
                 item.disabled = true;
                 return item;
@@ -525,7 +525,7 @@ class AcfData extends React.Component {
         return arr;
     }
 
-    render(){
+    render() {
         const { currentAction, table, modalOkBtnLoading, btns, currentData, selectedRowKeys, authorityList } = this.state;
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
@@ -533,8 +533,8 @@ class AcfData extends React.Component {
             aligin: "left",
             span: 6,
             list: [
-                {text: "查询", options: "queryOpt", event: this.search},
-                {text: "重置", options: "resetOpt", event: this.reset}
+                { text: "查询", options: "queryOpt", event: this.search },
+                { text: "重置", options: "resetOpt", event: this.reset }
             ]
         };
         // 增删改
@@ -561,47 +561,47 @@ class AcfData extends React.Component {
                 title: "新增飞机数据",
                 okButtonProps: { loading: modalOkBtnLoading }
             },
-            onRef: (ref) => {this.addModal = ref},
+            onRef: (ref) => { this.addModal = ref },
             ok: this.addSubmit.bind(this)
         }
         const addFormOptions = this.getAddFormOptions();
         // 模态框
         var title = currentAction == "edit" ? "编辑飞机详情" : "查看飞机详情";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title,
                 width: "1000px",
                 okButtonProps: { loading: modalOkBtnLoading }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
-        if( currentAction == "detail" ) modalOptions.options.footer = null;
+        if (currentAction == "detail") modalOptions.options.footer = null;
         const formOptions = this.getFormOptions();
-        return(
+        return (
             <CardCommon>
-                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searchForm = form.props.form;}} /> }
+                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searchForm = form.props.form; }} />}
                 <div className="buttons"><CommonBtns options={commonBtnOptions} btns={btns} /></div>
-                { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked} /> }
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }
+                { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked} />}
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...addModalOptions}>
                     <div className="form-grid-6">
-                        <CommonForm options={addFormOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.addForm = form.props.form;}} />
+                        <CommonForm options={addFormOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.addForm = form.props.form; }} />
                     </div>
                 </CommonModal>
                 <CommonModal {...modalOptions}>
                     <div>
-                        <CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}} />
+                        <CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }} />
                         <TableCustom datas={currentData} currentAction={currentAction} onRef={ref => this.tableCustom = ref} />
                     </div>
                 </CommonModal>
-            </CardCommon>            
+            </CardCommon>
         );
     }
 }
 
 class TableCustom extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             dataSource: [],
@@ -617,8 +617,8 @@ class TableCustom extends React.Component {
         this.searchForm;
     }
 
-    componentDidMount(){
-        if( this.props.onRef ) this.props.onRef(this);
+    componentDidMount() {
+        if (this.props.onRef) this.props.onRef(this);
         this.getTypes();
         this.getDepts();
         this.getSubDepts();
@@ -626,13 +626,13 @@ class TableCustom extends React.Component {
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getColumns(){
+    getColumns() {
         var arr = [
             { title: "编号", dataIndex: "index", width: 50 },
             { title: "类别", dataIndex: "colType", width: 100 },
@@ -645,62 +645,62 @@ class TableCustom extends React.Component {
         return arr;
     }
 
-    getDom(key, text, record){
-        if( this.props.currentAction == "detail" ) return <div>{text}</div>;
-        return this.state.edit && record.aircraftColsId == this.state.selected.aircraftColsId && key == this.state.selectedKey ? <Input defaultValue={text} onBlur={(e) => this.editTable(key, record, false, e)} autoComplete="off" /> : <div style={{minHeight: "22px"}} onClick={this.editTable.bind(this, key, record, true)}>{text}</div>;
+    getDom(key, text, record) {
+        if (this.props.currentAction == "detail") return <div>{text}</div>;
+        return this.state.edit && record.aircraftColsId == this.state.selected.aircraftColsId && key == this.state.selectedKey ? <Input defaultValue={text} onBlur={(e) => this.editTable(key, record, false, e)} autoComplete="off" /> : <div style={{ minHeight: "22px" }} onClick={this.editTable.bind(this, key, record, true)}>{text}</div>;
     }
 
-    editTable(key, record, flag, e){
-        this.setState({edit: flag, selected: record, selectedKey: key});
-        if( !flag) {
+    editTable(key, record, flag, e) {
+        this.setState({ edit: flag, selected: record, selectedKey: key });
+        if (!flag) {
             var dataSource = this.state.dataSource.map(item => {
-                if( item.aircraftColsId == record.aircraftColsId) item[key] = e.target.value;
+                if (item.aircraftColsId == record.aircraftColsId) item[key] = e.target.value;
                 return item;
             });
-            this.setState({dataSource});
+            this.setState({ dataSource });
         }
     }
 
-    getTypes(){
+    getTypes() {
         post({
             url: "acfData/queryAllDataTypes",
             success: data => {
                 this.setState({
                     types: data.map(item => {
-                        return {key:item.value, text: item.text}
+                        return { key: item.value, text: item.text }
                     })
                 });
             }
         });
     }
 
-    getDepts(){
+    getDepts() {
         post({
             url: "acfData/queryAllDepts",
             success: data => {
                 this.setState({
                     depts: data.map(item => {
-                        return {key:item.value, text: item.text}
+                        return { key: item.value, text: item.text }
                     })
                 });
             }
         });
     }
 
-    getSubDepts(){
+    getSubDepts() {
         post({
             url: "acfData/queryAllSubDepts",
             success: data => {
                 this.setState({
                     subDepts: data.map(item => {
-                        return {key:item.value, text: item.text}
+                        return { key: item.value, text: item.text }
                     })
                 });
             }
         });
     }
 
-    getDeptMap(){
+    getDeptMap() {
         post({
             url: "acfData/queryDeptMap",
             success: data => {
@@ -717,12 +717,12 @@ class TableCustom extends React.Component {
             url: "acfData/queryAcfDetail",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataSource = data.rows.map( (item, i) => {
+                if (data && data.rows) {
+                    var dataSource = data.rows.map((item, i) => {
                         item.index = i + 1;
                         return item;
                     });
-                    this.setState({dataSource, loading: false});
+                    this.setState({ dataSource, loading: false });
                 }
             }
         });
@@ -730,29 +730,29 @@ class TableCustom extends React.Component {
 
     search = () => {
         this.searchForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 var params = {};
-                for(var key in values){
-                    if( values[key] ){
-                        if( key == "dataType" || key == "dept1" || key == "dept" ) params[key] = values[key].value ? values[key].value : values[key];
+                for (var key in values) {
+                    if (values[key]) {
+                        if (key == "dataType" || key == "dept1" || key == "dept") params[key] = values[key].value ? values[key].value : values[key];
                     }
                 }
-                if( values.deptTypeSelector == "dept" && (!params.dept1 || (params.dept1 && params.dept1.length == 0)) ){
+                if (values.deptTypeSelector == "dept" && (!params.dept1 || (params.dept1 && params.dept1.length == 0))) {
                     message.warning("请选择一级部门！");
                     return;
                 }
-                if( values.deptTypeSelector == "dept" && (!params.dept || (params.dept && params.dept.length == 0)) ){
+                if (values.deptTypeSelector == "dept" && (!params.dept || (params.dept && params.dept.length == 0))) {
                     message.warning("请选择二级部门！");
                     return;
                 }
-                if( params.dept && params.dept.indexOf("全部") > -1 ){
-                    if( params.dept1 && params.dept1.indexOf("全部") > -1 ){
+                if (params.dept && params.dept.indexOf("全部") > -1) {
+                    if (params.dept1 && params.dept1.indexOf("全部") > -1) {
                         params = {};
-                    }else {
+                    } else {
                         params.dept = params.dept1;
                     }
                 }
-                if( params.dept1 ) delete params.dept1;
+                if (params.dept1) delete params.dept1;
                 this.getList(params);
             }
         });
@@ -762,26 +762,26 @@ class TableCustom extends React.Component {
         const deptMap = this.state.deptMap;
         var arr = [];
         value.forEach(item => {
-            if( deptMap[item] ){
-                arr = arr.concat( 
+            if (deptMap[item]) {
+                arr = arr.concat(
                     deptMap[item].map(key => {
-                        return {key: key, text: key}
+                        return { key: key, text: key }
                     })
                 );
             }
         });
-        this.setState({subDepts: arr});
+        this.setState({ subDepts: arr });
     }
 
-    getSearchFormOptions(){
+    getSearchFormOptions() {
         const { types, depts, subDepts } = this.state;
         return [
             {
                 type: "Radio",
                 name: "deptTypeSelector",
                 list: [
-                    {text: "按部门筛选", key: "dept"},
-                    {text: "按类别筛选", key: "info-type"}
+                    { text: "按部门筛选", key: "dept" },
+                    { text: "按类别筛选", key: "info-type" }
                 ],
                 span: 7,
                 options: {
@@ -832,19 +832,19 @@ class TableCustom extends React.Component {
         ];
     }
 
-    render(){
+    render() {
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
         const btnOptions = {
             aligin: "left",
             span: 5,
-            list: [{text: "查询", options: "queryOpt", event: this.search}]
+            list: [{ text: "查询", options: "queryOpt", event: this.search }]
         };
         // 列表表格参数
         const tableOptions = {
             notCheck: true,
             columns: this.getColumns(),
-            table: {dataList: this.state.dataSource, loading: this.state.loading},
+            table: { dataList: this.state.dataSource, loading: this.state.loading },
             scroll: {
                 x: "750px",
                 y: "300px"
@@ -853,7 +853,7 @@ class TableCustom extends React.Component {
         }
         return (
             <React.Fragment>
-                <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searchForm = form.props.form;}} />
+                <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searchForm = form.props.form; }} />
                 <CommonTable options={tableOptions} />
             </React.Fragment>
         )

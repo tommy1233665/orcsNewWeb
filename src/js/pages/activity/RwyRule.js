@@ -52,26 +52,26 @@ class RwyRule extends React.Component {
             { title: "原因备注", dataIndex: "landUnuseRwyRemark", width: 120, isTooltip: true },
             { title: "更新人", dataIndex: "updateUser", width: 100 },
             { title: "更新时间", dataIndex: "updateTime", width: 150 }
-        ];   
+        ];
         this.modal;
         this.form;
     }
 
     componentDidMount() {
         this.getParmaList("acfData/getAllPerformanceType", data => {
-            this.setState({performanceType: data.map(item => item.performanceType)}) 
+            this.setState({ performanceType: data.map(item => item.performanceType) })
         });
-        this.getParmaList("acfData/queryPerformanceType", data => this.setState({performanceTypeMap: data}) );
+        this.getParmaList("acfData/queryPerformanceType", data => this.setState({ performanceTypeMap: data }));
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getParmaList(url, callback){
+    getParmaList(url, callback) {
         post({
             url: url,
             success: data => {
@@ -88,9 +88,9 @@ class RwyRule extends React.Component {
             url: "rwyRule/queryRwyRuleListByParam",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -106,9 +106,9 @@ class RwyRule extends React.Component {
 
     search = () => {
         this.searcForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = handleInParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -122,23 +122,23 @@ class RwyRule extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             var datas = this.state.selectedRows[0];
             this.setState({
                 currentAction: "edit",
                 currentData: datas
             });
-            if( datas.performanceType ){
-                for(var key in this.state.performanceTypeMap){
-                    if (key == datas.performanceType){
-                        this.setState({subPerformanceType: this.state.performanceTypeMap[key]});
+            if (datas.performanceType) {
+                for (var key in this.state.performanceTypeMap) {
+                    if (key == datas.performanceType) {
+                        this.setState({ subPerformanceType: this.state.performanceTypeMap[key] });
                     }
                 }
             }
@@ -147,26 +147,26 @@ class RwyRule extends React.Component {
     }
 
     submit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
                 values = handleInParams(values);
-                for(var key in values){
-                    if(key == "subPerformanceType"){
-                        if(values[key].value) values[key] = values[key].value;
+                for (var key in values) {
+                    if (key == "subPerformanceType") {
+                        if (values[key].value) values[key] = values[key].value;
                         var index = values[key].indexOf("全部");
-                        if( index > -1 ){
+                        if (index > -1) {
                             values[key].splice(index, 1);
                         }
                     }
                 }
                 var url, msg;
-                if( this.state.currentAction == "add"){
+                if (this.state.currentAction == "add") {
                     url = "rwyRule/insert";
                     msg = "添加成功";
-                }else{
+                } else {
                     values.id = this.state.currentData.id;
                     url = "rwyRule/update";
                     msg = "修改成功";
@@ -174,11 +174,11 @@ class RwyRule extends React.Component {
                 post({
                     url: url,
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         message.success(msg);
                         this.modal.hide();
-                        this.getList({pageNum: 1});
+                        this.getList({ pageNum: 1 });
                     }
                 });
             }
@@ -186,10 +186,10 @@ class RwyRule extends React.Component {
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var list = this.state.selectedRows.map(item => item.id);
             confirm({
                 title: "确认删除选项吗?",
@@ -197,11 +197,11 @@ class RwyRule extends React.Component {
                 onOk: () => {
                     post({
                         url: "rwyRule/delete",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
-                            this.getList({pageNum: 1});
+                            this.getList({ pageNum: 1 });
                         }
                     });
                 },
@@ -211,17 +211,17 @@ class RwyRule extends React.Component {
     }
 
     export = (callback) => {
-        if( this.state.selectedExport.length == 0 ){
+        if (this.state.selectedExport.length == 0) {
             callback();
             message.warning("未选中选项");
-        }else{
+        } else {
             var list = this.state.selectedExport.map(item => item.id);
             confirm({
                 title: "确定导出选中的跑道规则吗？",
                 onOk() {
                     post({
                         url: "rwyRule/export",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             downloadFile(data, "跑道规则表");
@@ -252,7 +252,7 @@ class RwyRule extends React.Component {
         });
     }
 
-    getSearchFormOptions(){
+    getSearchFormOptions() {
         const { performanceType } = this.state;
         return [
             {
@@ -264,7 +264,7 @@ class RwyRule extends React.Component {
                 placeholder: "四字码，如：ZWAT",
                 options: {
                     rules: [
-                        { pattern: /^[A-Z]{4}$/, message: "请输入正确的四字码！"}
+                        { pattern: /^[A-Z]{4}$/, message: "请输入正确的四字码！" }
                     ]
                 }
             },
@@ -282,11 +282,11 @@ class RwyRule extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
+    getFormOptions() {
         const { currentAction, currentData, performanceType, performanceTypeMap, subPerformanceType } = this.state;
         var datas = currentAction == "add" ? {} : currentData;
         var subPerformanceTypeValue = [];
-        if( datas.subPerformanceType ){
+        if (datas.subPerformanceType) {
             subPerformanceTypeValue = datas.subPerformanceType.split(",");
         }
         return [
@@ -299,8 +299,8 @@ class RwyRule extends React.Component {
                 options: {
                     initialValue: datas.icaoCode,
                     rules: [
-                        {required: true, message: "机场不可为空！"},
-                        {pattern: /^[A-Z]{4}$/, message: "请输入正确的四字码！"}
+                        { required: true, message: "机场不可为空！" },
+                        { pattern: /^[A-Z]{4}$/, message: "请输入正确的四字码！" }
                     ]
                 }
             },
@@ -312,14 +312,14 @@ class RwyRule extends React.Component {
                 span: 24,
                 isHasAllSelect: false,
                 onSelect: (value) => {
-                    for(var key in performanceTypeMap){
-                        if (key == value) this.setState({subPerformanceType: performanceTypeMap[key]});
+                    for (var key in performanceTypeMap) {
+                        if (key == value) this.setState({ subPerformanceType: performanceTypeMap[key] });
                     }
                 },
                 options: {
                     initialValue: datas.performanceType,
                     rules: [
-                        {required: true, message: "性能机型不可为空！"}
+                        { required: true, message: "性能机型不可为空！" }
                     ]
                 }
             },
@@ -332,7 +332,7 @@ class RwyRule extends React.Component {
                 options: {
                     initialValue: subPerformanceTypeValue,
                     rules: [
-                        {required: true, message: "性能子机型不可为空！"},
+                        { required: true, message: "性能子机型不可为空！" },
                         {
                             validator: (rule, value, callback) => {
                                 if (value && value.value && value.value.length == 0) {
@@ -349,7 +349,7 @@ class RwyRule extends React.Component {
                 label: "起飞常用跑道",
                 name: "takeoffCommonUseRwy",
                 span: 24,
-                placeholder: "多条跑道请用英文逗号隔开",
+                placeholder: "多条跑道请用英文分号隔开",
                 options: {
                     initialValue: datas.takeoffCommonUseRwy
                 }
@@ -368,7 +368,7 @@ class RwyRule extends React.Component {
                 label: "起飞不可用跑道",
                 name: "takeoffUnuseRwy",
                 span: 24,
-                placeholder: "多条跑道请用英文逗号隔开",
+                placeholder: "多条跑道请用英文分号隔开",
                 options: {
                     initialValue: datas.takeoffUnuseRwy
                 }
@@ -387,7 +387,7 @@ class RwyRule extends React.Component {
                 label: "落地常用跑道",
                 name: "landCommonUseRwy",
                 span: 24,
-                placeholder: "多条跑道请用英文逗号隔开",
+                placeholder: "多条跑道请用英文分号隔开",
                 options: {
                     initialValue: datas.landCommonUseRwy
                 }
@@ -406,7 +406,7 @@ class RwyRule extends React.Component {
                 label: "落地不可用跑道",
                 name: "landUnuseRwy",
                 span: 24,
-                placeholder: "多条跑道请用英文逗号隔开",
+                placeholder: "多条跑道请用英文分号隔开",
                 options: {
                     initialValue: datas.landUnuseRwy
                 }
@@ -423,7 +423,7 @@ class RwyRule extends React.Component {
         ];
     }
 
-    render(){
+    render() {
         const { table, modalOkBtnLoading, currentAction, selectedRowKeys, authorityList } = this.state;
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
@@ -431,7 +431,7 @@ class RwyRule extends React.Component {
             aligin: "left",
             span: 6,
             list: [
-                {text: "查询", options: "queryOpt", event: this.search}
+                { text: "查询", options: "queryOpt", event: this.search }
             ]
         };
         // 增删改
@@ -464,7 +464,7 @@ class RwyRule extends React.Component {
         }
         // add、edit模态框
         var title = currentAction == "add" ? "新增" : currentAction == "edit" ? "修改" : "";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title,
                 bodyStyle: {
@@ -473,20 +473,20 @@ class RwyRule extends React.Component {
                 },
                 okButtonProps: { loading: modalOkBtnLoading }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
         const formOptions = this.getFormOptions();
-        return(
+        return (
             <CardCommon>
-                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searcForm = form.props.form;}} /> }
+                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searcForm = form.props.form; }} />}
                 <div className="buttons"><CommonBtns options={commonBtnOptions} btns={this.state.btns} /></div>
                 { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...modalOptions}>
-                    <div className="form-grid-7" style={{paddingLeft: "30px", paddingRight: "60px"}}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}} /></div>
+                    <div className="form-grid-7" style={{ paddingLeft: "30px", paddingRight: "60px" }}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }} /></div>
                 </CommonModal>
-            </CardCommon>            
+            </CardCommon>
         );
     }
 }
