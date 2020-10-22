@@ -46,8 +46,8 @@ class FlightRiskDetail extends React.Component {
             riskValue: {}
         };
         this.drawer;
-        this.detailUrl = "/#/QarOilAnalysis/";
-        this.newResultUrl = "/NewFlightRiskDetail/"
+        this.detailUrl = PRODUCTION ? "/orcs-web/#/QarOilAnalysis/" : "/#/QarOilAnalysis/";
+        this.newResultUrl = PRODUCTION ? "/orcs-web/#/NewFlightRiskDetail/" : "/#/NewFlightRiskDetail/";
     }
 
     componentDidMount() {
@@ -148,6 +148,13 @@ class FlightRiskDetail extends React.Component {
             }
         });
     }*/
+
+    // 新模型计算结果新开窗口页
+    linkToNew = () => {
+        console.log('新模型计算结果')
+        const w = window.open('about:blank');
+        w.location.href = this.newResultUrl + this.state.flightCode;
+    }
 
     /**
      * QAR监控事件
@@ -283,7 +290,8 @@ class FlightRiskDetail extends React.Component {
                                         return <Button key={i} className={btn.className} onClick={() => { btn.event && btn.event(btn) }} {...btn.options}>{btn.name}</Button>
                                     })
                                 }
-                                <Link to={`${this.newResultUrl}${this.state.flightCode}`} target="_blank">新模型计算结果</Link>
+                                {/* <Link className="airport-button" to={`${this.newResultUrl}${this.state.flightCode}`} target="_blank">新模型计算结果</Link> */}
+                                <Button className="sort-btn" onClick={this.linkToNew}>新模型计算结果</Button>
                                 <CommonDrawer {...drawerOptions}>
                                     {currentBtn.key && <CommonTable options={tableOptions}></CommonTable>}
                                     {currentBtn.key && <div className="flight-risk-detail-tip">统计时间范围：过去的六个月</div>}

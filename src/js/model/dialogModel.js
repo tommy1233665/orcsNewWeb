@@ -9,10 +9,10 @@ class dialogModel extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      // selectedRowKeys: [], // Check here to configure the default column
       loading: false,
       tableData: [],
       params: {},
+      selectedRows: [],
     };
   }
 
@@ -22,14 +22,13 @@ class dialogModel extends React.Component {
     // ajax request after empty completing
     setTimeout(() => {
       this.setState({
-        // selectedRowKeys: [],
         loading: false,
       });
     }, 1000);
   };
   // 导出全部
   exportAll = (callback) => {
-    console.log("导出全部");
+    // console.log("导出全部");
     const This = this;
     confirm({
       title: "确定导出全部航线吗？",
@@ -39,12 +38,12 @@ class dialogModel extends React.Component {
           data: This.state.params,
           // btn: callback,
           success: (data) => {
-            downloadFile(data, "导出全部航路");
-            console.log("导出");
+            downloadFile(data, "额外油航班明细");
+            // console.log("导出");
           },
           error: (data) => {
             console.log("11111");
-            message.error("导出失败！");
+            // message.error("导出失败！");
           },
         });
       },
@@ -59,10 +58,10 @@ class dialogModel extends React.Component {
   showModal = (data, paramsData) => {
     // TODO 后台数据修改后，切除 （~）取值
     // console.log(data, paramsData, "弹窗请求, 1111");
-    var str = "-4.2750006~-1.7808338";
+    var str = data.data.trueExtrOilSection;
     var newStr = [];
     newStr = str.split("~");
-    console.log(data, "我是弹窗柱子点击");
+    // console.log(data, "我是弹窗柱子点击");
     let params = {
       soflSeqNr: paramsData.soflSeqNr,
       time: paramsData.time,
@@ -114,12 +113,12 @@ class dialogModel extends React.Component {
       {
         title: "航班号",
         dataIndex: "fltNum",
-        width: 500,
+        width: 200,
       },
       {
         title: "机尾号",
         dataIndex: "tailNum",
-        width: 250,
+        width: 200,
       },
       {
         title: "计划起飞时间",
@@ -159,7 +158,7 @@ class dialogModel extends React.Component {
       {
         title: "额外油",
         dataIndex: "extrFuel",
-        width: 250,
+        width: 200,
       },
       {
         title: "额外时间",
@@ -188,7 +187,7 @@ class dialogModel extends React.Component {
       },
     ];
 
-    const { loading, selectedRowKeys } = this.state;
+    const { loading } = this.state;
     const paginationProps = {
       pageSize: 5, // 每页条数
     };
@@ -216,6 +215,7 @@ class dialogModel extends React.Component {
             bordered
             // sticky
             columns={columns}
+            key="name"
             dataSource={this.state.tableData}
             pagination={paginationProps}
             scroll={{ x: 1600 }}

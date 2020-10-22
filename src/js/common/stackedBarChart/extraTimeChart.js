@@ -17,7 +17,6 @@ class ExtraTimeChart extends React.Component {
       fltExtrTimeDtoData: {},
     };
   }
-
   componentDidMount() {
     var This = this;
     // 初始化
@@ -30,25 +29,17 @@ class ExtraTimeChart extends React.Component {
     });
     myChart.showLoading(); //数据加载完之前先显示一段简单的loading动画
   }
-
   // 初始化趋势图
-  initChart = (data, name) => {
-    // console.log(data, name, "时间趋势图");
-    // let params = {
-    //   soflSeqNr: "82643699",
-    //   time: 1,
-    // };
-    get({
-      url: "json/timeUseChart.json",
-      //   url: "qarInfoController/queryFltExtraTimeDtoInfo",
-      // data: params,
+  initChart = (params, name) => {
+    // get({
+    //   url: "json/timeUseChart.json",
+    // get({
+    //   url: "json/timeUseChart.json",
+    post({
+      url: "qarInfoController/queryFltExtraTimeDtoInfo",
+      data: params,
       success: (data) => {
         var data = data.fltExtrTimeDto.fltExtrOilList;
-        // let chartData = data.fltExtrOilList;
-        // this.setState({
-        //   fltExtrTimeDtoData: data,
-        // });
-        // this.myChildExtraTimeChart.initChart(chartData, "时间趋势图");
         var series = [];
         var extrOilSection = [];
         // 初始化
@@ -57,282 +48,144 @@ class ExtraTimeChart extends React.Component {
           myChart.resize();
         });
 
-        if (data) {
-          for (var i = 0; i < data.extrOilSection.length; i++) {
-            extrOilSection.push(data.extrOilSection[i]);
-            series.push({
-              value: data.fltAmount[i],
-              trueExtrOilSection: data.trueExtrOilSection[i],
-              useType: 2,
-            });
-          }
-        }
-        myChart.hideLoading(); //隐藏加载动画
-        // 绘制图表
-        myChart.setOption({
-          title: {
-            text: "额外油使用时间分布情况",
-            top: 30,
-            x: "center",
-            textStyle: { color: "#9ca0ad", fontSize: "16" },
-          },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              type: "cross",
-              label: {
-                backgroundColor: "#283b56",
-              },
-            },
-          },
-          dataZoom: [
-            {
-              type: "slider", //图表下方的伸缩条
-              show: true, //是否显示
-              realtime: true, //
-              zoomLock: true,
-              bottom: "0",
-              start: 0, //数据窗口范围的起始百分比,表示30%, 伸缩条开始位置（1-100），可以随时更改
-              end: 30, //数据窗口范围的结束百分比,表示70%
+        if (!data || data === []) {
+          myChart.hideLoading(); //隐藏加载动画
+          myChart.setOption({
+            title: {
+              text: '暂无数据',
+              x: 'center',
+              y: 'center',
               textStyle: {
-                color: "white",
-              },
-              // zoomOnMouseWheel: false,
-              // id: "dataZoomX",
-              // orient: "vertical",
-              // startValue: 0, //数据窗口范围的起始数值
-              // endValue: 100,
-              showDetail: false,
+                color: '#fff',
+                fontWeight: 'normal',
+                fontSize: 24
+              }
+            }
+          })
+        } else {
+          if (data) {
+            for (var i = 0; i < data.extrOilSection.length; i++) {
+              extrOilSection.push(data.extrOilSection[i]);
+              series.push({
+                value: data.fltAmount[i],
+                trueExtrOilSection: data.trueExtrOilSection[i],
+                useType: 2,
+              });
+            }
+          }
+          myChart.hideLoading(); //隐藏加载动画
+          // 绘制图表
+          myChart.setOption({
+            title: {
+              text: "额外油使用时间分布情况",
+              top: 30,
+              x: "center",
+              textStyle: { color: "#9ca0ad", fontSize: "16" },
             },
-            {
-              type: "inside", //鼠标滚轮
-              zoomOnMouseWheel: false,
-              // realtime: true, //还有很多属性可以设置，详见文档
-            },
-          ],
-          legend: {
-            show: false,
-          },
-          xAxis: [
-            {
-              type: "category",
-              boundaryGap: true,
-              name: "额外油使用量时间（分钟）",
-              nameTextStyle: {
-                color: "#fff",
-                padding: [30, 0, 0, 0],
+            tooltip: {
+              trigger: "axis",
+              axisPointer: {
+                type: "cross",
+                label: {
+                  backgroundColor: "#283b56",
+                },
               },
-              nameLocation: "middle",
-              axisLabel: {
-                show: true,
+            },
+            dataZoom: [
+              {
+                type: "slider", //图表下方的伸缩条
+                show: true, //是否显示
+                realtime: true, //
+                zoomLock: true,
+                bottom: "0",
+                start: 0, //数据窗口范围的起始百分比,表示30%, 伸缩条开始位置（1-100），可以随时更改
+                end: 100, //数据窗口范围的结束百分比,表示70%
                 textStyle: {
-                  color: "#ffffff",
+                  color: "white",
                 },
-                interval: 0,
-                rotate: 20, //角度顺时针计算的
+                // zoomOnMouseWheel: false,
+                // id: "dataZoomX",
+                // orient: "vertical",
+                // startValue: 0, //数据窗口范围的起始数值
+                // endValue: 100,
+                showDetail: false,
               },
-              data: extrOilSection,
+              {
+                type: "inside", //鼠标滚轮
+                zoomOnMouseWheel: false,
+                // realtime: true, //还有很多属性可以设置，详见文档
+              },
+            ],
+            legend: {
+              show: false,
             },
-          ],
-          //主要改这里
-          grid: {
-            // 控制图的大小，调整下面这些值就可以，
-            x: 40,
-            x2: 100,
-            y2: 100, // y2可以控制 X轴跟Zoom控件之间的间隔，避免以为倾斜后造成 label重叠到zoom上
-          },
-          yAxis: [
-            {
-              type: "value",
-              scale: true,
-              name: "航班量",
-              nameTextStyle: {
-                color: "#fff",
-              },
-              min: 0,
-              boundaryGap: [0.2, 0.2],
-              axisLabel: {
-                formatter: function (value) {
-                  return value;
+            xAxis: [
+              {
+                type: "category",
+                boundaryGap: true,
+                name: "额外油使用量时间（分钟）",
+                nameTextStyle: {
+                  color: "#fff",
+                  padding: [30, 0, 0, 0],
                 },
-                textStyle: {
-                  color: "#a5a7ad",
+                nameLocation: "middle",
+                axisLabel: {
+                  show: true,
+                  textStyle: {
+                    color: "#ffffff",
+                  },
+                  interval: 0,
+                  rotate: 20, //角度顺时针计算的
+                },
+                data: extrOilSection,
+              },
+            ],
+            //主要改这里
+            grid: {
+              // 控制图的大小，调整下面这些值就可以，
+              x: 40,
+              x2: 100,
+              y2: 100, // y2可以控制 X轴跟Zoom控件之间的间隔，避免以为倾斜后造成 label重叠到zoom上
+            },
+            yAxis: [
+              {
+                type: "value",
+                scale: true,
+                name: "航班量",
+                nameTextStyle: {
+                  color: "#fff",
+                },
+                min: 0,
+                boundaryGap: [0.2, 0.2],
+                axisLabel: {
+                  formatter: function (value) {
+                    return value;
+                  },
+                  textStyle: {
+                    color: "#a5a7ad",
+                  },
                 },
               },
-            },
-          ],
-          series: [
-            {
-              name: "HOLD FUEL",
-              type: "bar",
-              // yAxisIndex: 1,
-              stack: "one",
-              barWidth: 30, //柱图宽度
-              // barCategoryGap: "60%" /*多个并排柱子设置柱子之间的间距*/,
-              barGap: 10,
-              itemStyle: {
-                color: "#5A6A89",
+            ],
+            series: [
+              {
+                name: "HOLD FUEL",
+                type: "bar",
+                // yAxisIndex: 1,
+                stack: "one",
+                barWidth: 20, //柱图宽度
+                // barCategoryGap: "60%" /*多个并排柱子设置柱子之间的间距*/,
+                barGap: 10,
+                itemStyle: {
+                  color: "#5A6A89",
+                },
+                data: series,
               },
-              data: series,
-            },
-          ],
-        });
+            ],
+          });
+        }
       },
     });
-
-    // 相关油量使用时间
-    // post({
-    //   url: "qarInfoController/queryFltExtraTimeDtoInfo",
-    //   data: params,
-    //   success: (data) => {
-    //     var data = data.fltExtrTimeDto.fltExtrOilList;
-    //     // let chartData = data.fltExtrOilList;
-    //     // this.setState({
-    //     //   fltExtrTimeDtoData: data,
-    //     // });
-    //     // this.myChildExtraTimeChart.initChart(chartData, "时间趋势图");
-    //     var series = [];
-    //     var extrOilSection = [];
-    //     var trueExtrOilSection = [];
-    //     // 初始化
-    //     var myChart = echarts.init(document.getElementById("extraTime"));
-    //     window.addEventListener("resize", function () {
-    //       myChart.resize();
-    //     });
-
-    //     if (data) {
-    //       for (var i = 0; i < data.extrOilSection.length; i++) {
-    //         extrOilSection.push(data.extrOilSection[i]);
-    //         series.push(data.fltAmount[i], data.trueExtrOilSection[i]);
-    //         trueExtrOilSection.push(data.trueExtrOilSection[i]);
-    //       }
-    //       // console.log(extrOilSection);
-    //       // console.log(trueExtrOilSection);
-    //     }
-    //     // 绘制图表
-    //     myChart.setOption({
-    //       title: {
-    //         text: "额外油使用时间分布情况",
-    //         top: 30,
-    //         x: "center",
-    //         textStyle: { color: "#9ca0ad", fontSize: "16" },
-    //       },
-    //       tooltip: {
-    //         trigger: "axis",
-    //         axisPointer: {
-    //           type: "cross",
-    //           label: {
-    //             backgroundColor: "#283b56",
-    //           },
-    //         },
-    //       },
-    //       dataZoom: [
-    //         {
-    //           type: "slider", //图表下方的伸缩条
-    //           show: true, //是否显示
-    //           realtime: true, //
-    //           zoomLock: true,
-    //           bottom: "0",
-    //           start: 0, //数据窗口范围的起始百分比,表示30%, 伸缩条开始位置（1-100），可以随时更改
-    //           end: 30, //数据窗口范围的结束百分比,表示70%
-    //           textStyle: {
-    //             color: "white",
-    //           },
-    //           // zoomOnMouseWheel: false,
-    //           // id: "dataZoomX",
-    //           // orient: "vertical",
-    //           // startValue: 0, //数据窗口范围的起始数值
-    //           // endValue: 100,
-    //         },
-    //         {
-    //           type: "inside", //鼠标滚轮
-    //           zoomOnMouseWheel: false,
-    //           // realtime: true, //还有很多属性可以设置，详见文档
-    //         },
-    //       ],
-    //       legend: {
-    //         show: false,
-    //       },
-    //       xAxis: [
-    //         {
-    //           type: "category",
-    //           boundaryGap: true,
-    //           name: "额外油使用量时间（分钟）",
-    //           nameTextStyle: {
-    //             color: "#fff",
-    //             padding: [30, 0, 0, 0],
-    //           },
-    //           nameLocation: "middle",
-    //           axisLabel: {
-    //             show: true,
-    //             textStyle: {
-    //               color: "#ffffff",
-    //             },
-    //             interval: 0,
-    //             rotate: 20, //角度顺时针计算的
-    //           },
-    //           data: extrOilSection,
-    //         },
-    //       ],
-    //       //主要改这里
-    //       grid: {
-    //         // 控制图的大小，调整下面这些值就可以，
-    //         x: 40,
-    //         x2: 100,
-    //         y2: 100, // y2可以控制 X轴跟Zoom控件之间的间隔，避免以为倾斜后造成 label重叠到zoom上
-    //       },
-    //       yAxis: [
-    //         {
-    //           type: "value",
-    //           scale: true,
-    //           name: "航班量",
-    //           nameTextStyle: {
-    //             color: "#fff",
-    //           },
-    //           min: 0,
-    //           boundaryGap: [0.2, 0.2],
-    //           axisLabel: {
-    //             formatter: function (value) {
-    //               return value;
-    //             },
-    //             textStyle: {
-    //               color: "#a5a7ad",
-    //             },
-    //           },
-    //         },
-    //       ],
-    //       series: [
-    //         {
-    //           name: "HOLD FUEL",
-    //           type: "bar",
-    //           // yAxisIndex: 1,
-    //           stack: "one",
-    //           barWidth: 30, //柱图宽度
-    //           // barCategoryGap: "60%" /*多个并排柱子设置柱子之间的间距*/,
-    //           barGap: 10,
-    //           itemStyle: {
-    //             color: "#5A6A89",
-    //           },
-    //           data: series,
-    //         },
-    //         {
-    //           name: "到上一个点的时间偏差中位数",
-    //           type: "line",
-    //           itemStyle: {
-    //             color: "blue",
-    //           },
-    //           symbolSize: 0, // symbol的大小设置为0
-    //           showSymbol: false, // 不显示symbol
-    //           lineStyle: {
-    //             width: 0, // 线宽是0
-    //             color: "rgba(0, 0, 0, 0)", // 线的颜色是透明的
-    //           },
-    //           data: trueExtrOilSection,
-    //         },
-    //       ],
-    //     });
-    //   },
-    // });
   };
   render() {
     return <div id="extraTime" style={{ width: "100%", height: 500 }}></div>;

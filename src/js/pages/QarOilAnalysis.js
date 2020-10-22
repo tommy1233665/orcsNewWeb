@@ -21,6 +21,7 @@ class QarOilAnalysis extends React.Component {
   // 初始化表单数据
   constructor(props) {
     super(props);
+
     // 用来实时更新表格中风险详情值
     this.state = {
       flyRmArptRiskList: [],
@@ -33,28 +34,40 @@ class QarOilAnalysis extends React.Component {
       DES: {},
       CLB: {},
       flightCode: props.match.params.flightCode,
-      listData: ["shenzheng", "shanghai"],
+      listData: [],
       fltExtrTimeDtoData: {},
       time: 1,
       flightRouteNo: "",
       truncationRatio: 50,
+      disabled: true
     };
     this.modal;
+  }
+
+  // 初始化chart成功才可以操作
+  disableFlightHeightSelect = (obj) => {
+    console.log(obj, '禁用')
+    this.setState({
+      disabled: obj,
+      sliderDisabled: obj
+    })
   }
   // 航路代号选择
   getQueryfindFlightRouteNoData = () => {
     let params = {
       soflSeqNr: this.state.flightCode,
     };
-    console.log(params);
     post({
       url: "qarInfoController/queryfindFlightRouteNo",
       data: params,
       success: (data) => {
-        var data = data.flightRouteNo;
+        var res = data.flightRouteNo;
         this.setState({
-          listData: data,
+          listData: res,
+          flightRouteNodDefaultValue: res,
         });
+        // 初始化航路代号高度趋势图
+        this.initFlightHeight();
       },
     });
   };
@@ -71,6 +84,7 @@ class QarOilAnalysis extends React.Component {
     this.myChildExtraUse.initChart(params, "额外油使用量");
     this.myChildExtraTimeChart.initChart(params, "额外油使用时间");
     this.queryFltExtraOilInfo(params);
+    this.queryFltExtraTimeDtoInfo(params);
   };
   // 显示全部高度图数据
   showFHCallData = () => {
@@ -93,13 +107,14 @@ class QarOilAnalysis extends React.Component {
   flightHandleChange = (data) => {
     this.setState({
       flightRouteNo: data,
+      flightRouteNodDefaultValue: data
     });
     let params = {
       soflSeqNr: this.state.flightCode,
       flightRouteNo: data,
       truncationRatio: this.state.truncationRatio,
     };
-    console.log(params, this.state.listData);
+    // console.log(params, this.state.listData);
     this.myChildFlightHeightChart.initChart(params, "航路代号选择");
   };
   // 滑动块事件
@@ -159,6 +174,7 @@ class QarOilAnalysis extends React.Component {
       // onCancel: callback,
     });
   };
+
 
   // 相关油使用量
   queryFltExtraOilInfo = (params) => {
@@ -220,6 +236,8 @@ class QarOilAnalysis extends React.Component {
     let params = {
       soflSeqNr: this.state.flightCode,
     };
+    // get({
+    // url: "json/postFltTimeDevtDtos.json",
     post({
       url: "qarInfoController/queryPostFltTimeDevtDtoInfo",
       data: params,
@@ -231,30 +249,27 @@ class QarOilAnalysis extends React.Component {
         res.map((item) => {
           if (item.fltPhase === "CRUISE") {
             CRUISE.avgTimeDevt = item.avgTimeDevt;
-            CRUISE.lessFiveRate = item.lessFiveRate;
             CRUISE.moreFiveRate = item.moreFiveRate;
-            CRUISE.moreFifteenRate = item.moreFifteenRate;
-            CRUISE.lessFiveRate = item.lessFiveRate;
-            CRUISE.lessTenRate = item.lessTenRate;
-            CRUISE.moreTenRate = item.moreTenRate;
+            CRUISE.moreFifteenRate = item.moreFifteenRate + ' %';
+            CRUISE.lessFiveRate = item.lessFiveRate + ' %';
+            CRUISE.lessTenRate = item.lessTenRate + ' %';
+            CRUISE.moreTenRate = item.moreTenRate + ' %';
           }
           if (item.fltPhase === "DES") {
             DES.avgTimeDevt = item.avgTimeDevt;
-            DES.lessFiveRate = item.lessFiveRate;
             DES.moreFiveRate = item.moreFiveRate;
-            DES.moreFifteenRate = item.moreFifteenRate;
-            DES.lessFiveRate = item.lessFiveRate;
-            DES.lessTenRate = item.lessTenRate;
-            DES.moreTenRate = item.moreTenRate;
+            DES.moreFifteenRate = item.moreFifteenRate + ' %';
+            DES.lessFiveRate = item.lessFiveRate + ' %';
+            DES.lessTenRate = item.lessTenRate + ' %';
+            DES.moreTenRate = item.moreTenRate + ' %';
           }
           if (item.fltPhase === "CLB") {
             CLB.avgTimeDevt = item.avgTimeDevt;
-            CLB.lessFiveRate = item.lessFiveRate;
             CLB.moreFiveRate = item.moreFiveRate;
-            CLB.moreFifteenRate = item.moreFifteenRate;
-            CLB.lessFiveRate = item.lessFiveRate;
-            CLB.lessTenRate = item.lessTenRate;
-            CLB.moreTenRate = item.moreTenRate;
+            CLB.moreFifteenRate = item.moreFifteenRate + ' %';
+            CLB.lessFiveRate = item.lessFiveRate + ' %';
+            CLB.lessTenRate = item.lessTenRate + ' %';
+            CLB.moreTenRate = item.moreTenRate + ' %';
           }
         });
         this.setState({
@@ -266,11 +281,18 @@ class QarOilAnalysis extends React.Component {
     });
   };
 
+  componentWillMount() {
+    // 获取航路代号选择数据
+    this.getQueryfindFlightRouteNoData()
+  }
+
   componentDidMount() {
     let params = {
       soflSeqNr: this.state.flightCode,
       time: this.state.time,
     };
+    // 初始化航路代号高度趋势图
+    // this.initFlightHeight();
     // 初始化计划油量与实际耗油图（第一个趋势图）
     this.myChildStackedCharts.initChart(params.soflSeqNr);
     // 相关油量使用时间
@@ -279,11 +301,6 @@ class QarOilAnalysis extends React.Component {
     this.fltExtraDetailDto();
     // 时间偏差数据表格
     this.queryPostFltTimeDevtDtoInfo();
-    // 初始化航路代号高度趋势图
-    this.initFlightHeight();
-    // 获取航路代号选择数据
-    this.getQueryfindFlightRouteNoData();
-
     // 初始化相关油量数据图表
     this.myChildExtraUse.initChart(params);
     this.myChildExtraTimeChart.initChart(params);
@@ -429,8 +446,8 @@ class QarOilAnalysis extends React.Component {
         <CardCommon title="相关油量数据图表">
           <FormItem
             label="统计时间"
-            labelCol={{ span: 2 }}
-            wrapperCol={{ span: 22 }}
+            labelCol={{ span: 1 }}
+            wrapperCol={{ span: 23 }}
             required
           >
             <Select
@@ -532,7 +549,8 @@ class QarOilAnalysis extends React.Component {
               >
                 <Select
                   // labelInValue
-                  defaultValue={this.state.listData[0]}
+                  // defaultValue={this.state.flightRouteNodDefaultValue}
+                  value={this.state.flightRouteNodDefaultValue}
                   style={{ width: 120 }}
                   onChange={this.flightHandleChange.bind(this)}
                 >
@@ -548,6 +566,7 @@ class QarOilAnalysis extends React.Component {
                   style={{ marginLeft: 16 }}
                   type="primary"
                   onClick={this.exportAll}
+                  disabled={this.state.disabled}
                 >
                   导出Excel
                 </Button>
@@ -555,13 +574,14 @@ class QarOilAnalysis extends React.Component {
                   style={{ marginLeft: 16 }}
                   type="primary"
                   onClick={this.showFHCallData}
-                  // loading={loading}
+                  disabled={this.state.disabled}
                 >
                   显示全部
                 </Button>
               </FormItem>
               <div className="sliderStyleLabel">截断比</div>
               <FlightHeightChart
+                disableFlightHeightSelect={this.disableFlightHeightSelect}
                 ref={(childFlightHeightChart) => {
                   this.myChildFlightHeightChart = childFlightHeightChart;
                 }}

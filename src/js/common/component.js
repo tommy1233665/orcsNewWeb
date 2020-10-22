@@ -1435,6 +1435,12 @@ class commForm extends React.Component {
         var hide = (obj.hide && typeof obj.hide == "function") ? obj.hide() : obj.hide;
         if (!hide) {
             switch (obj.type) {
+                case "TimeRangePicker":
+                    dom = <RangePicker showTime={{
+                        hideDisabledOptions: true,
+                        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                    }} format="YYYY-MM-DD HH:mm" />;
+                    break;
                 case "DatePicker":
                     dom = <DatePicker showTime disabled={obj.disabled} />;
                     break;

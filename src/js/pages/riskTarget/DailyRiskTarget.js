@@ -457,14 +457,17 @@ class EditFrom extends React.Component {
                 initialValue: datas.fltCrew,
                 rules: [
                     {
-                        validator: (rule, value, callback) => {
-                            const reg = /^0$|^[0-9;]*$/;
-                            if (value.value && !reg.test(value.value)) {
-                                callback('输入规范的员工号！')
-                            }
-                            callback();
-                        }
+                        required: true, message: "机组不能为空"
                     }
+                    // {
+                    //     validator: (rule, value, callback) => {
+                    //         const reg = /^0$|^[0-9;]*$/;
+                    //         if (value.value && !reg.test(value.value)) {
+                    //             callback('输入规范的员工号！')
+                    //         }
+                    //         callback();
+                    //     }
+                    // }
                 ]
             }
         }];
@@ -485,13 +488,15 @@ class EditFrom extends React.Component {
                     initialValue: datas.latestTailNr,
                     rules: [
                         {
-                            validator: (rule, value, callback) => {
-                                const reg = /^0$|^[A-Z0-9;]*$/;
-                                if (value.value && !reg.test(value.value)) {
-                                    callback('输入规范的机尾号！')
-                                }
-                                callback();
-                            }
+                            required: true,
+                            message: "请填写机尾号",
+                            // validator: (rule, value, callback) => {
+                            //     const reg = /^0$|^[A-Z0-9;]*$/;
+                            //     if (value.value && !reg.test(value.value)) {
+                            //         callback('输入规范的机尾号！')
+                            //     }
+                            //     callback();
+                            // }
                         }
                     ]
                 }
@@ -561,13 +566,18 @@ class EditFrom extends React.Component {
                     initialValue: datas.arpName,
                     rules: [
                         {
-                            validator: (rule, value, callback) => {
-                                const reg = /^[A-Z;]*$/;
-                                if (value.value && !reg.test(value.value)) {
-                                    callback('输入规范的机场编码！')
-                                }
-                                callback();
-                            }
+                            required: true,
+                            message: "机场代码不能为空"
+                            // validator: (rule, value, callback) => {
+                            //     const reg = /^[A-Z;]*$/;
+                            //     if (value.value && !reg.test(value.value)) {
+                            //         callback('输入规范的机场编码！')
+                            //     }
+                            //     if (value.value === '') {
+                            //         callback('请输入机场编码')
+                            //     }
+                            //     callback();
+                            // }
                         }
                     ]
                 }
@@ -735,26 +745,37 @@ class EditFrom extends React.Component {
 
     getOptions7(datas) {
         return [
+            // {
+            //     type: "DatePicker",
+            //     label: "生效时间",
+            //     name: "effectiveTime",
+            //     span: 24,
+            //     length: 5,
+            //     options: {
+            //         initialValue: moment(datas.effectiveTime),
+            //         rules: [{ required: true, message: "生效时间不可为空！" }]
+            //     }
+            // },
+            // {
+            //     type: "DatePicker",
+            //     label: "失效时间",
+            //     name: "invalidTime",
+            //     span: 24,
+            //     length: 5,
+            //     options: {
+            //         initialValue: moment(datas.invalidTime),
+            //         rules: [{ required: true, message: "失效时间不可为空！" }]
+            //     }
+            // },
             {
-                type: "DatePicker",
-                label: "生效时间",
-                name: "effectiveTime",
+                type: "TimeRangePicker",
+                label: "有效时间",
+                name: "effecTime",
                 span: 24,
                 length: 5,
                 options: {
-                    initialValue: moment(datas.effectiveTime),
-                    rules: [{ required: true, message: "生效时间不可为空！" }]
-                }
-            },
-            {
-                type: "DatePicker",
-                label: "失效时间",
-                name: "invalidTime",
-                span: 24,
-                length: 5,
-                options: {
-                    initialValue: moment(datas.invalidTime),
-                    rules: [{ required: true, message: "失效时间不可为空！" }]
+                    initialValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                    rules: [{ required: true, message: "时间不可为空！" }],
                 }
             },
             {
@@ -823,12 +844,16 @@ class EditFrom extends React.Component {
                         if (!values.landing) values.landing = false;
                         delete values[key];
                     }
-                    if (key == "effectiveTime" || key == "invalidTime") {
-                        values[key] = moment(values[key]).format('YYYY-MM-DD HH:mm:ss');
+                    // if (key == "effectiveTime" || key == "invalidTime") {
+                    //     values[key] = moment(values[key]).format('YYYY-MM-DD HH:mm:ss');
+                    // }
+                    if (key == 'effecTime') {
+                        result.effectiveTime = moment(values[key][0]).format('YYYY-MM-DD HH:mm:ss')
+                        result.invalidTime = moment(values[key][1]).format('YYYY-MM-DD HH:mm:ss')
+                        console.log(values[key], '提交')
                     }
                 }
                 Object.assign(result, values);
-                // console.log(result, values, '获取input')
                 cb && typeof cb == "function" && cb();
             }
         });
@@ -837,6 +862,9 @@ class EditFrom extends React.Component {
     submit = (callback) => {
         var result = {};
         this.handleValues(result, this.form1, () => {
+            if (result == '') {
+                message.warning('请输入机组')
+            }
             this.handleValues(result, this.form2, () => {
                 this.handleValues(result, this.form3, () => {
                     this.handleValues(result, this.form4, () => {
@@ -859,6 +887,21 @@ class EditFrom extends React.Component {
                                         msg = "修改";
                                         params.id = this.props.datas.id;
                                     }
+                                    delete params.effecTime
+                                    // TODO
+                                    if (params.fltCrew == '') {
+                                        message.warning('请填写机组号')
+                                        return false
+                                    }
+                                    if (params.arpName == '') {
+                                        message.warning('请填写机场代码')
+                                        return false
+                                    }
+                                    if (params.latestTailNr == '') {
+                                        message.warning('请填写机尾号')
+                                        return false
+                                    }
+                                    console.log(params, '提交表单')
                                     if (url) {
                                         post({
                                             url: url,
