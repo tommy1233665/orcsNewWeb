@@ -35,7 +35,7 @@ class RelateRiskTarget extends React.Component {
                 label: "风险名称",
                 name: "riskName",
                 span: 6,
-                placeholder:"风险名称",
+                placeholder: "风险名称",
             }
         ];
         this.columns = [
@@ -62,7 +62,7 @@ class RelateRiskTarget extends React.Component {
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
@@ -76,9 +76,9 @@ class RelateRiskTarget extends React.Component {
             url: "associateRisk/queryRiskByName",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -94,9 +94,9 @@ class RelateRiskTarget extends React.Component {
 
     search = () => {
         this.searcForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = handleInParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -110,13 +110,13 @@ class RelateRiskTarget extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             this.setState({
                 currentAction: "edit",
@@ -127,18 +127,19 @@ class RelateRiskTarget extends React.Component {
     }
 
     submit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
-                values.useDefault= values.useDefault[0];
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
+                console.log(values, '提交表单')
+                values.useDefault = values.useDefault[0];
                 values.valid = values.valid[0];
                 values = handleInParams(values);
                 post({
                     url: "associateRisk/saveRisk",
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         var msg = this.state.currentAction == "add" ? "添加成功" : "修改成功";
                         message.success(msg);
@@ -151,10 +152,10 @@ class RelateRiskTarget extends React.Component {
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var risks = this.state.selectedRows.map(item => {
                 item.useDefault = item.useDefault == "是" ? true : false;
                 item.valid = item.valid == "是" ? true : false;
@@ -167,7 +168,7 @@ class RelateRiskTarget extends React.Component {
                 onOk: () => {
                     post({
                         url: "associateRisk/deleteRisk",
-                        data: {risks: JSON.stringify(risks)},
+                        data: { risks: JSON.stringify(risks) },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
@@ -183,13 +184,13 @@ class RelateRiskTarget extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
+    getFormOptions() {
         const { currentAction, selectedRows, table, isRiskvariablevalue } = this.state;
         var data = {}, useDefault = false, valid = false;
-        if( currentAction == "add" ){
+        if (currentAction == "add") {
             data.accumulatemethod = "无累计";
         }
-        if( currentAction == "edit" && selectedRows.length > 0 ){
+        if (currentAction == "edit" && selectedRows.length > 0) {
             data = table.dataList.find(item => item.id == selectedRows[0].id);
             useDefault = data.useDefault == "是" ? true : false;
             valid = data.valid == "是" ? true : false;
@@ -205,9 +206,9 @@ class RelateRiskTarget extends React.Component {
                 options: {
                     initialValue: data.id,
                     rules: [
-                        {required: true, message: '编号不能为空'},
-                        {max: 64, message: '长度在64之内'},
-                        {pattern: /^[a-zA-Z]\d+$/, message: '第一位为字母，其余为数字'}
+                        { required: true, message: '编号不能为空' },
+                        { max: 64, message: '长度在64之内' },
+                        { pattern: /^[a-zA-Z]\d+$/, message: '第一位为字母，其余为数字' }
                     ]
                 }
             },
@@ -220,8 +221,8 @@ class RelateRiskTarget extends React.Component {
                 options: {
                     initialValue: data.name,
                     rules: [
-                        {required: true, message: '编号不能为空'},
-                        {max: 64, message: '长度在64之内'}
+                        { required: true, message: '编号不能为空' },
+                        { max: 64, message: '长度在64之内' }
                     ]
                 }
             },
@@ -234,7 +235,7 @@ class RelateRiskTarget extends React.Component {
                 options: {
                     initialValue: data.ruleDisc,
                     rules: [
-                        {max: 800, message: '规则描述长度不可超过800'}
+                        { max: 800, message: '规则描述长度不可超过800' }
                     ]
                 }
             },
@@ -246,7 +247,10 @@ class RelateRiskTarget extends React.Component {
                 placeholder: "风险等级（长度1位）",
                 options: {
                     initialValue: data.riskLevel,
-                    rules: [{max: 1, message: '风险等级长度为1'}]
+                    rules: [
+                        { max: 1, message: '风险等级长度为1' },
+                        { pattern: /^[LHM]*$/, message: '请输入正确的风险等级' },
+                    ]
                 }
             },
             {
@@ -258,8 +262,21 @@ class RelateRiskTarget extends React.Component {
                 options: {
                     initialValue: data.riskValue,
                     rules: [
-                        {validator: (rule, value, callback) => (!this.form.getFieldValue("useDefault")[0] && !value) ? callback('非默认风险需要设置风险值') : callback()},
-                        {pattern: /^[0-9]+(.[0-9]{2})?$/, message: '风险值为正实数，且小数点后面保留2位'},
+                        // { validator: (rule, value, callback) => (!this.form.getFieldValue("useDefault")[0] && !value) ? callback('非默认风险需要设置风险值') : callback() },
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!this.form.getFieldValue("useDefault")[0] && !value) {
+                                    callback('非默认风险需要设置风险值')
+                                } else if (value && value > 10) {
+                                    callback('不能大于10')
+                                } else {
+                                    callback()
+                                }
+                            }
+                        },
+                        {
+                            pattern: /^[0-9]+(.[0-9]{2})?$/, message: '风险值为正实数，且小数点后面保留2位'
+                        },
                     ]
                 }
             },
@@ -283,8 +300,8 @@ class RelateRiskTarget extends React.Component {
                     initialValue: data.accumulatemethod,
                 },
                 onChange: (value) => {
-                    if( value == "无累计" ){
-                        this.setState({isRiskvariablevalue: true});
+                    if (value == "无累计") {
+                        this.setState({ isRiskvariablevalue: true });
                     }
                 }
             },
@@ -297,12 +314,12 @@ class RelateRiskTarget extends React.Component {
                 options: {
                     initialValue: riskvariablevalue,
                     rules: [
-                        {pattern: /^[0-9]+(.[0-9]{2})?$/, message: '风险变量值为正实数，且小数点后面保留2位'},
+                        { pattern: /^[0-9]+(.[0-9]{2})?$/, message: '风险变量值为正实数，且小数点后面保留2位' },
                     ]
-                    
+
                 },
                 hide: () => {
-                    return (this.form && this.form.getFieldValue("accumulatemethod") == "无累计") || (!this.form && data.accumulatemethod == "无累计") ||  (this.form && !this.form.getFieldValue("accumulatemethod") && data.accumulatemethod == "无累计") ? true : false;
+                    return (this.form && this.form.getFieldValue("accumulatemethod") == "无累计") || (!this.form && data.accumulatemethod == "无累计") || (this.form && !this.form.getFieldValue("accumulatemethod") && data.accumulatemethod == "无累计") ? true : false;
                 }
             },
             {
@@ -313,7 +330,7 @@ class RelateRiskTarget extends React.Component {
                 placeholder: "建议措施（长度500以内）",
                 options: {
                     initialValue: data.measures,
-                    rules: [{max: 500, message: '缓解措施长度不可超过500'}]
+                    rules: [{ max: 500, message: '缓解措施长度不可超过500' }]
                 }
             },
             {
@@ -325,7 +342,7 @@ class RelateRiskTarget extends React.Component {
                 options: {
                     initialValue: data.priority,
                     rules: [
-                        {pattern: /^[1-9]\d{0,3}$/, message: '风险优先级为4位以内的数值'},
+                        { pattern: /^[1-9]\d{0,3}$/, message: '风险优先级为4位以内的数值' },
                     ]
                 }
             },
@@ -335,7 +352,7 @@ class RelateRiskTarget extends React.Component {
                 name: "useDefault",
                 span: 7,
                 list: [
-                    {label: "", value: true}
+                    { label: "", value: true }
                 ],
                 options: {
                     initialValue: [useDefault]
@@ -350,8 +367,8 @@ class RelateRiskTarget extends React.Component {
                 options: {
                     initialValue: data.defaultValue,
                     rules: [
-                        {validator: (rule, value, callback) => (this.form.getFieldValue("useDefault")[0] && !value) ? callback('默认风险需要设置对应的默认风险值') : callback()},
-                        {pattern: /^[0-9]+(.[0-9]{2})?$/, message: '默认风险值为正实数，且小数点后面保留2位'}
+                        { validator: (rule, value, callback) => (this.form.getFieldValue("useDefault")[0] && !value) ? callback('默认风险需要设置对应的默认风险值') : callback() },
+                        { pattern: /^[0-9]+(.[0-9]{2})?$/, message: '默认风险值为正实数，且小数点后面保留2位' }
                     ]
                 }
             },
@@ -361,7 +378,7 @@ class RelateRiskTarget extends React.Component {
                 name: "valid",
                 span: 7,
                 list: [
-                    {label: "", value: true}
+                    { label: "", value: true }
                 ],
                 options: {
                     initialValue: [valid]
@@ -370,14 +387,14 @@ class RelateRiskTarget extends React.Component {
         ];
     }
 
-    render(){
+    render() {
         const { table, selectedRowKeys, authorityList } = this.state;
         // 查询form
         const btnOptions = {
             aligin: "left",
             span: 6,
             list: [
-                {text: "查询", options: "queryOpt", event: this.search}
+                { text: "查询", options: "queryOpt", event: this.search }
             ]
         };
         // 增删改
@@ -402,7 +419,7 @@ class RelateRiskTarget extends React.Component {
         }
         // 模态框
         var title = this.state.currentAction == "add" ? "新增" : this.state.currentAction == "edit" ? "编辑" : "";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title,
                 width: "650px",
@@ -412,22 +429,22 @@ class RelateRiskTarget extends React.Component {
                 },
                 okButtonProps: { loading: this.state.modalOkBtnLoading }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
         const formOptions = this.getFormOptions();
-        return(
+        return (
             <CardCommon>
-                { authorityList && <CommonForm options={this.searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searcForm = form.props.form;}} />}
+                { authorityList && <CommonForm options={this.searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searcForm = form.props.form; }} />}
                 <div className="buttons"><CommonBtns options={commonBtnOptions} btns={this.state.btns} /></div>
                 { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }       
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...modalOptions}>
                     <div className="form-grid-6">
-                        <CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}} />
+                        <CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }} />
                     </div>
                 </CommonModal>
-            </CardCommon>            
+            </CardCommon>
         );
     }
 }
