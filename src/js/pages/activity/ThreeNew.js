@@ -46,9 +46,9 @@ class ThreeNew extends React.Component {
         this.state = {}
     }
 
-    render(){
+    render() {
         const { authority } = this.props;
-        return(
+        return (
             <CardCommon>
                 <Tabs>
                     <TabPane tab="新机型老航线" key="1"><AirLineAcftType authority={authority} /></TabPane>
@@ -106,26 +106,26 @@ class AirLineAcftType extends React.Component {
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getFleetTailMap(){
+    getFleetTailMap() {
         post({
             url: "acfData/queryFleetTailMap",
             success: data => {
-                this.setState({fleetTailMap: data});
+                this.setState({ fleetTailMap: data });
             }
         });
     }
 
-    getAllBranch(){
+    getAllBranch() {
         post({
             url: "acfData/getAllBranch",
             success: data => {
-                this.setState({allBranch: data});
+                this.setState({ allBranch: data });
             }
         });
     }
@@ -138,9 +138,9 @@ class AirLineAcftType extends React.Component {
             url: "airLineAcftType/queryAirLineAcftTypeListByParam",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -156,9 +156,9 @@ class AirLineAcftType extends React.Component {
 
     search = () => {
         this.searcForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = handleInParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -172,13 +172,13 @@ class AirLineAcftType extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             this.setState({
                 currentAction: "edit",
@@ -189,25 +189,25 @@ class AirLineAcftType extends React.Component {
     }
 
     submit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
                 values = handleInParams(values);
-                for(var key in values){
-                    if(key == "acftType" || key == "executeBase"){
-                        if(values[key].value) values[key] = values[key].value;
+                for (var key in values) {
+                    if (key == "acftType" || key == "executeBase") {
+                        if (values[key].value) values[key] = values[key].value;
                         var index = values[key].indexOf("全部");
-                        if( index > -1 ) values[key].splice(index, 1);
+                        if (index > -1) values[key].splice(index, 1);
                     }
-                    if(key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                    if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
                 }
                 var url, msg;
-                if( this.state.currentAction == "add"){
+                if (this.state.currentAction == "add") {
                     url = "airLineAcftType/insert";
                     msg = "添加成功";
-                }else{
+                } else {
                     values.id = this.state.currentData.id;
                     url = "airLineAcftType/update";
                     msg = "修改成功";
@@ -215,11 +215,11 @@ class AirLineAcftType extends React.Component {
                 post({
                     url: url,
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         message.success(msg);
                         this.modal.hide();
-                        this.getList({pageNum: 1});
+                        this.getList({ pageNum: 1 });
                     }
                 });
             }
@@ -227,10 +227,10 @@ class AirLineAcftType extends React.Component {
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var list = this.state.selectedRows.map(item => item.id);
             var name = this.state.selectedRows.map(item => item.airLineDesc);
             confirm({
@@ -239,11 +239,11 @@ class AirLineAcftType extends React.Component {
                 onOk: () => {
                     post({
                         url: "airLineAcftType/delete",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
-                            this.getList({pageNum: 1});
+                            this.getList({ pageNum: 1 });
                         }
                     });
                 },
@@ -253,18 +253,18 @@ class AirLineAcftType extends React.Component {
     }
 
     export = (callback) => {
-        if( this.state.selectedExport.length == 0 ){
+        if (this.state.selectedExport.length == 0) {
             callback();
             message.warning("未选中选项");
-        }else{
+        } else {
             var list = this.state.selectedExport.map(item => item.id);
             var name = this.state.selectedExport.map(item => item.airLineDesc);
             confirm({
-                title: "确定导出"+ name.join("、")+"的航线吗？",
+                title: "确定导出" + name.join("、") + "的航线吗？",
                 onOk() {
                     post({
                         url: "airLineAcftType/export",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             downloadFile(data, "新机型老航线表");
@@ -295,7 +295,7 @@ class AirLineAcftType extends React.Component {
         });
     }
 
-    getSearchFormOptions(){
+    getSearchFormOptions() {
         return [
             {
                 type: "Input",
@@ -311,17 +311,17 @@ class AirLineAcftType extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
+    getFormOptions() {
         const { currentAction, currentData, fleetTailMap, allBranch } = this.state;
         var fleet = [];
-        for(var key in fleetTailMap){
+        for (var key in fleetTailMap) {
             fleet.push(key);
         }
         var branch = allBranch.map(item => item.chnDescShort);
-        var datas = currentAction == "add" ? {} : JSON.parse( JSON.stringify(currentData) );
-        for(var key in datas){
-            if( (key == "acftType" || key == "executeBase") && datas[key] && typeof datas[key] == "string" ) datas[key] =  datas[key].split(",");
-            if( key == "effFrom" || key == "effTill" ){
+        var datas = currentAction == "add" ? {} : JSON.parse(JSON.stringify(currentData));
+        for (var key in datas) {
+            if ((key == "acftType" || key == "executeBase") && datas[key] && typeof datas[key] == "string") datas[key] = datas[key].split(",");
+            if (key == "effFrom" || key == "effTill") {
                 datas[key] = datas[key] ? moment(datas[key]) : null;
             }
         }
@@ -334,7 +334,10 @@ class AirLineAcftType extends React.Component {
                 placeholder: "例：广州-伦敦",
                 options: {
                     initialValue: datas.airLineDesc,
-                    rules:[{required: true, message: "航线不可为空"}]
+                    rules: [
+                        { required: true, message: "航线不可为空" },
+                        { pattern: /^[\u4e00-\u9fa5-]*$/, message: '请输入正确中文航线' }
+                    ]
                 }
             },
             {
@@ -345,7 +348,10 @@ class AirLineAcftType extends React.Component {
                 placeholder: "例：CAN-LHR",
                 options: {
                     initialValue: datas.airLineCode,
-                    rules:[{required: true, message: "航线代码不可为空"}]
+                    rules: [
+                        { required: true, message: "航线代码不可为空" },
+                        { pattern: /^[A-Z-]*$/, message: '请输入正确的航线代码' }
+                    ],
                 }
             },
             {
@@ -356,8 +362,8 @@ class AirLineAcftType extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.acftType,
-                    rules:[
-                        {required: true, message: "机型不可为空"},
+                    rules: [
+                        { required: true, message: "机型不可为空" },
                         {
                             validator: (rule, value, callback) => {
                                 if (value && value.value && value.value.length == 0) {
@@ -377,8 +383,8 @@ class AirLineAcftType extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.executeBase,
-                    rules:[
-                        {required: true, message: "执行不可为空"},
+                    rules: [
+                        { required: true, message: "执行不可为空" },
                         {
                             validator: (rule, value, callback) => {
                                 if (value && value.value && value.value.length == 0) {
@@ -406,7 +412,7 @@ class AirLineAcftType extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effFrom,
-                    rules:[{required: true, message: "生效时间不可为空"}]
+                    rules: [{ required: true, message: "生效时间不可为空" }]
                 }
             },
             {
@@ -416,13 +422,13 @@ class AirLineAcftType extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effTill,
-                    rules:[{required: true, message: "失效时间不可为空"}]
+                    rules: [{ required: true, message: "失效时间不可为空" }]
                 }
             }
         ];
     }
 
-    render(){
+    render() {
         const { table, modalOkBtnLoading, currentAction, selectedRowKeys, authorityList, authorityUpload } = this.state;
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
@@ -430,7 +436,7 @@ class AirLineAcftType extends React.Component {
             aligin: "left",
             span: 6,
             list: [
-                {text: "查询", options: "queryOpt", event: this.search}
+                { text: "查询", options: "queryOpt", event: this.search }
             ]
         };
         // 增删改
@@ -457,36 +463,36 @@ class AirLineAcftType extends React.Component {
         }
         // add、edit模态框
         var title = currentAction == "add" ? "新增" : currentAction == "edit" ? "修改" : "";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title,
                 okButtonProps: { loading: modalOkBtnLoading }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
         const formOptions = this.getFormOptions();
         // 导入
         const props = getUploadProps("airLineAcftType/importExcel", () => {
-            this.getList({pageNum: 1});
+            this.getList({ pageNum: 1 });
         });
-        return(
-            <div className="card" style={{margin: 0, padding: 0}}>
-                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searcForm = form.props.form;}} />}
+        return (
+            <div className="card" style={{ margin: 0, padding: 0 }}>
+                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searcForm = form.props.form; }} />}
                 <div className="buttons">
                     <CommonBtns options={commonBtnOptions} btns={this.state.btns} />
-                    { authorityUpload &&
+                    {authorityUpload &&
                         <Upload {...props}>
                             <Button shape="round" size="small"><Icon type="upload" />导入</Button>
                         </Upload>
                     }
                 </div>
                 { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...modalOptions}>
-                    <div className="form-grid-5" style={{paddingLeft: "70px", paddingRight: "100px"}}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}} /></div>
+                    <div className="form-grid-5" style={{ paddingLeft: "70px", paddingRight: "100px" }}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }} /></div>
                 </CommonModal>
-            </div>            
+            </div>
         );
     }
 }
@@ -528,7 +534,7 @@ class NewAirport extends React.Component {
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
@@ -542,9 +548,9 @@ class NewAirport extends React.Component {
             url: "newAirport/queryNewAirportListByParam",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -560,9 +566,9 @@ class NewAirport extends React.Component {
 
     search = () => {
         this.searcForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = handleInParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -576,13 +582,13 @@ class NewAirport extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             this.setState({
                 currentAction: "edit",
@@ -593,20 +599,20 @@ class NewAirport extends React.Component {
     }
 
     submit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
                 values = handleInParams(values);
-                for(var key in values){
-                    if(key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                for (var key in values) {
+                    if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
                 }
                 var url, msg;
-                if( this.state.currentAction == "add"){
+                if (this.state.currentAction == "add") {
                     url = "newAirport/insert";
                     msg = "添加成功";
-                }else{
+                } else {
                     values.id = this.state.currentData.id;
                     url = "newAirport/update";
                     msg = "修改成功";
@@ -614,11 +620,11 @@ class NewAirport extends React.Component {
                 post({
                     url: url,
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         message.success(msg);
                         this.modal.hide();
-                        this.getList({pageNum: 1});
+                        this.getList({ pageNum: 1 });
                     }
                 });
             }
@@ -626,10 +632,10 @@ class NewAirport extends React.Component {
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var list = this.state.selectedRows.map(item => item.id);
             var name = this.state.selectedRows.map(item => item.icaoCode);
             confirm({
@@ -638,11 +644,11 @@ class NewAirport extends React.Component {
                 onOk: () => {
                     post({
                         url: "newAirport/delete",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
-                            this.getList({pageNum: 1});
+                            this.getList({ pageNum: 1 });
                         }
                     });
                 },
@@ -652,18 +658,18 @@ class NewAirport extends React.Component {
     }
 
     export = (callback) => {
-        if( this.state.selectedExport.length == 0 ){
+        if (this.state.selectedExport.length == 0) {
             callback();
             message.warning("未选中选项");
-        }else{
+        } else {
             var list = this.state.selectedExport.map(item => item.id);
             var name = this.state.selectedExport.map(item => item.icaoCode);
             confirm({
-                title: "确定导出"+ name.join("、")+"的新开航机场吗？",
+                title: "确定导出" + name.join("、") + "的新开航机场吗？",
                 onOk() {
                     post({
                         url: "newAirport/export",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             downloadFile(data, "新开航机场表");
@@ -694,7 +700,7 @@ class NewAirport extends React.Component {
         });
     }
 
-    getSearchFormOptions(){
+    getSearchFormOptions() {
         return [
             {
                 type: "Input",
@@ -710,11 +716,11 @@ class NewAirport extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
+    getFormOptions() {
         const { currentAction, currentData } = this.state;
-        var datas = currentAction == "add" ? {} : JSON.parse( JSON.stringify(currentData) );
-        for(var key in datas){
-            if(key == "effFrom" || key == "effTill") datas[key] = datas[key] ? moment(datas[key]) : null;
+        var datas = currentAction == "add" ? {} : JSON.parse(JSON.stringify(currentData));
+        for (var key in datas) {
+            if (key == "effFrom" || key == "effTill") datas[key] = datas[key] ? moment(datas[key]) : null;
         }
         return [
             {
@@ -724,7 +730,7 @@ class NewAirport extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.icaoCode,
-                    rules:[{required: true, message: "新开航机场不可为空"}]
+                    rules: [{ required: true, message: "新开航机场不可为空" }]
                 }
             },
             {
@@ -743,7 +749,7 @@ class NewAirport extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effFrom,
-                    rules:[{required: true, message: "生效时间不可为空"}]
+                    rules: [{ required: true, message: "生效时间不可为空" }]
                 }
             },
             {
@@ -753,13 +759,13 @@ class NewAirport extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effTill,
-                    rules:[{required: true, message: "失效时间不可为空"}]
+                    rules: [{ required: true, message: "失效时间不可为空" }]
                 }
             }
         ];
     }
 
-    render(){
+    render() {
         const { table, modalOkBtnLoading, currentAction, selectedRowKeys, authorityList } = this.state;
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
@@ -767,7 +773,7 @@ class NewAirport extends React.Component {
             aligin: "left",
             span: 6,
             list: [
-                {text: "查询", options: "queryOpt", event: this.search}
+                { text: "查询", options: "queryOpt", event: this.search }
             ]
         };
         // 增删改
@@ -794,25 +800,25 @@ class NewAirport extends React.Component {
         }
         // add、edit模态框
         var title = currentAction == "add" ? "新增" : currentAction == "edit" ? "修改" : "";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title,
                 okButtonProps: { loading: modalOkBtnLoading }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
         const formOptions = this.getFormOptions();
-        return(
-            <div className="card" style={{margin: 0, padding: 0}}>
-                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searcForm = form.props.form;}} />}
+        return (
+            <div className="card" style={{ margin: 0, padding: 0 }}>
+                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searcForm = form.props.form; }} />}
                 <div className="buttons"><CommonBtns options={commonBtnOptions} btns={this.state.btns} /></div>
                 { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...modalOptions}>
-                    <div className="form-grid-6" style={{paddingLeft: "70px", paddingRight: "100px"}}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}} /></div>
+                    <div className="form-grid-6" style={{ paddingLeft: "70px", paddingRight: "100px" }}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }} /></div>
                 </CommonModal>
-            </div>            
+            </div>
         );
     }
 }
@@ -864,26 +870,26 @@ class NewAirLine extends React.Component {
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    getFleetTailMap(){
+    getFleetTailMap() {
         post({
             url: "acfData/queryFleetTailMap",
             success: data => {
-                this.setState({fleetTailMap: data});
+                this.setState({ fleetTailMap: data });
             }
         });
     }
 
-    getAllBranch(){
+    getAllBranch() {
         post({
             url: "acfData/getAllBranch",
             success: data => {
-                this.setState({allBranch: data});
+                this.setState({ allBranch: data });
             }
         });
     }
@@ -896,9 +902,9 @@ class NewAirLine extends React.Component {
             url: "newAirLine/queryNewAirLineListByParam",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -914,9 +920,9 @@ class NewAirLine extends React.Component {
 
     search = () => {
         this.searcForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = handleInParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -930,13 +936,13 @@ class NewAirLine extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             this.setState({
                 currentAction: "edit",
@@ -947,25 +953,25 @@ class NewAirLine extends React.Component {
     }
 
     submit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
                 values = handleInParams(values);
-                for(var key in values){
-                    if(key == "acftType" || key == "executeBase"){
-                        if(values[key].value) values[key] = values[key].value;
+                for (var key in values) {
+                    if (key == "acftType" || key == "executeBase") {
+                        if (values[key].value) values[key] = values[key].value;
                         var index = values[key].indexOf("全部");
-                        if( index > -1 ) values[key].splice(index, 1);
+                        if (index > -1) values[key].splice(index, 1);
                     }
-                    if(key == "expectStart" || key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                    if (key == "expectStart" || key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
                 }
                 var url, msg;
-                if( this.state.currentAction == "add"){
+                if (this.state.currentAction == "add") {
                     url = "newAirLine/insert";
                     msg = "添加成功";
-                }else{
+                } else {
                     values.id = this.state.currentData.id;
                     url = "newAirLine/update";
                     msg = "修改成功";
@@ -973,11 +979,11 @@ class NewAirLine extends React.Component {
                 post({
                     url: url,
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         message.success(msg);
                         this.modal.hide();
-                        this.getList({pageNum: 1});
+                        this.getList({ pageNum: 1 });
                     }
                 });
             }
@@ -985,10 +991,10 @@ class NewAirLine extends React.Component {
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var list = this.state.selectedRows.map(item => item.id);
             var name = this.state.selectedRows.map(item => item.airLineDesc);
             confirm({
@@ -997,11 +1003,11 @@ class NewAirLine extends React.Component {
                 onOk: () => {
                     post({
                         url: "newAirLine/delete",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
-                            this.getList({pageNum: 1});
+                            this.getList({ pageNum: 1 });
                         }
                     });
                 },
@@ -1011,18 +1017,18 @@ class NewAirLine extends React.Component {
     }
 
     export = (callback) => {
-        if( this.state.selectedExport.length == 0 ){
+        if (this.state.selectedExport.length == 0) {
             callback();
             message.warning("未选中选项");
-        }else{
+        } else {
             var list = this.state.selectedExport.map(item => item.id);
             var name = this.state.selectedExport.map(item => item.airLineDesc);
             confirm({
-                title: "确定导出"+ name.join("、")+"的新开航航线吗？",
+                title: "确定导出" + name.join("、") + "的新开航航线吗？",
                 onOk() {
                     post({
                         url: "newAirLine/export",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             downloadFile(data, "新开航线表");
@@ -1053,7 +1059,7 @@ class NewAirLine extends React.Component {
         });
     }
 
-    getSearchFormOptions(){
+    getSearchFormOptions() {
         return [
             {
                 type: "Input",
@@ -1069,15 +1075,15 @@ class NewAirLine extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
+    getFormOptions() {
         const { currentAction, currentData, fleetTailMap, allBranch } = this.state;
-        var datas = currentAction == "add" ? {} : JSON.parse( JSON.stringify(currentData) );;
-        for(var key in datas){
-            if( (key == "acftType" || key == "executeBase") && datas[key] && typeof datas[key] == "string") datas[key] = datas[key].split(",");
-            if( key == "expectStart" || key == "effFrom" || key == "effTill" ) datas[key] = datas[key] ? moment(datas[key]) : null;
+        var datas = currentAction == "add" ? {} : JSON.parse(JSON.stringify(currentData));;
+        for (var key in datas) {
+            if ((key == "acftType" || key == "executeBase") && datas[key] && typeof datas[key] == "string") datas[key] = datas[key].split(",");
+            if (key == "expectStart" || key == "effFrom" || key == "effTill") datas[key] = datas[key] ? moment(datas[key]) : null;
         }
         var fleet = [];
-        for(var key in fleetTailMap){
+        for (var key in fleetTailMap) {
             fleet.push(key);
         }
         var branch = allBranch.map(item => item.chnDescShort);
@@ -1098,7 +1104,7 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.airLineDesc,
-                    rules:[{required: true, message: "航线不可为空"}]
+                    rules: [{ required: true, message: "航线不可为空" }]
                 }
             },
             {
@@ -1108,7 +1114,7 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.airLineCode,
-                    rules:[{required: true, message: "航线代码不可为空"}]
+                    rules: [{ required: true, message: "航线代码不可为空" }]
                 }
             },
             {
@@ -1119,8 +1125,8 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.acftType,
-                    rules:[
-                        {required: true, message: "机型不可为空"},
+                    rules: [
+                        { required: true, message: "机型不可为空" },
                         {
                             validator: (rule, value, callback) => {
                                 if (value && value.value && value.value.length == 0) {
@@ -1140,8 +1146,8 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.executeBase,
-                    rules:[
-                        {required: true, message: "执行不可为空"},
+                    rules: [
+                        { required: true, message: "执行不可为空" },
                         {
                             validator: (rule, value, callback) => {
                                 if (value && value.value && value.value.length == 0) {
@@ -1178,7 +1184,7 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effFrom,
-                    rules:[{required: true, message: "生效时间不可为空"}]
+                    rules: [{ required: true, message: "生效时间不可为空" }]
                 }
             },
             {
@@ -1188,13 +1194,13 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effTill,
-                    rules:[{required: true, message: "失效时间不可为空"}]
+                    rules: [{ required: true, message: "失效时间不可为空" }]
                 }
             }
         ];
     }
 
-    render(){
+    render() {
         const { table, modalOkBtnLoading, currentAction, selectedRowKeys, authorityList, authorityUpload } = this.state;
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
@@ -1202,7 +1208,7 @@ class NewAirLine extends React.Component {
             aligin: "left",
             span: 6,
             list: [
-                {text: "查询", options: "queryOpt", event: this.search}
+                { text: "查询", options: "queryOpt", event: this.search }
             ]
         };
         // 增删改
@@ -1229,22 +1235,22 @@ class NewAirLine extends React.Component {
         }
         // add、edit模态框
         var title = currentAction == "add" ? "新增" : currentAction == "edit" ? "修改" : "";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title,
                 okButtonProps: { loading: modalOkBtnLoading }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
         const formOptions = this.getFormOptions();
         // 导入
         const props = getUploadProps("newAirLine/importExcel", () => {
-            this.getList({pageNum: 1});
+            this.getList({ pageNum: 1 });
         });
-        return(
-            <div className="card" style={{margin: 0, padding: 0}}>
-                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searcForm = form.props.form;}} />}
+        return (
+            <div className="card" style={{ margin: 0, padding: 0 }}>
+                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searcForm = form.props.form; }} />}
                 <div className="buttons">
                     <CommonBtns options={commonBtnOptions} btns={this.state.btns} />
                     {
@@ -1254,11 +1260,11 @@ class NewAirLine extends React.Component {
                         </Upload>
                     }
                 </div>
-                { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}   
+                { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
                 <CommonModal {...modalOptions}>
-                    <div className="form-grid-6" style={{paddingLeft: "70px", paddingRight: "100px"}}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}} /></div>
+                    <div className="form-grid-6" style={{ paddingLeft: "70px", paddingRight: "100px" }}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }} /></div>
                 </CommonModal>
-            </div>            
+            </div>
         );
     }
 }
@@ -1302,31 +1308,31 @@ class NewAcftType extends React.Component {
         this.getList();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState = (state, callback) => {
             return;
         };
     }
 
-    handleComboTree(arr){
-        for(var i = 0; i < arr.length; i++){
+    handleComboTree(arr) {
+        for (var i = 0; i < arr.length; i++) {
             arr[i].title = arr[i].text;
             arr[i].value = arr[i].id;
             arr[i].key = arr[i].id;
-            if( arr[i].children ){
+            if (arr[i].children) {
                 arr[i].children = this.handleComboTree(arr[i].children);
             }
         }
         return arr;
     }
 
-    getComboTree(){
+    getComboTree() {
         post({
             url: "newAcftType/comboTree",
             success: data => {
-                if( data ){
+                if (data) {
                     var arr = this.handleComboTree(JSON.parse(data));
-                    this.setState({comboTree: arr});
+                    this.setState({ comboTree: arr });
                 }
             }
         });
@@ -1340,9 +1346,9 @@ class NewAcftType extends React.Component {
             url: "newAcftType/queryNewAcftTypeListByParam",
             data: params,
             success: data => {
-                if( data && data.rows ){
-                    var dataList = data.rows.map( (item, i) => {
-                        item.index = ( params.pageNum - 1 ) * params.pageSize + i + 1;
+                if (data && data.rows) {
+                    var dataList = data.rows.map((item, i) => {
+                        item.index = (params.pageNum - 1) * params.pageSize + i + 1;
                         return item;
                     });
                     table.setPage({ dataList, total: data.total, pageNum: params.pageNum, pageSize: params.pageSize });
@@ -1358,9 +1364,9 @@ class NewAcftType extends React.Component {
 
     search = () => {
         this.searcForm.validateFields((err, values) => {
-            if( !err ){
+            if (!err) {
                 values = handleInParams(values);
-                this.getList({params: values, pageNum: 1});
+                this.getList({ params: values, pageNum: 1 });
             }
         });
     }
@@ -1374,13 +1380,13 @@ class NewAcftType extends React.Component {
     }
 
     edit = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("必须选择一个选项才能编辑！");
-        }else if( this.state.selectedRows.length  > 1 ){
+        } else if (this.state.selectedRows.length > 1) {
             callback();
             message.warning("只能选择一个选项！");
-        }else{
+        } else {
             callback();
             this.setState({
                 currentAction: "edit",
@@ -1390,14 +1396,14 @@ class NewAcftType extends React.Component {
         }
     }
 
-    getIdByText(text){
+    getIdByText(text) {
         var result = "";
         var recursion = (tree, text) => {
             if (!tree || !tree.length) return;
             for (let i = 0; i < tree.length; i++) {
                 const childs = tree[i].children;
-                if( tree[i].text === text ) result = tree[i].id;
-                if( childs && childs.length > 0 ){
+                if (tree[i].text === text) result = tree[i].id;
+                if (childs && childs.length > 0) {
                     recursion(childs, text);
                 }
             }
@@ -1407,14 +1413,14 @@ class NewAcftType extends React.Component {
         return result;
     }
 
-    getTextById(id){
+    getTextById(id) {
         var result = "";
         var recursion = (tree, id) => {
             if (!tree || !tree.length) return;
             for (let i = 0; i < tree.length; i++) {
                 const childs = tree[i].children;
-                if( tree[i].id === id ) result = tree[i].text;
-                if( childs && childs.length > 0 ){
+                if (tree[i].id === id) result = tree[i].text;
+                if (childs && childs.length > 0) {
                     recursion(childs, id);
                 }
             }
@@ -1425,21 +1431,21 @@ class NewAcftType extends React.Component {
     }
 
     submit = () => {
-        this.setState({modalOkBtnLoading: true});
+        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
-            if( err ){
-                this.setState({modalOkBtnLoading: false});
-            }else{
+            if (err) {
+                this.setState({ modalOkBtnLoading: false });
+            } else {
                 values = handleInParams(values);
-                for(var key in values){
-                    if(key == "acftType") values[key] = this.getTextById(values[key]);
-                    if(key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                for (var key in values) {
+                    if (key == "acftType") values[key] = this.getTextById(values[key]);
+                    if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
                 }
                 var url, msg;
-                if( this.state.currentAction == "add"){
+                if (this.state.currentAction == "add") {
                     url = "newAcftType/insert";
                     msg = "添加成功";
-                }else{
+                } else {
                     values.id = this.state.currentData.id;
                     url = "newAcftType/update";
                     msg = "修改成功";
@@ -1447,11 +1453,11 @@ class NewAcftType extends React.Component {
                 post({
                     url: url,
                     data: values,
-                    btn: () => this.setState({modalOkBtnLoading: false}),
+                    btn: () => this.setState({ modalOkBtnLoading: false }),
                     success: data => {
                         message.success(msg);
                         this.modal.hide();
-                        this.getList({pageNum: 1});
+                        this.getList({ pageNum: 1 });
                     }
                 });
             }
@@ -1459,10 +1465,10 @@ class NewAcftType extends React.Component {
     }
 
     del = (callback) => {
-        if( this.state.selectedRows.length == 0 ){
+        if (this.state.selectedRows.length == 0) {
             callback();
             message.warning("请至少选择一行数据");
-        }else{
+        } else {
             var list = this.state.selectedRows.map(item => item.id);
             var name = this.state.selectedRows.map(item => item.acftType);
             confirm({
@@ -1471,11 +1477,11 @@ class NewAcftType extends React.Component {
                 onOk: () => {
                     post({
                         url: "newAcftType/delete",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             message.success("删除成功");
-                            this.getList({pageNum: 1});
+                            this.getList({ pageNum: 1 });
                         }
                     });
                 },
@@ -1485,18 +1491,18 @@ class NewAcftType extends React.Component {
     }
 
     export = (callback) => {
-        if( this.state.selectedExport.length == 0 ){
+        if (this.state.selectedExport.length == 0) {
             callback();
             message.warning("未选中选项");
-        }else{
+        } else {
             var list = this.state.selectedExport.map(item => item.id);
             var name = this.state.selectedExport.map(item => item.acftType);
             confirm({
-                title: "确定导出"+ name.join("、")+"的新引进机型吗？",
+                title: "确定导出" + name.join("、") + "的新引进机型吗？",
                 onOk() {
                     post({
                         url: "newAcftType/export",
-                        data: {ids: list},
+                        data: { ids: list },
                         btn: callback,
                         success: data => {
                             downloadFile(data, "新引进机型表");
@@ -1527,7 +1533,7 @@ class NewAcftType extends React.Component {
         });
     }
 
-    getSearchFormOptions(){
+    getSearchFormOptions() {
         return [
             {
                 type: "Input",
@@ -1543,11 +1549,11 @@ class NewAcftType extends React.Component {
     /**
      * 获取form表的配置
      */
-    getFormOptions(){
+    getFormOptions() {
         const { currentAction, currentData, comboTree } = this.state;
-        var datas = currentAction == "add" ? {} : JSON.parse( JSON.stringify(currentData) );;
-        for(var key in datas){
-            if(key == "effFrom" || key == "effTill") datas[key] = datas[key] ? moment(datas[key]) : datas[key];
+        var datas = currentAction == "add" ? {} : JSON.parse(JSON.stringify(currentData));;
+        for (var key in datas) {
+            if (key == "effFrom" || key == "effTill") datas[key] = datas[key] ? moment(datas[key]) : datas[key];
         }
         var acftType = this.getIdByText(datas.acftType);
         return [
@@ -1559,7 +1565,7 @@ class NewAcftType extends React.Component {
                 span: 24,
                 options: {
                     initialValue: acftType,
-                    rules:[{required: true, message: "动态机型不可为空"}]
+                    rules: [{ required: true, message: "动态机型不可为空" }]
                 }
             },
             {
@@ -1578,7 +1584,7 @@ class NewAcftType extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effFrom,
-                    rules:[{required: true, message: "生效时间不可为空"}]
+                    rules: [{ required: true, message: "生效时间不可为空" }]
                 }
             },
             {
@@ -1588,13 +1594,13 @@ class NewAcftType extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.effTill,
-                    rules:[{required: true, message: "失效时间不可为空"}]
+                    rules: [{ required: true, message: "失效时间不可为空" }]
                 }
             }
         ];
     }
 
-    render(){
+    render() {
         const { table, modalOkBtnLoading, currentAction, selectedRowKeys, authorityList } = this.state;
         // 查询form
         const searchFormOptions = this.getSearchFormOptions();
@@ -1602,7 +1608,7 @@ class NewAcftType extends React.Component {
             aligin: "left",
             span: 6,
             list: [
-                {text: "查询", options: "queryOpt", event: this.search}
+                { text: "查询", options: "queryOpt", event: this.search }
             ]
         };
         // 增删改
@@ -1629,25 +1635,25 @@ class NewAcftType extends React.Component {
         }
         // add、edit模态框
         var title = currentAction == "add" ? "新增" : currentAction == "edit" ? "修改" : "";
-        const modalOptions =  {
+        const modalOptions = {
             options: {
                 title: title,
                 okButtonProps: { loading: modalOkBtnLoading }
             },
-            onRef: (ref) => {this.modal = ref},
+            onRef: (ref) => { this.modal = ref },
             ok: this.submit.bind(this)
         }
         const formOptions = this.getFormOptions();
-        return(
-            <div className="card" style={{margin: 0, padding: 0}}>
-                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.searcForm = form.props.form;}} />}
+        return (
+            <div className="card" style={{ margin: 0, padding: 0 }}>
+                { authorityList && <CommonForm options={searchFormOptions} btnOptions={btnOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.searcForm = form.props.form; }} />}
                 <div className="buttons"><CommonBtns options={commonBtnOptions} btns={this.state.btns} /></div>
                 { authorityList && <CommonTable options={tableOptions} onChecked={this.onChecked}></CommonTable>}
-                { !authorityList && <div className="no-authority-box">无权限查看</div> }  
+                { !authorityList && <div className="no-authority-box">无权限查看</div>}
                 <CommonModal {...modalOptions}>
-                    <div className="form-grid-5" style={{paddingLeft: "70px", paddingRight: "100px"}}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if(form && form.props && form.props.form) this.form = form.props.form;}} /></div>
+                    <div className="form-grid-5" style={{ paddingLeft: "70px", paddingRight: "100px" }}><CommonForm options={formOptions} wrappedComponentRef={(form) => { if (form && form.props && form.props.form) this.form = form.props.form; }} /></div>
                 </CommonModal>
-            </div>            
+            </div>
         );
     }
 }

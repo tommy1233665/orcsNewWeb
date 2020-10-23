@@ -22,19 +22,19 @@ class Login extends React.Component {
     // 组件渲染后调用
     componentDidMount() {
         this.changeCaptcha();
-        this.timer = setInterval( () => {
+        this.timer = setInterval(() => {
             this.changeCaptcha();
         }, 90000); // 90s
         //是否需要回显账号
         var list = this.getUserNames();
-        if( list.length > 0 ) {
+        if (list.length > 0) {
             this.props.form.setFieldsValue({
                 username: list[0]
             });
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         clearInterval(this.timer);
         this.setState = (state, callback) => {
             return;
@@ -42,42 +42,42 @@ class Login extends React.Component {
     }
 
     // 获取验证码图片地址
-    getCaptcha(){
+    getCaptcha() {
         return window.g_url + "captcha-image?id=" + Math.random();
     }
 
     // 改变验证码
-    changeCaptcha(){
+    changeCaptcha() {
         this.setState({
             captchaImg: this.getCaptcha()
         });
-　　}
+    }
 
     // 发送短信验证码
-    sendCode(){
+    sendCode() {
         // 对接发送短信验证码接口
     }
 
     onChange() {
-        if( this.state.msg ) this.setState({msg: ""});
+        if (this.state.msg) this.setState({ msg: "" });
     }
 
     // 获取保存在localStorage里的orcs-userName的值
     getUserNames() {
         var list = localStorage.getItem('orcs-userName');
-        return list ? JSON.parse( list ) : [];
+        return list ? JSON.parse(list) : [];
     }
 
     // 将输入过的username记住
-    rememberUserName(userName){
+    rememberUserName(userName) {
         var list = this.getUserNames();
         var i = list.indexOf(userName);
-        if( i > -1 ){
-            if( i != 0 ){
+        if (i > -1) {
+            if (i != 0) {
                 list.splice(i, 1);
                 list.unshift(userName);
             }
-        }else{
+        } else {
             list.unshift(userName);
         }
         // 存数组的原因：为了以后扩展
@@ -91,16 +91,16 @@ class Login extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 let params = {};
-                for(let key in values){
+                for (let key in values) {
                     params[key] = encrypt(values[key]);
                 }
-                if( this.state.flag ) params["ssoToken"] = this.state.ssoToken;
+                if (this.state.flag) params["ssoToken"] = this.state.ssoToken;
                 post({
                     url: "doLogin",
                     data: params,
                     success: (data) => {
                         setSession("token", data.signInToken);
-                        This.props.updateUserInfo({username:data.userName,userCode:data.userCode});
+                        This.props.updateUserInfo({ username: data.userName, userCode: data.userCode });
                         This.props.updateAuthority(data.sysPermission);
                         This.props.updateCurrentMenu({
                             currentMenus: [],
@@ -111,9 +111,9 @@ class Login extends React.Component {
                     },
                     error: (res) => {
                         This.changeCaptcha();
-                        This.setState({msg: res.message});
-                        if( res.code == 64 ){
-                            This.setState({flag: true, mobile: res.data.mobile, ssoToken: res.data.ssoToken});
+                        This.setState({ msg: res.message });
+                        if (res.code == 64) {
+                            This.setState({ flag: true, mobile: res.data.mobile, ssoToken: res.data.ssoToken });
                         }
                     }
                 });
@@ -128,7 +128,7 @@ class Login extends React.Component {
                 <div className="login">
                     <div className="logo-img"></div>
                     <div className="title">运行风险管控系统</div>
-                    <div className="sec-title">orcs csair.com</div>
+                    <div className="sec-title">orcs.csair.com</div>
                     <div>
                         <div className="tip">{this.state.msg}</div>
                         <Form onSubmit={this.submit}>
@@ -156,7 +156,7 @@ class Login extends React.Component {
                                         </Col>
                                         <Col span={8} className="code-box">
                                             <div className="code">
-                                                <img onClick={this.changeCaptcha.bind(this)} src={this.state.captchaImg}/>
+                                                <img onClick={this.changeCaptcha.bind(this)} src={this.state.captchaImg} />
                                             </div>
                                         </Col>
                                     </Row>
@@ -201,7 +201,7 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return { 
+    return {
         userInfo: state.userInfo,
         authority: state.authority
     };
