@@ -151,7 +151,6 @@ class FlightRiskDetail extends React.Component {
 
     // 新模型计算结果新开窗口页
     linkToNew = () => {
-        console.log('新模型计算结果')
         const w = window.open('about:blank');
         w.location.href = this.newResultUrl + this.state.flightCode;
     }

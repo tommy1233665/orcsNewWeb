@@ -189,11 +189,11 @@ class AirLineAcftType extends React.Component {
     }
 
     submit = () => {
-        this.setState({ modalOkBtnLoading: true });
         this.form.validateFields((err, values) => {
             if (err) {
                 this.setState({ modalOkBtnLoading: false });
             } else {
+                this.setState({ modalOkBtnLoading: true });
                 values = handleInParams(values);
                 for (var key in values) {
                     if (key == "acftType" || key == "executeBase") {
@@ -201,8 +201,13 @@ class AirLineAcftType extends React.Component {
                         var index = values[key].indexOf("全部");
                         if (index > -1) values[key].splice(index, 1);
                     }
-                    if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                    // if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
                 }
+                if (values.effecTime) {
+                    values.effFrom = moment(values.effecTime[0]).format('YYYY-MM-DD HH:mm:ss')
+                    values.effTill = moment(values.effecTime[1]).format('YYYY-MM-DD HH:mm:ss')
+                }
+                delete values.effecTime
                 var url, msg;
                 if (this.state.currentAction == "add") {
                     url = "airLineAcftType/insert";
@@ -220,6 +225,7 @@ class AirLineAcftType extends React.Component {
                         message.success(msg);
                         this.modal.hide();
                         this.getList({ pageNum: 1 });
+                        this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                     }
                 });
             }
@@ -244,6 +250,7 @@ class AirLineAcftType extends React.Component {
                         success: data => {
                             message.success("删除成功");
                             this.getList({ pageNum: 1 });
+                            this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                         }
                     });
                 },
@@ -405,26 +412,61 @@ class AirLineAcftType extends React.Component {
                     initialValue: datas.remark
                 }
             },
+            // {
+            //     type: "DatePicker",
+            //     label: "生效时间",
+            //     name: "effFrom",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effFrom,
+            //         rules: [
+            //             { required: true, message: "生效时间不可为空" },
+            //             {
+            //                 validator: (rule, value, callback) => {
+            //                     console.log(moment(value).valueOf())
+            //                     this.setState({ effFromTime: moment(value).valueOf() })
+            //                     console.log(this.state.effFromTime)
+            //                     if (value && value.value && value.value.length == 0) {
+            //                         callback('生效时间不可为空')
+            //                     }
+            //                     callback()
+            //                 }
+            //             }
+            //         ]
+            //     }
+            // },
+            // {
+            //     type: "DatePicker",
+            //     label: "失效时间",
+            //     name: "effTill",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effTill,
+            //         rules: [
+            //             { required: true, message: "失效时间不可为空" },
+            //             {
+            //                 validator: (rule, value, callback) => {
+            //                     console.log(moment(value).valueOf())
+            //                     if (value && value.value && value.value.length == 0) {
+            //                         callback('生效时间不可为空')
+            //                     }
+            //                     callback()
+            //                 }
+            //             }
+            //         ]
+            //     }
+            // },
             {
-                type: "DatePicker",
-                label: "生效时间",
-                name: "effFrom",
+                type: "TimeRangePicker",
+                label: "有效时间",
+                name: "effecTime",
                 span: 24,
+                length: 5,
                 options: {
-                    initialValue: datas.effFrom,
-                    rules: [{ required: true, message: "生效时间不可为空" }]
+                    initialValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                    rules: [{ required: true, message: "时间不可为空！" }],
                 }
             },
-            {
-                type: "DatePicker",
-                label: "失效时间",
-                name: "effTill",
-                span: 24,
-                options: {
-                    initialValue: datas.effTill,
-                    rules: [{ required: true, message: "失效时间不可为空" }]
-                }
-            }
         ];
     }
 
@@ -466,6 +508,7 @@ class AirLineAcftType extends React.Component {
         const modalOptions = {
             options: {
                 title: title,
+                width: "690px",
                 okButtonProps: { loading: modalOkBtnLoading }
             },
             onRef: (ref) => { this.modal = ref },
@@ -605,9 +648,15 @@ class NewAirport extends React.Component {
                 this.setState({ modalOkBtnLoading: false });
             } else {
                 values = handleInParams(values);
-                for (var key in values) {
-                    if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                // for (var key in values) {
+                //     if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                // }
+                debugger
+                if (values.effecTime) {
+                    values.effFrom = moment(values.effecTime[0]).format('YYYY-MM-DD HH:mm:ss')
+                    values.effTill = moment(values.effecTime[1]).format('YYYY-MM-DD HH:mm:ss')
                 }
+                delete values.effecTime
                 var url, msg;
                 if (this.state.currentAction == "add") {
                     url = "newAirport/insert";
@@ -625,6 +674,7 @@ class NewAirport extends React.Component {
                         message.success(msg);
                         this.modal.hide();
                         this.getList({ pageNum: 1 });
+                        this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                     }
                 });
             }
@@ -649,6 +699,7 @@ class NewAirport extends React.Component {
                         success: data => {
                             message.success("删除成功");
                             this.getList({ pageNum: 1 });
+                            this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                         }
                     });
                 },
@@ -742,26 +793,37 @@ class NewAirport extends React.Component {
                     initialValue: datas.remark
                 }
             },
+            // {
+            //     type: "DatePicker",
+            //     label: "生效时间",
+            //     name: "effFrom",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effFrom,
+            //         rules: [{ required: true, message: "生效时间不可为空" }]
+            //     }
+            // },
+            // {
+            //     type: "DatePicker",
+            //     label: "失效时间",
+            //     name: "effTill",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effTill,
+            //         rules: [{ required: true, message: "失效时间不可为空" }]
+            //     }
+            // },
             {
-                type: "DatePicker",
-                label: "生效时间",
-                name: "effFrom",
+                type: "TimeRangePicker",
+                label: "有效时间",
+                name: "effecTime",
                 span: 24,
+                length: 5,
                 options: {
-                    initialValue: datas.effFrom,
-                    rules: [{ required: true, message: "生效时间不可为空" }]
+                    initialValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                    rules: [{ required: true, message: "时间不可为空！" }],
                 }
             },
-            {
-                type: "DatePicker",
-                label: "失效时间",
-                name: "effTill",
-                span: 24,
-                options: {
-                    initialValue: datas.effTill,
-                    rules: [{ required: true, message: "失效时间不可为空" }]
-                }
-            }
         ];
     }
 
@@ -803,6 +865,7 @@ class NewAirport extends React.Component {
         const modalOptions = {
             options: {
                 title: title,
+                width: "705px",
                 okButtonProps: { loading: modalOkBtnLoading }
             },
             onRef: (ref) => { this.modal = ref },
@@ -965,8 +1028,13 @@ class NewAirLine extends React.Component {
                         var index = values[key].indexOf("全部");
                         if (index > -1) values[key].splice(index, 1);
                     }
-                    if (key == "expectStart" || key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                    if (key == "expectStart") values[key] = moment(values[key]).format("YYYY-MM-DD");
                 }
+                if (values.effecTime) {
+                    values.effFrom = moment(values.effecTime[0]).format('YYYY-MM-DD HH:mm:ss')
+                    values.effTill = moment(values.effecTime[1]).format('YYYY-MM-DD HH:mm:ss')
+                }
+                delete values.effecTime
                 var url, msg;
                 if (this.state.currentAction == "add") {
                     url = "newAirLine/insert";
@@ -984,6 +1052,7 @@ class NewAirLine extends React.Component {
                         message.success(msg);
                         this.modal.hide();
                         this.getList({ pageNum: 1 });
+                        this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                     }
                 });
             }
@@ -1008,6 +1077,7 @@ class NewAirLine extends React.Component {
                         success: data => {
                             message.success("删除成功");
                             this.getList({ pageNum: 1 });
+                            this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                         }
                     });
                 },
@@ -1104,7 +1174,11 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.airLineDesc,
-                    rules: [{ required: true, message: "航线不可为空" }]
+                    // rules: [{ required: true, message: "航线不可为空" }]
+                    rules: [
+                        { required: true, message: "航线不可为空" },
+                        { pattern: /^[\u4e00-\u9fa5-]*$/, message: '请输入正确中文航线' }
+                    ]
                 }
             },
             {
@@ -1114,7 +1188,11 @@ class NewAirLine extends React.Component {
                 span: 24,
                 options: {
                     initialValue: datas.airLineCode,
-                    rules: [{ required: true, message: "航线代码不可为空" }]
+                    // rules: [{ required: true, message: "航线代码不可为空" }]
+                    rules: [
+                        { required: true, message: "航线代码不可为空" },
+                        { pattern: /^[A-Z-]*$/, message: '请输入正确的航线代码' }
+                    ],
                 }
             },
             {
@@ -1177,24 +1255,35 @@ class NewAirLine extends React.Component {
                     initialValue: datas.expectStart
                 }
             },
+            // {
+            //     type: "DatePicker",
+            //     label: "生效时间",
+            //     name: "effFrom",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effFrom,
+            //         rules: [{ required: true, message: "生效时间不可为空" }]
+            //     }
+            // },
+            // {
+            //     type: "DatePicker",
+            //     label: "失效时间",
+            //     name: "effTill",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effTill,
+            //         rules: [{ required: true, message: "失效时间不可为空" }]
+            //     }
+            // },
             {
-                type: "DatePicker",
-                label: "生效时间",
-                name: "effFrom",
+                type: "TimeRangePicker",
+                label: "有效时间",
+                name: "effecTime",
                 span: 24,
+                length: 5,
                 options: {
-                    initialValue: datas.effFrom,
-                    rules: [{ required: true, message: "生效时间不可为空" }]
-                }
-            },
-            {
-                type: "DatePicker",
-                label: "失效时间",
-                name: "effTill",
-                span: 24,
-                options: {
-                    initialValue: datas.effTill,
-                    rules: [{ required: true, message: "失效时间不可为空" }]
+                    initialValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                    rules: [{ required: true, message: "时间不可为空！" }],
                 }
             }
         ];
@@ -1238,6 +1327,7 @@ class NewAirLine extends React.Component {
         const modalOptions = {
             options: {
                 title: title,
+                width: "705px",
                 okButtonProps: { loading: modalOkBtnLoading }
             },
             onRef: (ref) => { this.modal = ref },
@@ -1439,8 +1529,13 @@ class NewAcftType extends React.Component {
                 values = handleInParams(values);
                 for (var key in values) {
                     if (key == "acftType") values[key] = this.getTextById(values[key]);
-                    if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
+                    // if (key == "effFrom" || key == "effTill") values[key] = moment(values[key]).format("YYYY-MM-DD");
                 }
+                if (values.effecTime) {
+                    values.effFrom = moment(values.effecTime[0]).format('YYYY-MM-DD HH:mm:ss')
+                    values.effTill = moment(values.effecTime[1]).format('YYYY-MM-DD HH:mm:ss')
+                }
+                delete values.effecTime
                 var url, msg;
                 if (this.state.currentAction == "add") {
                     url = "newAcftType/insert";
@@ -1458,6 +1553,7 @@ class NewAcftType extends React.Component {
                         message.success(msg);
                         this.modal.hide();
                         this.getList({ pageNum: 1 });
+                        this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                     }
                 });
             }
@@ -1482,6 +1578,7 @@ class NewAcftType extends React.Component {
                         success: data => {
                             message.success("删除成功");
                             this.getList({ pageNum: 1 });
+                            this.setState({ selectedRowKeys: [], selectedRows: [], selectedExport: [] });
                         }
                     });
                 },
@@ -1577,24 +1674,35 @@ class NewAcftType extends React.Component {
                     initialValue: datas.remark
                 }
             },
+            // {
+            //     type: "DatePicker",
+            //     label: "生效时间",
+            //     name: "effFrom",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effFrom,
+            //         rules: [{ required: true, message: "生效时间不可为空" }]
+            //     }
+            // },
+            // {
+            //     type: "DatePicker",
+            //     label: "失效时间",
+            //     name: "effTill",
+            //     span: 24,
+            //     options: {
+            //         initialValue: datas.effTill,
+            //         rules: [{ required: true, message: "失效时间不可为空" }]
+            //     }
+            // },
             {
-                type: "DatePicker",
-                label: "生效时间",
-                name: "effFrom",
+                type: "TimeRangePicker",
+                label: "有效时间",
+                name: "effecTime",
                 span: 24,
+                length: 5,
                 options: {
-                    initialValue: datas.effFrom,
-                    rules: [{ required: true, message: "生效时间不可为空" }]
-                }
-            },
-            {
-                type: "DatePicker",
-                label: "失效时间",
-                name: "effTill",
-                span: 24,
-                options: {
-                    initialValue: datas.effTill,
-                    rules: [{ required: true, message: "失效时间不可为空" }]
+                    initialValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                    rules: [{ required: true, message: "时间不可为空！" }],
                 }
             }
         ];
@@ -1638,6 +1746,7 @@ class NewAcftType extends React.Component {
         const modalOptions = {
             options: {
                 title: title,
+                width: '690px',
                 okButtonProps: { loading: modalOkBtnLoading }
             },
             onRef: (ref) => { this.modal = ref },

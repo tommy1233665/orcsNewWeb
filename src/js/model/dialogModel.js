@@ -1,5 +1,4 @@
 import { Modal, Table, Button } from "antd";
-// import { CardCommon, CommonTable } from "common/component";
 import { post } from "common/http";
 import { downloadFile } from "common/commonFn";
 const { confirm } = Modal;
@@ -18,7 +17,6 @@ class dialogModel extends React.Component {
 
   start = () => {
     this.setState({ loading: true });
-    // this.exportAll()
     // ajax request after empty completing
     setTimeout(() => {
       this.setState({
@@ -56,12 +54,10 @@ class dialogModel extends React.Component {
     this.props.onRef(this);
   }
   showModal = (data, paramsData) => {
-    // TODO 后台数据修改后，切除 （~）取值
-    // console.log(data, paramsData, "弹窗请求, 1111");
+    // 后台数据修改后，切除 （~）取值
     var str = data.data.trueExtrOilSection;
     var newStr = [];
     newStr = str.split("~");
-    // console.log(data, "我是弹窗柱子点击");
     let params = {
       soflSeqNr: paramsData.soflSeqNr,
       time: paramsData.time,
@@ -77,7 +73,6 @@ class dialogModel extends React.Component {
       url: "qarInfoController/queryFltExtraSectionDetailInfo",
       data: params,
       success: (data) => {
-        // console.log(data, "弹窗请求");
         this.setState({
           tableData: data.fltExtraSectionDetailList,
         });
@@ -86,29 +81,18 @@ class dialogModel extends React.Component {
   };
 
   handleOk = (e) => {
-    // console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleCancel = (e) => {
-    // console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   render() {
-    // const data = [];
-    // for (let i = 0; i < 46; i++) {
-    //   data.push({
-    //     key: i,
-    //     name: `Edward King ${i}`,
-    //     age: 32,
-    //     address: `London, Park Lane no. ${i}`,
-    //   });
-    // }
     const columns = [
       {
         title: "航班号",

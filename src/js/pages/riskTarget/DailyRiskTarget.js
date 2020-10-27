@@ -373,7 +373,7 @@ class DailyRiskTarget extends React.Component {
         const modalOptions = {
             options: {
                 title: title + "日常风险",
-                width: "1000px",
+                width: "1100px",
                 bodyStyle: {
                     height: "500px",
                     overflow: "auto"
@@ -850,7 +850,6 @@ class EditFrom extends React.Component {
                     if (key == 'effecTime') {
                         result.effectiveTime = moment(values[key][0]).format('YYYY-MM-DD HH:mm:ss')
                         result.invalidTime = moment(values[key][1]).format('YYYY-MM-DD HH:mm:ss')
-                        console.log(values[key], '提交')
                     }
                 }
                 Object.assign(result, values);
@@ -901,7 +900,6 @@ class EditFrom extends React.Component {
                                         message.warning('请填写机尾号')
                                         return false
                                     }
-                                    console.log(params, '提交表单')
                                     if (url) {
                                         post({
                                             url: url,

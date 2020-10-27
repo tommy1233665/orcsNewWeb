@@ -20,7 +20,6 @@ function href(_this, url, params = '') {
 
 // 获取url后面参数后台浏览器时改变菜单栏的状态
 function getUrlSearch(obj, windowEvent) {
-    // console.log(obj)
     let urlParamsArr = (windowEvent && obj.substring(1).split("&")) || obj.search.substring(1).split("&"),
         i,
         objParams = {};
@@ -28,7 +27,6 @@ function getUrlSearch(obj, windowEvent) {
         i = item.indexOf("=");
         objParams[item.slice(0, i)] = item.slice(i + 1);
     });
-    // console.log(objParams);
     return objParams
 }
 

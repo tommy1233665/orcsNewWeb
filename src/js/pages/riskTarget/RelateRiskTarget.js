@@ -132,7 +132,6 @@ class RelateRiskTarget extends React.Component {
             if (err) {
                 this.setState({ modalOkBtnLoading: false });
             } else {
-                console.log(values, '提交表单')
                 values.useDefault = values.useDefault[0];
                 values.valid = values.valid[0];
                 values = handleInParams(values);

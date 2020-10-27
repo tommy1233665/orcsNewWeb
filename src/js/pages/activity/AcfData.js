@@ -364,7 +364,6 @@ class AcfData extends React.Component {
                         { required: true, message: "机尾号不可为空！" },
                         {
                             validator: (rule, value, callback) => {
-                                console.log(value[0])
                                 // if (value && (value == "B" || value.trim() == "B" || value.trim() == "" || value.length > 12)) {
                                 if (value && ((value[0]) !== 'B' || value.length > 12)) {
                                     callback('请输入正确的机尾号！')

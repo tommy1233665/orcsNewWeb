@@ -46,7 +46,6 @@ class QarOilAnalysis extends React.Component {
 
   // 初始化chart成功才可以操作
   disableFlightHeightSelect = (obj) => {
-    console.log(obj, '禁用')
     this.setState({
       disabled: obj,
       sliderDisabled: obj
@@ -147,8 +146,7 @@ class QarOilAnalysis extends React.Component {
   };
 
   // 导出全部航路代号选择
-  exportAll = (callback) => {
-    console.log("导出全部");
+  exportAll = () => {
     const This = this;
     confirm({
       title: "确定导出全部航线吗？",
@@ -160,18 +158,14 @@ class QarOilAnalysis extends React.Component {
         post({
           url: "qarInfoController/exportPostWaypointInfo",
           data: params,
-          // btn: callback,
           success: (data) => {
             downloadFile(data, "导出全部航路");
-            console.log("导出");
           },
           error: (data) => {
-            console.log(data);
             message.error("导出失败！");
           },
         });
       },
-      // onCancel: callback,
     });
   };
 
