@@ -1,4 +1,4 @@
-import { Modal, Table, Button } from "antd";
+import { Modal, Table, Button, Spin } from "antd";
 import { post } from "common/http";
 import { downloadFile } from "common/commonFn";
 const { confirm } = Modal;
@@ -12,43 +12,30 @@ class dialogModel extends React.Component {
       tableData: [],
       params: {},
       selectedRows: [],
+      spinning: false
     };
   }
-
-  start = () => {
-    this.setState({ loading: true });
-    // ajax request after empty completing
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-      });
-    }, 1000);
-  };
   // 导出全部
-  exportAll = (callback) => {
-    // console.log("导出全部");
+  exportAll = () => {
     const This = this;
+    This.setState({ loading: true });
     confirm({
       title: "确定导出全部航线吗？",
       onOk() {
         post({
           url: "qarInfoController/exportFltExtraOilInfo",
           data: This.state.params,
-          // btn: callback,
           success: (data) => {
             downloadFile(data, "额外油航班明细");
-            // console.log("导出");
+            This.setState({ loading: false });
           },
           error: (data) => {
             console.log("11111");
-            // message.error("导出失败！");
           },
         });
       },
-      // onCancel: callback
     });
   };
-
   componentDidMount() {
     //通过pros接收父组件传来的方法
     this.props.onRef(this);
@@ -68,6 +55,8 @@ class dialogModel extends React.Component {
     this.setState({
       visible: true,
       params: params,
+      spinning: true,
+      tableData: []
     });
     post({
       url: "qarInfoController/queryFltExtraSectionDetailInfo",
@@ -75,6 +64,7 @@ class dialogModel extends React.Component {
       success: (data) => {
         this.setState({
           tableData: data.fltExtraSectionDetailList,
+          spinning: false
         });
       },
     });
@@ -183,28 +173,28 @@ class dialogModel extends React.Component {
         width="1600px"
         onCancel={this.handleCancel}
       >
-        <div>
-          <div style={{ marginBottom: 16 }}>
-            <Button
-              type="primary"
-              // onClick={this.start}
-              onClick={this.exportAll}
-              // disabled={!hasSelected}
-              loading={loading}
-            >
-              导出全部Excel
+        <Spin spinning={this.state.spinning}>
+          <div>
+            <div style={{ marginBottom: 16 }}>
+              <Button
+                type="primary"
+                onClick={this.exportAll}
+                loading={loading}
+              >
+                导出全部Excel
             </Button>
+            </div>
+            <Table
+              bordered
+              // sticky
+              columns={columns}
+              key="name"
+              dataSource={this.state.tableData}
+              pagination={paginationProps}
+              scroll={{ x: 1600 }}
+            />
           </div>
-          <Table
-            bordered
-            // sticky
-            columns={columns}
-            key="name"
-            dataSource={this.state.tableData}
-            pagination={paginationProps}
-            scroll={{ x: 1600 }}
-          />
-        </div>
+        </Spin>
       </Modal>
     );
   }
