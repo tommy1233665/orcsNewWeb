@@ -456,18 +456,18 @@ class EditFrom extends React.Component {
             options: {
                 initialValue: datas.fltCrew,
                 rules: [
-                    {
-                        required: true, message: "机组不能为空"
-                    }
                     // {
-                    //     validator: (rule, value, callback) => {
-                    //         const reg = /^0$|^[0-9;]*$/;
-                    //         if (value.value && !reg.test(value.value)) {
-                    //             callback('输入规范的员工号！')
-                    //         }
-                    //         callback();
-                    //     }
+                    //     required: true, message: "机组不能为空"
                     // }
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^0$|^[0-9;]*$/;
+                            if (value.value && !reg.test(value.value)) {
+                                callback('输入规范的员工号！')
+                            }
+                            callback();
+                        }
+                    }
                 ]
             }
         }];
@@ -485,18 +485,18 @@ class EditFrom extends React.Component {
                 variableTemp: "latestTailNr",
                 tooltip: "多个机尾号请用英文分号;隔开",
                 options: {
-                    initialValue: datas.latestTailNr,
+                    initialValue: datas.latestTailNr || '',
                     rules: [
                         {
-                            required: true,
-                            message: "请填写机尾号",
-                            // validator: (rule, value, callback) => {
-                            //     const reg = /^0$|^[A-Z0-9;]*$/;
-                            //     if (value.value && !reg.test(value.value)) {
-                            //         callback('输入规范的机尾号！')
-                            //     }
-                            //     callback();
-                            // }
+                            // required: true,
+                            // message: "请填写机尾号",
+                            validator: (rule, value, callback) => {
+                                const reg = /^0$|^[A-Z0-9;]*$/;
+                                if (value.value && !reg.test(value.value)) {
+                                    callback('输入规范的机尾号！')
+                                }
+                                callback();
+                            }
                         }
                     ]
                 }
@@ -510,7 +510,7 @@ class EditFrom extends React.Component {
                 length: 4,
                 isHasAllSelect: false,
                 options: {
-                    initialValue: datas.branchCode
+                    initialValue: datas.branchCode || ''
                 }
             },
             {
@@ -521,7 +521,7 @@ class EditFrom extends React.Component {
                 detailSpan: [10, 14],
                 length: 4,
                 options: {
-                    initialValue: { acftType: datas.acftType, eqpType: datas.eqpType }
+                    initialValue: { acftType: datas.acftType || '', eqpType: datas.eqpType || '' }
                 }
             },
             {
@@ -533,7 +533,7 @@ class EditFrom extends React.Component {
                 placeholder: "如：32-51-01-01",
                 tooltip: "多个MEL请用英文分号;隔开",
                 options: {
-                    initialValue: datas.melInfo
+                    initialValue: datas.melInfo || ''
                 }
             },
             {
@@ -542,7 +542,7 @@ class EditFrom extends React.Component {
                 list: ["MEL", "CDL"],
                 span: 12,
                 options: {
-                    initialValue: melType
+                    initialValue: melType || ''
                 }
             }
         ];
@@ -566,18 +566,18 @@ class EditFrom extends React.Component {
                     initialValue: datas.arpName,
                     rules: [
                         {
-                            required: true,
-                            message: "机场代码不能为空"
-                            // validator: (rule, value, callback) => {
-                            //     const reg = /^[A-Z;]*$/;
-                            //     if (value.value && !reg.test(value.value)) {
-                            //         callback('输入规范的机场编码！')
-                            //     }
-                            //     if (value.value === '') {
-                            //         callback('请输入机场编码')
-                            //     }
-                            //     callback();
-                            // }
+                            // required: true,
+                            // message: "机场代码不能为空"
+                            validator: (rule, value, callback) => {
+                                const reg = /^[A-Z;]*$/;
+                                if (value.value && !reg.test(value.value)) {
+                                    callback('输入规范的机场编码！')
+                                }
+                                if (value.value === '') {
+                                    callback('请输入机场编码')
+                                }
+                                callback();
+                            }
                         }
                     ]
                 }
@@ -666,6 +666,7 @@ class EditFrom extends React.Component {
                         presentation: datas.presentation
                     },
                     rules: [
+                        { required: true, message: "风险值不可为空！" },
                         {
                             validator: (rule, value, callback) => {
                                 //const reg = /^0$|^[1-9]\d*$|^[1-9]\d*.\d{1,2}$|^0.\d{1,2}$/;
@@ -855,72 +856,121 @@ class EditFrom extends React.Component {
                 Object.assign(result, values);
                 cb && typeof cb == "function" && cb();
             }
+            // console.log(result)
+            return result
         });
+        // console.log(result)
+        return result
     }
 
+    // submit = (callback) => {
+    //     var result = {};
+    //     this.handleValues(result, this.form4, () => {
+    //         this.handleValues(result, this.form7, () => {
+    //             this.handleValues(result, this.form3, () => {
+    //                 this.handleValues(result, this.form6, () => {
+    //                     this.handleValues(result, this.form5, () => {
+    //                         this.handleValues(result, this.form1, () => {
+    //                             this.handleValues(result, this.form2, () => {
+    //                                 var obj = {};
+    //                                 this.otherConfig.state.list.forEach((item, i) => {
+    //                                     obj[item.id] = item.riskValue;
+    //                                 });
+    //                                 result.rmItemIds = JSON.stringify(obj).replace("{", "").replace("}", "");
+    //                                 const params = handleInParams(result);
+    //                                 const currentAction = this.props.currentAction;
+    //                                 var url, msg;
+    //                                 if (currentAction == "add") {
+    //                                     url = "dailyAssociateRisk/addDailyAssoRisksInfo";
+    //                                     msg = "添加";
+    //                                 } else if (currentAction == "edit") {
+    //                                     url = "dailyAssociateRisk/updateDailyAssoRisksInfo";
+    //                                     msg = "修改";
+    //                                     params.id = this.props.datas.id;
+    //                                 }
+    //                                 delete params.effecTime
+    //                                 debugger
+    //                                 if (url) {
+    //                                     post({
+    //                                         url: url,
+    //                                         data: params,
+    //                                         success: res => {
+    //                                             if (res.success) {
+    //                                                 message.success(msg + "成功！");
+    //                                                 callback && typeof callback == "function" && callback();
+    //                                             } else {
+    //                                                 message.error(msg + "失败！");
+    //                                             }
+    //                                         }
+    //                                     });
+    //                                 } else {
+    //                                     console.log('123123')
+    //                                 }
+    //                             });
+    //                         });
+    //                     });
+    //                 });
+    //             });
+    //         });
+    //     });
+    // }
+
     submit = (callback) => {
-        var result = {};
-        this.handleValues(result, this.form1, () => {
-            if (result == '') {
-                message.warning('请输入机组')
-            }
-            this.handleValues(result, this.form2, () => {
-                this.handleValues(result, this.form3, () => {
-                    this.handleValues(result, this.form4, () => {
-                        this.handleValues(result, this.form5, () => {
-                            this.handleValues(result, this.form6, () => {
-                                this.handleValues(result, this.form7, () => {
-                                    var obj = {};
-                                    this.otherConfig.state.list.forEach((item, i) => {
-                                        obj[item.id] = item.riskValue;
-                                    });
-                                    result.rmItemIds = JSON.stringify(obj).replace("{", "").replace("}", "");
-                                    const params = handleInParams(result);
-                                    const currentAction = this.props.currentAction;
-                                    var url, msg;
-                                    if (currentAction == "add") {
-                                        url = "dailyAssociateRisk/addDailyAssoRisksInfo";
-                                        msg = "添加";
-                                    } else if (currentAction == "edit") {
-                                        url = "dailyAssociateRisk/updateDailyAssoRisksInfo";
-                                        msg = "修改";
-                                        params.id = this.props.datas.id;
-                                    }
-                                    delete params.effecTime
-                                    // TODO
-                                    if (params.fltCrew == '') {
-                                        message.warning('请填写机组号')
-                                        return false
-                                    }
-                                    if (params.arpName == '') {
-                                        message.warning('请填写机场代码')
-                                        return false
-                                    }
-                                    if (params.latestTailNr == '') {
-                                        message.warning('请填写机尾号')
-                                        return false
-                                    }
-                                    if (url) {
-                                        post({
-                                            url: url,
-                                            data: params,
-                                            success: res => {
-                                                if (res.success) {
-                                                    message.success(msg + "成功！");
-                                                    callback && typeof callback == "function" && callback();
-                                                } else {
-                                                    message.error(msg + "失败！");
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            });
-                        });
+        let params = {}
+        this.handleValues(params, this.form1)
+        this.handleValues(params, this.form2)
+        this.handleValues(params, this.form3)
+        this.handleValues(params, this.form4)
+        this.handleValues(params, this.form5)
+        this.handleValues(params, this.form6)
+        this.handleValues(params, this.form7)
+        // 必填项都有才发请求
+        if (params.effectiveTime && params.invalidTime && params.riskName && params.reminder && params.maintenanceDept) {
+            if (params.takeOff === true || params.cruise === true || params.landing === true) {
+                console.log('可以提交')
+                // var obj = {};
+                // this.otherConfig.state.list.forEach((item, i) => {
+                //     obj[item.id] = item.riskValue;
+                // });
+                // params.rmItemIds = JSON.stringify(obj).replace("{", "").replace("}", "");
+                // const params = handleInParams(params);
+                for (let key in params) {
+                    const value = params[key];
+                    if (typeof value === "undefined" || value == null) {
+                        params[key] = '';
+                    }
+                }
+                if (params.riskValue === '') {
+                    message.warning('风险值不能为空！')
+                    return false
+                }
+                const currentAction = this.props.currentAction;
+                var url, msg;
+                if (currentAction == "add") {
+                    url = "dailyAssociateRisk/addDailyAssoRisksInfo";
+                    msg = "添加";
+                } else if (currentAction == "edit") {
+                    url = "dailyAssociateRisk/updateDailyAssoRisksInfo";
+                    msg = "修改";
+                    params.id = this.props.datas.id;
+                }
+                delete params.effecTime
+                if (url) {
+                    post({
+                        url: url,
+                        data: params,
+                        success: res => {
+                            if (res.success) {
+                                message.success(msg + "成功！");
+                                callback && typeof callback == "function" && callback();
+                            } else {
+                                message.error(msg + "失败！");
+                            }
+                        }
                     });
-                });
-            });
-        });
+                }
+            }
+        }
     }
 
     render() {
