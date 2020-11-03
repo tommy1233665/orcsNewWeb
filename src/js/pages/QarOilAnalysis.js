@@ -36,7 +36,7 @@ class QarOilAnalysis extends React.Component {
       flightCode: props.match.params.flightCode,
       listData: [],
       fltExtrTimeDtoData: {},
-      time: 1,
+      time: 4,
       flightRouteNo: "",
       truncationRatio: 50,
       disabled: true
@@ -78,7 +78,7 @@ class QarOilAnalysis extends React.Component {
     });
     let params = {
       soflSeqNr: this.state.flightCode,
-      time: data || 1,
+      time: data || 4,
     };
     this.myChildExtraUse.initChart(params, "额外油使用量");
     this.myChildExtraTimeChart.initChart(params, "额外油使用时间");
@@ -447,7 +447,7 @@ class QarOilAnalysis extends React.Component {
             <Select
               // labelInValue
               // allowClear
-              defaultValue="自然月"
+              defaultValue="前365天"
               style={{ width: 120 }}
               onChange={this.statisticsHandleChange}
             >

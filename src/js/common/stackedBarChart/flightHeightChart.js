@@ -183,8 +183,11 @@ class FlightHeightChart extends React.Component {
             },
             dataZoom: [
               {
+                // top: 1000,
+                bottom: 0,
                 type: "slider", //图表下方的伸缩条
-                show: false, //是否显示
+                show: true, //是否显示
+                showDetail: true,
                 start: 0,
                 end: dataZoom_end,
                 textStyle: {
@@ -236,11 +239,11 @@ class FlightHeightChart extends React.Component {
                 splitNumber: 10,
                 minInterval: 0,
                 // boundaryGap: [0.2, 0.2],
-                axisLabel: {
-                  formatter: function (value) {
-                    return value;
-                  },
-                },
+                // axisLabel: {
+                //   formatter: function (value) {
+                //     return value;
+                //   },
+                // },
                 axisLabel: {
                   textStyle: {
                     color: "#a5a7ad",
@@ -258,7 +261,13 @@ class FlightHeightChart extends React.Component {
                 data: digitAfl,
                 label: {
                   show: true,
-                  formatter: "{c}",
+                  // formatter: "{c}",
+                  normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 35,
+                    rotate: 20,
+                  },
                 },
               },
               {
@@ -270,7 +279,13 @@ class FlightHeightChart extends React.Component {
                 data: avgEfl,
                 label: {
                   show: true,
-                  formatter: "{c}",
+                  // formatter: "{c}",
+                  normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 0,
+                    rotate: 20,
+                  },
                 },
               },
               {
