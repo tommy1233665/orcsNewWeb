@@ -94,7 +94,7 @@ class ExtraTimeChart extends React.Component {
             dataZoom: [
               {
                 type: "slider", //图表下方的伸缩条
-                show: true, //是否显示
+                show: false, //是否显示
                 realtime: true, //
                 zoomLock: true,
                 bottom: "0",
@@ -126,7 +126,7 @@ class ExtraTimeChart extends React.Component {
                 name: "额外油使用量时间（分钟）",
                 nameTextStyle: {
                   color: "#fff",
-                  padding: [30, 0, 0, 0],
+                  padding: [50, 0, 0, 0],
                 },
                 nameLocation: "middle",
                 axisLabel: {
