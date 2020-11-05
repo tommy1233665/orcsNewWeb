@@ -21,7 +21,6 @@ class QarOilAnalysis extends React.Component {
   // 初始化表单数据
   constructor(props) {
     super(props);
-
     // 用来实时更新表格中风险详情值
     this.state = {
       flyRmArptRiskList: [],
@@ -63,8 +62,9 @@ class QarOilAnalysis extends React.Component {
         var res = data.flightRouteNo;
         this.setState({
           listData: res,
-          flightRouteNodDefaultValue: res,
+          flightRouteNodDefaultValue: res[0],
         });
+        console.log(res, '初始化航路代号选择')
         // 初始化航路代号高度趋势图
         this.initFlightHeight();
       },
@@ -172,11 +172,6 @@ class QarOilAnalysis extends React.Component {
 
   // 相关油使用量
   queryFltExtraOilInfo = (params) => {
-    // let params = {
-    //   soflSeqNr: this.state.flightCode,
-    //   time: 2,
-    //   // useType: 2
-    // };
     post({
       url: "qarInfoController/queryFltExtraOilInfo",
       data: params,
@@ -230,8 +225,6 @@ class QarOilAnalysis extends React.Component {
     let params = {
       soflSeqNr: this.state.flightCode,
     };
-    // get({
-    // url: "json/postFltTimeDevtDtos.json",
     post({
       url: "qarInfoController/queryPostFltTimeDevtDtoInfo",
       data: params,
@@ -542,8 +535,6 @@ class QarOilAnalysis extends React.Component {
                 required
               >
                 <Select
-                  // labelInValue
-                  // defaultValue={this.state.flightRouteNodDefaultValue}
                   value={this.state.flightRouteNodDefaultValue}
                   style={{ width: 120 }}
                   onChange={this.flightHandleChange.bind(this)}

@@ -229,7 +229,7 @@ class StackedCharts extends React.Component {
                   normal: {
                     show: true,
                     position: 'bottom',
-                    distance: 40,
+                    distance: 30,
                   },
                 },
               },
