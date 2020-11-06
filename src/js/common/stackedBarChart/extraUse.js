@@ -76,7 +76,7 @@ class ExtraTimeChart extends React.Component {
           myChart.hideLoading(); //隐藏加载动画
           myChart.setOption({
             title: {
-              text: "额外油使用量分布情况",
+              text: "空中飞行时间偏差分布",
               top: 30,
               x: "center",
               textStyle: { color: "#9ca0ad", fontSize: "16" },

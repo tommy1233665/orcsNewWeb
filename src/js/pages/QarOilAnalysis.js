@@ -236,7 +236,8 @@ class QarOilAnalysis extends React.Component {
         res.map((item) => {
           if (item.fltPhase === "CRUISE") {
             CRUISE.avgTimeDevt = item.avgTimeDevt;
-            CRUISE.moreFiveRate = item.moreFiveRate;
+            CRUISE.moreFiveRate = item.moreFiveRate + ' %';
+            // CRUISE.moreFifteenRate = (Math.floor(item.moreFifteenRate * 100) / 100) + ' %';
             CRUISE.moreFifteenRate = item.moreFifteenRate + ' %';
             CRUISE.lessFiveRate = item.lessFiveRate + ' %';
             CRUISE.lessTenRate = item.lessTenRate + ' %';
@@ -244,7 +245,7 @@ class QarOilAnalysis extends React.Component {
           }
           if (item.fltPhase === "DES") {
             DES.avgTimeDevt = item.avgTimeDevt;
-            DES.moreFiveRate = item.moreFiveRate;
+            DES.moreFiveRate = item.moreFiveRate + ' %';
             DES.moreFifteenRate = item.moreFifteenRate + ' %';
             DES.lessFiveRate = item.lessFiveRate + ' %';
             DES.lessTenRate = item.lessTenRate + ' %';
@@ -252,7 +253,7 @@ class QarOilAnalysis extends React.Component {
           }
           if (item.fltPhase === "CLB") {
             CLB.avgTimeDevt = item.avgTimeDevt;
-            CLB.moreFiveRate = item.moreFiveRate;
+            CLB.moreFiveRate = item.moreFiveRate + ' %';
             CLB.moreFifteenRate = item.moreFifteenRate + ' %';
             CLB.lessFiveRate = item.lessFiveRate + ' %';
             CLB.lessTenRate = item.lessTenRate + ' %';
@@ -320,7 +321,6 @@ class QarOilAnalysis extends React.Component {
         itemNum: "爬升",
         avgTimeDevt: this.state.CLB.avgTimeDevt,
         moreFiveRate: this.state.CLB.moreFiveRate,
-        moreFiveRate: this.state.CLB.moreFiveRate,
         moreFifteenRate: this.state.CLB.moreFifteenRate,
         lessFiveRate: this.state.CLB.lessFiveRate,
         lessTenRate: this.state.CLB.lessTenRate,
@@ -330,7 +330,6 @@ class QarOilAnalysis extends React.Component {
         itemNum: "巡航",
         avgTimeDevt: this.state.cruise.avgTimeDevt,
         moreFiveRate: this.state.cruise.moreFiveRate,
-        moreFiveRate: this.state.cruise.moreFiveRate,
         moreFifteenRate: this.state.cruise.moreFifteenRate,
         lessFiveRate: this.state.cruise.lessFiveRate,
         lessTenRate: this.state.cruise.lessTenRate,
@@ -339,7 +338,6 @@ class QarOilAnalysis extends React.Component {
       {
         itemNum: "下降",
         avgTimeDevt: this.state.DES.avgTimeDevt,
-        moreFiveRate: this.state.DES.moreFiveRate,
         moreFiveRate: this.state.DES.moreFiveRate,
         moreFifteenRate: this.state.DES.moreFifteenRate,
         lessFiveRate: this.state.DES.lessFiveRate,
