@@ -24,6 +24,7 @@ class ExtraTimeChart extends React.Component {
     window.addEventListener("resize", function () {
       myChart.resize();
     });
+    myChart.clear()
     myChart.on("click", function (params) {
       This.props.showDialog(params, "点击事件");
     });
@@ -76,7 +77,7 @@ class ExtraTimeChart extends React.Component {
           myChart.hideLoading(); //隐藏加载动画
           myChart.setOption({
             title: {
-              text: "空中飞行时间偏差分布",
+              text: "航程油量偏差分布情况",
               top: 30,
               x: "center",
               textStyle: { color: "#9ca0ad", fontSize: "16" },
