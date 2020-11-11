@@ -524,20 +524,12 @@ class FlightRisk extends React.Component {
                 }
             },
             {
-                type: "CheckboxCustom",
-                label: "机型组",
-                name: "latestEqpCds",
-                span: 13,
-                list: performanceTypeList,
-                options: { initialValue: datas.latestEqpCds },
-            },
-            {
                 //  type: "RiskTabsCustom",
                 type: "RiskTabsTreeSelect",
                 label: "风险项",
                 name: "riskTabs",
-                span: 7,
-                length: 3,
+                span: 8,
+                length: 4,
                 list: riskParamsMapList,
                 options: {
                     initialValue: datas.riskTabs
@@ -547,8 +539,8 @@ class FlightRisk extends React.Component {
                 type: "MultipleSelect",
                 label: "风险值",
                 name: "riskValue",
-                span: 4,
-                length: 3,
+                span: 6,
+                length: 4,
                 list: [
                     { key: "H", text: "高" },
                     { key: "M", text: "中" },
@@ -558,7 +550,14 @@ class FlightRisk extends React.Component {
                     initialValue: datas.riskValue
                 }
             },
-
+            {
+                type: "CheckboxCustom",
+                label: "机型组",
+                name: "latestEqpCds",
+                span: 24,
+                list: performanceTypeList,
+                options: { initialValue: datas.latestEqpCds },
+            },
         ];
     }
 

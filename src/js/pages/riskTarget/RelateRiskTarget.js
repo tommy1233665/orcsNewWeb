@@ -267,7 +267,7 @@ class RelateRiskTarget extends React.Component {
                                 if (!this.form.getFieldValue("useDefault")[0] && !value) {
                                     callback('非默认风险需要设置风险值')
                                 } else if (value && value > 10) {
-                                    callback('不能大于10')
+                                    callback('风险值不能大于10')
                                 } else {
                                     callback()
                                 }

@@ -216,7 +216,8 @@ class DailyRiskTarget extends React.Component {
                     { key: "高", text: "高7.1-10" }
                 ],
                 length: 3,
-                isHasAllSelect: false
+                isHasAllSelect: false,
+                allowClear: true
             },
             {
                 type: "Input",
@@ -253,7 +254,8 @@ class DailyRiskTarget extends React.Component {
                 span: 4,
                 list: allBranch,
                 length: 6,
-                isHasAllSelect: false
+                isHasAllSelect: false,
+                allowClear: true
             },
             {
                 type: "Input",
@@ -269,7 +271,8 @@ class DailyRiskTarget extends React.Component {
                 span: 4,
                 list: ["运指中心", "信息中心", "安监部", "飞行总队", "机务工程部"],
                 length: 4,
-                isHasAllSelect: false
+                isHasAllSelect: false,
+                allowClear: true
             },
             {
                 type: "Input",
@@ -292,7 +295,8 @@ class DailyRiskTarget extends React.Component {
                 span: 4,
                 list: ["当前有效", "已失效", "全部"],
                 length: 4,
-                isHasAllSelect: false
+                isHasAllSelect: false,
+                allowClear: true
             },
             {
                 type: "Select",
@@ -301,7 +305,8 @@ class DailyRiskTarget extends React.Component {
                 span: 4,
                 list: allBranch,
                 length: 6,
-                isHasAllSelect: false
+                isHasAllSelect: false,
+                allowClear: true
             },
             {
                 type: "Input",
@@ -675,7 +680,7 @@ class EditFrom extends React.Component {
                                     callback('保留1位小数！')
                                 }
                                 if (value.value.riskValue && value.value.riskValue > 10) {
-                                    callback('不能大于10')
+                                    callback('风险值不能大于10')
                                 }
                                 callback();
                             }
