@@ -460,20 +460,20 @@ class EditFrom extends React.Component {
             tooltip: "多个机组请用英文分号;隔开",
             options: {
                 initialValue: datas.fltCrew,
-                rules: [
-                    // {
-                    //     required: true, message: "机组不能为空"
-                    // }
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^0$|^[0-9;]*$/;
-                            if (value.value && !reg.test(value.value)) {
-                                callback('输入规范的员工号！')
-                            }
-                            callback();
-                        }
-                    }
-                ]
+                // rules: [
+                // {
+                //     required: true, message: "机组不能为空"
+                // }
+                // {
+                //     validator: (rule, value, callback) => {
+                //         const reg = /^0$|^[0-9;]*$/;
+                //         if (value.value && !reg.test(value.value)) {
+                //             callback('输入规范的员工号！')
+                //         }
+                //         callback();
+                //     }
+                // }
+                // ]
             }
         }];
     }
@@ -491,19 +491,17 @@ class EditFrom extends React.Component {
                 tooltip: "多个机尾号请用英文分号;隔开",
                 options: {
                     initialValue: datas.latestTailNr || '',
-                    rules: [
-                        {
-                            // required: true,
-                            // message: "请填写机尾号",
-                            validator: (rule, value, callback) => {
-                                const reg = /^0$|^[A-Z0-9;]*$/;
-                                if (value.value && !reg.test(value.value)) {
-                                    callback('输入规范的机尾号！')
-                                }
-                                callback();
-                            }
-                        }
-                    ]
+                    // rules: [
+                    //     {
+                    //         validator: (rule, value, callback) => {
+                    //             const reg = /^0$|^[A-Z0-9;]*$/;
+                    //             if (value.value && !reg.test(value.value)) {
+                    //                 callback('输入规范的机尾号！')
+                    //             }
+                    //             callback();
+                    //         }
+                    //     }
+                    // ]
                 }
             },
             {
@@ -569,22 +567,20 @@ class EditFrom extends React.Component {
                 tooltip: "多个机场请用英文分号;隔开",
                 options: {
                     initialValue: datas.arpName,
-                    rules: [
-                        {
-                            // required: true,
-                            // message: "机场代码不能为空"
-                            validator: (rule, value, callback) => {
-                                const reg = /^[A-Z;]*$/;
-                                if (value.value && !reg.test(value.value)) {
-                                    callback('输入规范的机场编码！')
-                                }
-                                if (value.value === '') {
-                                    callback('请输入机场编码')
-                                }
-                                callback();
-                            }
-                        }
-                    ]
+                    // rules: [
+                    //     {
+                    //         validator: (rule, value, callback) => {
+                    //             const reg = /^[A-Z;]*$/;
+                    //             if (value.value && !reg.test(value.value)) {
+                    //                 callback('输入规范的机场编码！')
+                    //             }
+                    //             if (value.value === '') {
+                    //                 callback('请输入机场编码')
+                    //             }
+                    //             callback();
+                    //         }
+                    //     }
+                    // ]
                 }
             },
             {
@@ -932,7 +928,6 @@ class EditFrom extends React.Component {
         // 必填项都有才发请求
         if (params.effectiveTime && params.invalidTime && params.riskName && params.reminder && params.maintenanceDept) {
             if (params.takeOff === true || params.cruise === true || params.landing === true) {
-                console.log('可以提交')
                 // var obj = {};
                 // this.otherConfig.state.list.forEach((item, i) => {
                 //     obj[item.id] = item.riskValue;
@@ -1146,9 +1141,16 @@ class OtherConfig extends React.Component {
                         this.state.list.map((item, i) => {
                             var path = "";
                             if (item.path) path = item.path.substring(0, 2);
-                            var title = `<div>阶段：${path}<br />父节点：${item.path}<br />风险值 >= ${item.riskValue}</div>`;
+                            // var title = `<div>阶段：${path}<br />父节点：${item.path}<br />风险值 >= ${item.riskValue}</div>`
+                            let msgNode = (
+                                <span>
+                                    阶段：{path}<br />
+                                父节点：{item.path}<br />
+                                风险值: {item.riskValue}
+                                </span>
+                            );
                             return (
-                                <Tooltip title={title} key={i} >
+                                <Tooltip title={msgNode} key={i} >
                                     <div className={item.active ? "active" : ""} onClick={() => this.onClick(item)}>{item.riskName}</div>
                                 </Tooltip>
                             )

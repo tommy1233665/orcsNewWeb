@@ -518,7 +518,8 @@ class GroupCustom extends React.Component {
             groupTypes: [],
             groups: [],
             groupContent: [],
-            selectedTags: []
+            selectedTags: [],
+            groupTypesParams: ''
         };
         this.modal1;
         this.modal2;
@@ -547,8 +548,10 @@ class GroupCustom extends React.Component {
         this.setState({ value });
         this.triggerChange({ value });
     }
+
+    // 配置群组弹窗默认页
     getSelectGroupOptions() {
-        const { groupTypes, groups, groupContent } = this.state;
+        const { groupTypes, groups, groupContent, groupTypesParams } = this.state;
         return [
             {
                 type: "Select",
@@ -560,7 +563,7 @@ class GroupCustom extends React.Component {
                 isHasAllSelect: false,
                 disabled: true,
                 options: {
-                    initialValue: groupTypes.length > 0 ? groupTypes[0].key : "",
+                    initialValue: groupTypes.length > 0 ? groupTypes[0].key : groupTypesParams,
                     rules: [
                         { required: true, message: '群组类别不能为空' }
                     ]
@@ -600,8 +603,9 @@ class GroupCustom extends React.Component {
             }
         ];
     }
+    // 获取新增时组件配置
     getAddGroupOptions() {
-        const { groupTypes } = this.state;
+        const { groupContent, groupTypes, groupTypesParams } = this.state;
         return [
             {
                 type: "Select",
@@ -613,7 +617,7 @@ class GroupCustom extends React.Component {
                 isHasAllSelect: false,
                 disabled: true,
                 options: {
-                    initialValue: groupTypes.length > 0 ? groupTypes[0].key : "",
+                    initialValue: groupTypes.length > 0 ? groupTypes[0].key : groupTypesParams,
                     rules: [
                         { required: true, message: '群组类别不能为空' }
                     ]
@@ -637,12 +641,16 @@ class GroupCustom extends React.Component {
                 name: "groupTableContent",
                 span: 24,
                 length: 5,
-                placeholder: "多个用英文分号;隔开"
+                placeholder: "多个用英文分号;隔开",
+                options: {
+                    initialValue: groupContent
+                }
             }
         ];
     }
+    // 获取修时组件配置
     getEditGroupOptions() {
-        const { groupTypes, groups, groupContent } = this.state;
+        const { groupTypes, groups, groupContent, groupTypesParams } = this.state;
         return [
             {
                 type: "Select",
@@ -654,7 +662,7 @@ class GroupCustom extends React.Component {
                 isHasAllSelect: false,
                 disabled: true,
                 options: {
-                    initialValue: groupTypes.length > 0 ? groupTypes[0].key : "",
+                    initialValue: groupTypes.length > 0 ? groupTypes[0].key : groupTypesParams,
                     rules: [
                         { required: true, message: '群组类别不能为空' }
                     ]
@@ -690,25 +698,47 @@ class GroupCustom extends React.Component {
             }
         ];
     }
-    getGroupTypeList(callback) {
-        post({
-            url: "dailyAssociateRisk/queryGroupTableInfo",
-            data: { variableTemp: this.props.options.variableTemp },
-            success: res => {
-                var groupTypes = res.map(item => {
-                    return {
-                        key: item.groupTableId,
-                        text: item.groupTableName
-                    };
-                });
-                this.setState({ groupTypes });
-                if (groupTypes.length > 0) {
-                    this.getGroupList(groupTypes[0].text);
-                }
-                callback && typeof callback == "function" && callback(res);
-            }
-        });
-    }
+
+    // 获取群组类型数据
+    // getGroupTypeList(callback) {
+    //     post({
+    //         url: "dailyAssociateRisk/queryGroupTableInfo",
+    //         data: { variableTemp: this.props.options.variableTemp },
+    //         success: res => {
+    //             var groupTypes = res.map(item => {
+    //                 return {
+    //                     key: item.groupTableId,
+    //                     text: item.groupTableName
+    //                 };
+    //             });
+    //             this.setState({ groupTypes });
+    //             if (groupTypes.length > 0) {
+    //                 this.getGroupList(groupTypes[0].text);
+    //             } else {
+    //                 let variableTemp = this.props.options.variableTemp
+    //                 console.log(variableTemp)
+    //                 let params = ''
+    //                 switch (this.props.options.variableTemp) {
+    //                     case "fltCrew":
+    //                         params = '机组'
+    //                         break;
+    //                     case "latestTailNr":
+    //                         params = '机尾号'
+    //                         break;
+    //                     case "arpName":
+    //                         params = '机场'
+    //                         break;
+    //                     case "fltNr":
+    //                         params = '航班号'
+    //                         break;
+    //                 }
+    //                 this.getGroupList(params);
+    //             }
+    //             callback && typeof callback == "function" && callback(res);
+    //         }
+    //     });
+    // }
+    // 获取群组名称
     getGroupList(typeName) {
         post({
             url: "dailyAssociateRisk/queryGroupTableInfoByType",
@@ -724,6 +754,7 @@ class GroupCustom extends React.Component {
             }
         });
     }
+    // 获取群组内容
     getGroupContent(name) {
         post({
             url: "dailyAssociateRisk/queryGroupTableInfoByName",
@@ -766,16 +797,18 @@ class GroupCustom extends React.Component {
             }
         });
     }
+
+    // 配置新增群组
     submit2 = () => {
         this.setState({ modalOkBtnLoading2: true });
         this.form2.validateFields((err, values) => {
             if (err) {
                 this.setState({ modalOkBtnLoading2: false });
             } else {
-                var groupTableType = this.state.groupTypes.find((item) => {
-                    return (item.key == values.groupTableType);
-                }).text;
-                values.groupTableType = groupTableType;
+                // var groupTableType = this.state.groupTypes.find((item) => {
+                //     return (item.key == values.groupTableType);
+                // }).text;
+                // values.groupTableType = groupTableType;
                 post({
                     url: "dailyAssociateRisk/addGroupTableInfo",
                     data: values,
@@ -785,15 +818,34 @@ class GroupCustom extends React.Component {
                             message.success("添加成功");
                             this.modal2.hide();
                             // 更新group数据
-                            if (this.state.groupTypes.length > 0) {
-                                this.getGroupList(this.state.groupTypes[0].text);
+                            var params = ''
+                            switch (this.props.options.variableTemp) {
+                                case "fltCrew":
+                                    params = '机组'
+                                    break;
+                                case "latestTailNr":
+                                    params = '机尾号'
+                                    break;
+                                case "arpName":
+                                    params = '机场'
+                                    break;
+                                case "fltNr":
+                                    params = '航班号'
+                                    break;
                             }
+                            this.getGroupList(params);
+                            // this.getGroupList(this.state.groupTypes[0].text);
+                            // if (this.state.groupTypes.length > 0) {
+                            //     this.getGroupList(this.state.groupTypes[0].text);
+                            // }
                         }
                     }
                 });
             }
         });
     }
+
+    // 删除群组配置
     submit3 = () => {
         const This = this;
         const groupTableIds = This.state.selectedTags;
@@ -811,7 +863,6 @@ class GroupCustom extends React.Component {
                     success: data => {
                         if (data.success) {
                             message.success("删除成功");
-                            This.modal3.hide();
                             // 更新group数据
                             var params = This.form1.getFieldsValue();
                             if (groupTableIds.indexOf(params.groupTableName) > -1) {
@@ -819,9 +870,27 @@ class GroupCustom extends React.Component {
                                 params.groupTableContent = "";
                                 This.form1.setFieldsValue(params);
                             }
-                            if (This.state.groupTypes.length > 0) {
-                                This.getGroupList(This.state.groupTypes[0].text);
+                            // if (This.state.groupTypes.length > 0) {
+                            //     This.getGroupList(This.state.groupTypes[0].text);
+                            // }
+                            // 更新group数据
+                            var params = ''
+                            switch (This.props.options.variableTemp) {
+                                case "fltCrew":
+                                    params = '机组'
+                                    break;
+                                case "latestTailNr":
+                                    params = '机尾号'
+                                    break;
+                                case "arpName":
+                                    params = '机场'
+                                    break;
+                                case "fltNr":
+                                    params = '航班号'
+                                    break;
                             }
+                            This.getGroupList(params);
+                            This.modal3.hide();
                         }
                     }
                 })
@@ -849,6 +918,7 @@ class GroupCustom extends React.Component {
                                 params.groupTableContent = values.groupTableContent;
                                 this.form1.setFieldsValue(params);
                             }
+                            this.setState({ groupContent: [] })
                         }
                     }
                 });
@@ -856,9 +926,27 @@ class GroupCustom extends React.Component {
         });
     }
     onClick = () => {
-        this.getGroupTypeList((res) => {
-            this.modal1.show();
-        });
+        var params = ''
+        switch (this.props.options.variableTemp) {
+            case "fltCrew":
+                params = '机组'
+                break;
+            case "latestTailNr":
+                params = '机尾号'
+                break;
+            case "arpName":
+                params = '机场'
+                break;
+            case "fltNr":
+                params = '航班号'
+                break;
+        }
+        this.getGroupList(params);
+        this.setState({ groupContent: [], groupTypesParams: params });
+        this.modal1.show();
+        // this.getGroupTypeList((res) => {
+        //     this.modal1.show();
+        // });
     }
     handleChange(item, checked) {
         const { selectedTags } = this.state;

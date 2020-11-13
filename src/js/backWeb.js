@@ -1,12 +1,7 @@
-import "babel-polyfill";
-import "css/theme.scss";
-// 添加404错误页
-import "ant-design-pro/dist/ant-design-pro.css";
-import Exception from "ant-design-pro/lib/Exception";
+import { ConfigProvider } from "antd";
 import { Provider } from "react-redux";
 import { HashRouter, Switch, Route } from "react-router-dom";
 import { PersistGate } from "redux-persist/lib/integration/react";
-import { ConfigProvider } from "antd";
 import zh_CN from "antd/es/locale/zh_CN";
 import { store, persistor } from "reduxs/store";
 import { PageContainer } from "common/component";
@@ -18,6 +13,12 @@ import FlightRiskDetail from "./pages/FlightRiskDetail";
 // 计划油量与实际耗油图
 import QarOilAnalysis from "./pages/QarOilAnalysis";
 import NewFlightRiskDetail from "./pages/NewFlightRiskDetail";
+
+// 添加404错误页
+import Exception from "ant-design-pro/lib/Exception";
+import "babel-polyfill";
+// import "ant-design-pro/dist/ant-design-pro.css";
+import "css/theme.scss";
 
 /**
  * 生产环境：
