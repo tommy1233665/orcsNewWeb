@@ -204,6 +204,9 @@ class CommonModal extends React.Component {
         // 调用成功后，会返回一个关闭函数，用于手动关闭弹窗
         this.props.ok();
     }
+    cancelConfirmLoading = () => {
+        this.setState({ confirmLoading: false });
+    }
     render() {
         const { visible, confirmLoading } = this.state;
         //弹窗参数(参考API)，绑定的按钮，显示的弹窗内容

@@ -779,9 +779,13 @@ class NewAirport extends React.Component {
                 label: "新开航机场",
                 name: "icaoCode",
                 span: 24,
+                placeholder: '四位大写字母',
                 options: {
                     initialValue: datas.icaoCode,
-                    rules: [{ required: true, message: "新开航机场不可为空" }]
+                    rules: [
+                        { required: true, message: "新开航机场不可为空" },
+                        { pattern: /^[A-Z-]{4}$/, message: '请输入正确的航线代码' }
+                    ]
                 }
             },
             {

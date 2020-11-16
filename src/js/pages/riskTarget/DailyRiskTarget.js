@@ -1069,14 +1069,16 @@ class OtherConfig extends React.Component {
                 label: "节点名称",
                 name: "riskName",
                 span: 24,
-                length: 5
+                length: 5,
+                placeholder: "选择左侧节点",
             },
             {
                 type: "Input",
                 label: "风险值>=",
                 name: "riskValue",
                 span: 24,
-                length: 5
+                length: 5,
+                placeholder: "输入0.0-10.0数字",
             },
         ];
     }
@@ -1097,6 +1099,19 @@ class OtherConfig extends React.Component {
 
     submit = () => {
         this.form.validateFields((err, values) => {
+            console.log(err, values, '确认')
+            if (values.riskValue) {
+                this.modal.cancelConfirmLoading()
+                const reg = /^0$|^[0-9]\d*$|^[0-9]\d*.\d{1}$|^0/;
+                if (values.riskValue && !reg.test(values.riskValue)) {
+                    message.warning('风险值: 输入数字且保留1位小数！')
+                    return false
+                }
+                if (values.riskValue && values.riskValue > 10) {
+                    message.warning('风险值: 不能大于10')
+                    return false
+                }
+            }
             if (!err) {
                 var list = this.state.list;
                 list.push(values);
