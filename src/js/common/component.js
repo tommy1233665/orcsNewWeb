@@ -198,6 +198,7 @@ class CommonModal extends React.Component {
     }
     hide = () => {
         this.setState({ confirmLoading: false, visible: false });
+        this.props && this.props.hide && this.props.hide();
     }
     ok = () => {
         this.setState({ confirmLoading: true });
@@ -522,7 +523,8 @@ class GroupCustom extends React.Component {
             groups: [],
             groupContent: [],
             selectedTags: [],
-            groupTypesParams: ''
+            groupTypesParams: '',
+            editGroupContent: ''
         };
         this.modal1;
         this.modal2;
@@ -584,6 +586,7 @@ class GroupCustom extends React.Component {
                 length: 5,
                 isHasAllSelect: false,
                 options: {
+                    // initialValue: groups,
                     rules: [
                         { required: true, message: '群组名称不能为空' }
                     ]
@@ -608,7 +611,7 @@ class GroupCustom extends React.Component {
     }
     // 获取新增时组件配置
     getAddGroupOptions() {
-        const { groupContent, groupTypes, groupTypesParams } = this.state;
+        const { groupTypes, editGroupContent, groupTypesParams } = this.state;
         return [
             {
                 type: "Select",
@@ -646,14 +649,14 @@ class GroupCustom extends React.Component {
                 length: 5,
                 placeholder: "多个用英文分号;隔开",
                 options: {
-                    initialValue: groupContent
+                    initialValue: editGroupContent
                 }
             }
         ];
     }
     // 获取修时组件配置
     getEditGroupOptions() {
-        const { groupTypes, groups, groupContent, groupTypesParams } = this.state;
+        const { groupTypes, groups, editGroupContent, groupTypesParams } = this.state;
         return [
             {
                 type: "Select",
@@ -685,7 +688,7 @@ class GroupCustom extends React.Component {
                     ]
                 },
                 onSelect: (value, options) => {
-                    this.getGroupContent(options.props.children);
+                    this.editGroupContent(options.props.children);
                 }
             },
             {
@@ -696,7 +699,7 @@ class GroupCustom extends React.Component {
                 length: 5,
                 placeholder: "请填入机组员工号，多个员工号用英文分号;隔开，如：200123,200124,200125",
                 options: {
-                    initialValue: groupContent
+                    initialValue: editGroupContent
                 }
             }
         ];
@@ -759,12 +762,25 @@ class GroupCustom extends React.Component {
     }
     // 获取群组内容
     getGroupContent(name) {
+        console.log('getGroupContent')
         post({
             url: "dailyAssociateRisk/queryGroupTableInfoByName",
             data: { tableName: name },
             success: res => {
                 var groupContent = res;
                 this.setState({ groupContent });
+            }
+        });
+    }
+    // 编辑获取群组内容
+    editGroupContent(name) {
+        console.log('editGroupContent')
+        post({
+            url: "dailyAssociateRisk/queryGroupTableInfoByName",
+            data: { tableName: name },
+            success: res => {
+                var editGroupContent = res
+                this.setState({ editGroupContent });
             }
         });
     }
@@ -921,12 +937,15 @@ class GroupCustom extends React.Component {
                                 params.groupTableContent = values.groupTableContent;
                                 this.form1.setFieldsValue(params);
                             }
-                            this.setState({ groupContent: [] })
+                            this.setState({ groupContent: [], editGroupContent: [] })
                         }
                     }
                 });
             }
         });
+    }
+    changeDate = () => {
+        this.setState({ editGroupContent: [] })
     }
     onClick = () => {
         var params = ''
@@ -990,7 +1009,8 @@ class GroupCustom extends React.Component {
                 okButtonProps: { loading: modalOkBtnLoading4 }
             },
             onRef: (ref) => { this.modal4 = ref },
-            ok: this.submit4.bind(this)
+            ok: this.submit4.bind(this),
+            hide: this.changeDate.bind(this)
         }
         const selectGroupOptions = this.getSelectGroupOptions();
         const addGroupOptions = this.getAddGroupOptions();
