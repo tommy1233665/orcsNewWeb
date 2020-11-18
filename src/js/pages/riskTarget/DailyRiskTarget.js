@@ -1020,7 +1020,10 @@ class OtherConfig extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(props)
+        // var initialValue = props.options.options ? props.options.options.initialValue : null;
         this.state = {
+            value: props.value,
             list: [],
             currentItem: {}
         };
@@ -1055,6 +1058,7 @@ class OtherConfig extends React.Component {
     }
 
     getFormOptions() {
+        // const { riskValue } = this.state
         return [
             {
                 type: "Hidden",
@@ -1079,6 +1083,25 @@ class OtherConfig extends React.Component {
                 span: 24,
                 length: 5,
                 placeholder: "输入0.0-10.0数字",
+                options: {
+                    rules: [
+                        { required: true, message: '风险值不能为空' },
+                        // { pattern: /^[0-9]+(.[0-9]{2})?$/, message: "请输入正确的三字码" },
+                        {
+                            validator: (rule, value, callback) => {
+                                console.log(value)
+                                const reg = /^0$|^[0-9]\d*$|^[0-9]\d*.\d{1}$|^0/;
+                                if (value && !reg.test(value)) {
+                                    callback('保留1位小数！')
+                                }
+                                if (value && value > 10) {
+                                    callback('不能大于10')
+                                }
+                                callback();
+                            }
+                        }
+                    ]
+                },
             },
         ];
     }
@@ -1099,7 +1122,8 @@ class OtherConfig extends React.Component {
 
     submit = () => {
         this.form.validateFields((err, values) => {
-            console.log(err, values, '确认')
+            this.modal.cancelConfirmLoading()
+            // console.log(err, values, '确认')
             if (values.riskValue) {
                 this.modal.cancelConfirmLoading()
                 const reg = /^0$|^[0-9]\d*$|^[0-9]\d*.\d{1}$|^0/;
