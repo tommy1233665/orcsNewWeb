@@ -37,12 +37,12 @@ class ExtraTimeChart extends React.Component {
     // get({
     //   url: "json/timeUseChart.json",
     post({
-      url: "qarInfoController/queryFltExtraTimeDtoInfo",
+      url: "qarInfoController/queryAirTimeDevtDto",
       data: params,
       success: (data) => {
-        var data = data.fltExtrTimeDto.fltExtrOilList;
+        var data = data.airTimeDevtDto.airTimeDevtList;
         var series = [];
-        var extrOilSection = [];
+        var airTimeDevtSection = [];
         // 初始化
         var myChart = echarts.init(document.getElementById("extraTime"));
         window.addEventListener("resize", function () {
@@ -65,12 +65,12 @@ class ExtraTimeChart extends React.Component {
           })
         } else {
           if (data) {
-            for (var i = 0; i < data.extrOilSection.length; i++) {
-              extrOilSection.push(data.extrOilSection[i]);
+            for (var i = 0; i < data.airTimeDevtSection.length; i++) {
+              airTimeDevtSection.push(data.airTimeDevtSection[i]);
               series.push({
                 value: data.fltAmount[i],
-                trueExtrOilSection: data.trueExtrOilSection[i],
-                useType: 2,
+                trueAirTimeDevtSection: data.trueAirTimeDevtSection[i],
+                useType: 3,
               });
             }
           }
@@ -138,7 +138,7 @@ class ExtraTimeChart extends React.Component {
                   interval: 0,
                   rotate: 20, //角度顺时针计算的
                 },
-                data: extrOilSection,
+                data: airTimeDevtSection,
               },
             ],
             //主要改这里

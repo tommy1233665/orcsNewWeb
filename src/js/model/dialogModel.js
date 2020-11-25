@@ -42,7 +42,7 @@ class dialogModel extends React.Component {
   }
   showModal = (data, paramsData) => {
     // 后台数据修改后，切除 （~）取值
-    var str = data.data.trueExtrOilSection;
+    var str = data.data.useType === 1 ? data.data.trueExtrOilSection : data.data.trueAirTimeDevtSection;
     var newStr = [];
     newStr = str.split("~");
     let params = {

@@ -83,7 +83,7 @@ class QarOilAnalysis extends React.Component {
     this.myChildExtraUse.initChart(params, "额外油使用量");
     this.myChildExtraTimeChart.initChart(params, "额外油使用时间");
     this.queryFltExtraOilInfo(params);
-    this.queryFltExtraTimeDtoInfo(params);
+    this.queryAirTimeDevtDto(params);
   };
   // 显示全部高度图数据
   showFHCallData = () => {
@@ -185,16 +185,16 @@ class QarOilAnalysis extends React.Component {
   };
 
   // 相关油量使用时间
-  queryFltExtraTimeDtoInfo = (obj = {}) => {
+  queryAirTimeDevtDto = (obj = {}) => {
     let params = {
       soflSeqNr: this.state.flightCode,
       time: this.state.time,
     };
     post({
-      url: "qarInfoController/queryFltExtraTimeDtoInfo",
+      url: "qarInfoController/queryAirTimeDevtDto",
       data: params,
       success: (data) => {
-        var data = data.fltExtrTimeDto;
+        var data = data.airTimeDevtDto;
         this.setState({
           fltExtrTimeDtoData: data,
         });
@@ -284,7 +284,7 @@ class QarOilAnalysis extends React.Component {
     // 初始化计划油量与实际耗油图（第一个趋势图）
     this.myChildStackedCharts.initChart(params.soflSeqNr);
     // 相关油量使用时间
-    this.queryFltExtraTimeDtoInfo();
+    this.queryAirTimeDevtDto();
     // 相关油量使用时间表格
     this.fltExtraDetailDto();
     // 时间偏差数据表格
@@ -484,16 +484,16 @@ class QarOilAnalysis extends React.Component {
               <div className="extra-time-summary-content">
                 <div className="extraTimeSummary">
                   <p>
-                    中位数：{this.state.fltExtrTimeDtoData.medianFltExtrOil} min
+                    中位数：{this.state.fltExtrTimeDtoData.medianAirTimeDevt} min
                   </p>
                   <p>
-                    最大值：{this.state.fltExtrTimeDtoData.maxFltExtrOil} min
+                    最大值：{this.state.fltExtrTimeDtoData.maxAirTimeDevt} min
                   </p>
                   <p>
-                    最小值：{this.state.fltExtrTimeDtoData.minFltExtrOil} min
+                    最小值：{this.state.fltExtrTimeDtoData.minAirTimeDevt} min
                   </p>
                 </div>
-                <div className="extraTimeSummary">
+                {/* <div className="extraTimeSummary">
                   <p>
                     90%航班{" < "}
                     {this.state.fltExtrTimeDtoData.tenPercentFltExtrOil} min
@@ -503,7 +503,7 @@ class QarOilAnalysis extends React.Component {
                     {this.state.fltExtrTimeDtoData.onePercentFltExtrOil}
                     min
                   </p>
-                </div>
+                </div> */}
               </div>
               <ExtraTimeChart
                 ref={(childExtraTimeChart) => {
