@@ -9,6 +9,8 @@ import StackedCharts from "../common/stackedBarChart/stackedCharts";
 import ExtraTimeChart from "../common/stackedBarChart/extraTimeChart";
 // 额外油使用量图
 import ExtraUse from "../common/stackedBarChart/extraUse";
+// 额外飞行时间 userType = 2 备用注释掉,后期需要时才放开
+// import TimeChart from "../common/stackedBarChart/timeChart";
 // 飞行高度图
 import FlightHeightChart from "../common/stackedBarChart/flightHeightChart";
 // 使用油弹窗明细
@@ -82,6 +84,8 @@ class QarOilAnalysis extends React.Component {
     };
     this.myChildExtraUse.initChart(params, "额外油使用量");
     this.myChildExtraTimeChart.initChart(params, "额外油使用时间");
+    {/* 如需显示老趋势图放开一下注释  */ }
+    // this.myChildTimeChart.initChart(params, '老额外油使用时间')
     this.queryFltExtraOilInfo(params);
     this.queryAirTimeDevtDto(params);
   };
@@ -280,7 +284,6 @@ class QarOilAnalysis extends React.Component {
       time: this.state.time,
     };
     // 初始化航路代号高度趋势图
-    // this.initFlightHeight();
     // 初始化计划油量与实际耗油图（第一个趋势图）
     this.myChildStackedCharts.initChart(params.soflSeqNr);
     // 相关油量使用时间
@@ -292,11 +295,11 @@ class QarOilAnalysis extends React.Component {
     // 初始化相关油量数据图表
     this.myChildExtraUse.initChart(params);
     this.myChildExtraTimeChart.initChart(params);
+    {/* 如需显示老趋势图放开一下注释  */ }
+    // this.myChildTimeChart.initChart(params)
     this.queryFltExtraOilInfo(params);
   }
   render() {
-    // const { authority } = this.props;
-    const authority = "1";
     const flyRmArptRiskList = [
       {
         medianAirFuelDevt: this.state.fltExtraDetailDto.medianAirFuelDevt,
@@ -436,8 +439,6 @@ class QarOilAnalysis extends React.Component {
             required
           >
             <Select
-              // labelInValue
-              // allowClear
               defaultValue="前365天"
               style={{ width: 120 }}
               onChange={this.statisticsHandleChange}
@@ -493,17 +494,6 @@ class QarOilAnalysis extends React.Component {
                     最小值：{this.state.fltExtrTimeDtoData.minAirTimeDevt} min
                   </p>
                 </div>
-                {/* <div className="extraTimeSummary">
-                  <p>
-                    90%航班{" < "}
-                    {this.state.fltExtrTimeDtoData.tenPercentFltExtrOil} min
-                  </p>
-                  <p>
-                    99%航班{" < "}
-                    {this.state.fltExtrTimeDtoData.onePercentFltExtrOil}
-                    min
-                  </p>
-                </div> */}
               </div>
               <ExtraTimeChart
                 ref={(childExtraTimeChart) => {
@@ -513,6 +503,43 @@ class QarOilAnalysis extends React.Component {
               ></ExtraTimeChart>
               <DialogModel onRef={this.onRef} />
             </Col>
+
+            {/* 如需显示老趋势图放开一下注释  */}
+            {/* <Col span={24}>
+              <div className="extra-time-summary-content">
+                <div className="extraTimeSummary">
+                  <p>
+                    中位数：{this.state.fltExtrTimeDtoData.medianAirTimeDevt} min
+                  </p>
+                  <p>
+                    最大值：{this.state.fltExtrTimeDtoData.maxAirTimeDevt} min
+                  </p>
+                  <p>
+                    最小值：{this.state.fltExtrTimeDtoData.minAirTimeDevt} min
+                  </p>
+                </div>
+                <div className="extraTimeSummary">
+                  <p>
+                    90%航班{" < "}
+                    {this.state.fltExtrTimeDtoData.tenPercentFltExtrOil} min
+                  </p>
+                  <p>
+                    99%航班{" < "}
+                    {this.state.fltExtrTimeDtoData.onePercentFltExtrOil}
+                    min
+                  </p>
+                </div>
+              </div>
+              <TimeChart
+                ref={(childTimeChart) => {
+                  this.myChildTimeChart = childTimeChart;
+                }}
+                showDialog={this.showDialog}
+              ></TimeChart>
+              <DialogModel onRef={this.onRef} />
+            </Col> */}
+            {/* 如需显示老趋势图放开以上注释  */}
+
           </Row>
           <CommonTable options={OilTableOptions}></CommonTable>
         </CardCommon>
