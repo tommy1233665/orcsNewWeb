@@ -52,6 +52,7 @@ class QarOilAnalysis extends React.Component {
       sliderDisabled: obj
     })
   }
+
   // 航路代号选择
   getQueryfindFlightRouteNoData = () => {
     let params = {
@@ -82,10 +83,10 @@ class QarOilAnalysis extends React.Component {
       soflSeqNr: this.state.flightCode,
       time: data || 4,
     };
-    this.myChildExtraUse.initChart(params, "额外油使用量");
+    this.myChildExtraUse.initChart(params, "空中时间偏差（分钟）");
     this.myChildExtraTimeChart.initChart(params, "额外油使用时间");
     {/* 如需显示老趋势图放开一下注释  */ }
-    // this.myChildTimeChart.initChart(params, '老额外油使用时间')
+    // this.myChildTimeChart.initChart(params, '额外油使用量')
     this.queryFltExtraOilInfo(params);
     this.queryAirTimeDevtDto(params);
   };

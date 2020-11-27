@@ -124,7 +124,7 @@ class ExtraTimeChart extends React.Component {
               {
                 type: "category",
                 boundaryGap: true,
-                name: "额外油使用量时间（分钟）",
+                name: "空中时间偏差（分钟）",
                 nameTextStyle: {
                   color: "#fff",
                   padding: [50, 0, 0, 0],
